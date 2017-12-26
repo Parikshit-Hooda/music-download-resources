@@ -1,0 +1,1375 @@
+// Copyright 2016 Google Inc. All Rights Reserved.
+
+/**
+ * @fileoverview This JavaScript file contains data used to generate code
+ * snippets that demonstrate how to call YouTube Data API methods using
+ * Google APIs client libraries. The file defines data structures that can
+ * be used to populate templates for code samples in different languages.
+ * The data is also used to construct API calls using the Google APIs
+ * Client Library for JavaScript.
+ *
+ * @see https://developers.google.com/youtube/v3/code_samples/code_snippets
+ *
+ * @author adiamondstein@google.com (Andy Diamondstein)
+ */
+
+(function() {
+  /**
+   * An object that defines default values that are used in API requests.
+   * @type {Object}
+   */
+  var DEFAULTS = {
+    CHANNEL: 'UC_x5XG1OV2P6uZZ5FSM9Ttw',
+    CHANNEL_SECTION: 'UCVKr6F52qMicvj7fCSITWkw.jpQSKxsnbc0',
+    CHANNEL_WITH_COMMENTS: 'UCAuUUnT6oDeKwE6v1NGQxug',
+    CHUCK_NORRIS: 'E6UTz_Doic8',
+    COMMENT: 'z13jwvbyskz4dpitg22et5shuzbsfvha204',
+    COMMENT_THREAD: 'z13rspd45leaixaqj04cdf4r1rfwz1jhosc0k',
+    FOR_USERNAME: 'GoogleDevelopers',
+    GOOGLE_DEVELOPERS: 'UC_x5XG1OV2P6uZZ5FSM9Ttw',
+    GOOGLE_DEVELOPERS_CHANNEL_LINK: ('<a href="' +
+        'https://www.youtube.com/user/GoogleDevelopers">Google Developers</a>'),
+    HL_ES: 'es',
+    LANGUAGE: 'es_MX',
+    LIKE_RATING: 'like',
+    // First comment on video m4Jtj2lCMAA, chosen because it has many replies.
+    PARENT_COMMENT: 'z13icrq45mzjfvkpv04ce54gbnjgvroojf0',
+    PLAYLIST: 'PLBCF2DAC6FFB574DE',
+    // Getting Started with Apps Script | Add Ons, Apps Script | The Apps Show
+    PLAYLIST_ITEM_INSERT: 'M7FIvfx5J10',
+    REGION_CODE_ES: 'ES',
+    REGION_CODE_US: 'US',
+    SEARCH_EVENT_TYPE: 'live',
+    SEARCH_LOCATION: '21.5922529,-158.1147114',
+    SEARCH_LOCATION_RADIUS: '10mi',
+    SEARCH_TERM: 'surfing',
+    SEARCH_TERM_EVENT: 'news',
+    SEARCH_TERM_MINE: 'fun',
+    SEARCH_TYPE_VIDEO: 'video',
+    // Amy Cuddy's TED talk about body language
+    VIDEO: 'Ks-_Mh1QhMc',
+    // Volvo Epic Split commercial
+    VIDEO_WITH_CAPTIONS: 'M7FIvfx5J10',
+    // Getting Started with Apps Script | Add Ons, Apps Script | The Apps Show
+    VIDEO_WITH_COMMENTS: 'm4Jtj2lCMAA',
+    // Three TED videos
+    VIDEO_LIST: 'Ks-_Mh1QhMc,c0KYU2j0TM4,eIho2S0ZahI',
+  };
+
+  /**
+   * This function defines information that the script needs to execute the
+   * API calls:
+   * - clientId: A client ID (from the Developers Console) that is set up to
+   *             call the API showcased in the examples.
+   * - jsApi: The name of the API as specified in call to gapi.client.load
+   * - jsApiPath: The path for API requests as specified in call to
+   *              gapi.client.request. Default for each API is jsApi value.
+   * - jsApiVersion: The API version as specified in call to gapi.client.load
+   * - scopes: Auth scopes that the user will need to grant access to to make
+   *           API calls.
+   * - resources: An object that identifies the API's resources and the
+   *              examples that the scripts expose for the API. The examples
+   *              are tied to the resources. Each example can specify either
+   *              1 or 3 values:
+   *                1 value: Specify the method name (e.g. list, getRating, etc.
+   *                         This is the value that displays in the UI.
+   *                3 values:
+   *                  - The first value identifies the method name (e.g. list).
+   *                    This is the API method that is actually being called.
+   *                  - The second value specifies the text you want to
+   *                    display. For example, if you have two snippets that
+   *                    call the same method, you want to distinguish them
+   *                    in the API. The default value (when 1 value is
+   *                    specified instead of 3) is the method name.
+   *                  - The third value identifies the name assigned to
+   *                    uniquely identify the function in the code. The
+   *                    default value is resource + method name (with
+   *                    first letter of method name capitalized) -- e.g.
+   *                    videos + list = videosList.
+   */
+  function getConfigData() {
+    return {
+      'apiKey': 'AIzaSyAMkHWnLNAvpKte-XA9nh3RheX7lFn_dNM',
+      'appsScriptService': 'YouTube',
+      'boilerplateDefaults': {
+        'GOSCOPE': 'youtube.YoutubeForceSslScope',
+      },
+      'clientId': '589726014278-m46so8ls5htu0ps5pnda5h78tdv92061.apps.googleusercontent.com',
+      'defaultParam': 'part',
+      'goService': 'youtube.Service',
+      'host': 'https://www.googleapis.com/',
+      'javaResourceMethods': {'insert': true, 'update': true},
+      'javaService': 'YouTube',
+      'jsApi': 'youtube',
+      'jsApiVersion': 'v3',
+      'methodSpecificDefaultParams': {
+        'delete': ['id'],
+        'getRating': ['id'],
+        //'markAsSpam': ['id'],
+        'rate': ['id', 'rating'],
+        'setModerationStatus': ['id', 'moderationStatus']
+      },
+      'phpService': 'YouTube',
+      'propertyOrderParameter': 'part',
+      'propertyOrderRule': 'YouTubeDataApi',
+      'scopes': ['https://www.googleapis.com/auth/youtube.force-ssl',
+                 'https://www.googleapis.com/auth/youtubepartner'],
+      'resources': {
+        'activities': [
+          ['list', 'list (any channel)', 'activitiesList'],
+          ['list', 'list (my channel)', 'activitiesListMine'],
+          ['insert', 'insert (post a channel bulletin)',
+           'activitiesInsertChannelBulletin']
+        ],
+        'captions': [
+          ['list'],
+          //['insert'],
+          ['update'],
+          //['download'],
+          //['delete']
+        ],
+        //'channelBanners': [
+        //  ['insert', '', '', 'insert']
+        //],
+        'channels': [
+          ['list', 'list (by channel ID)', 'channelsListById'],
+          ['list', 'list (by YouTube username)', 'channelsListByUsername'],
+          ['list', 'list (my channel)', 'channelsListMine'],
+          ['list', 'list (channels managed by a content owner)',
+           'channelsListManagedByMe'],
+          //['update', 'update (in-video promotion)',
+          // 'channelsUpdateInVideoPromotion'],
+          ['update', 'update branding settings',
+           'channelsUpdateBrandingSettings']
+          //['update', 'update channel banner image',
+          // 'channelsUpdateChannelBanner']
+          //['update', 'update (localizations)',
+          // 'channelsUpdateLocalizations']
+        ],
+        'channelSections': [
+          ['list', 'list (by channel ID)', 'channelSectionsListById'],
+          ['list', 'list (my channel)', 'channelSectionsListMine'],
+          ['insert'],
+          ['update'],
+          ['delete']
+        ],
+        'comments': [
+          ['list'],
+          ['insert'],
+          ['update'],
+          //['markAsSpam', '', '', 'markAsSpam'],
+          ['setModerationStatus', '', '', 'setModerationStatus'],
+          ['delete']
+        ],
+        'commentThreads': [
+          ['list', 'list (by video ID)', 'commentThreadsListByVideoId'],
+          ['list', 'list (by channel ID)', 'commentThreadsListByChannelId'],
+          ['list', 'list (all threads related to channel ID)',
+              'commentThreadsListAllThreadsByChannelId'],
+          ['insert'],
+          ['update']
+        ],
+        'i18nLanguages': [
+          ['list']
+        ],
+        'i18nRegions': [
+          ['list']
+        ],
+        'playlistItems': [
+          ['list', 'list (by playlist ID)', 'playlistItemsListByPlaylistId'],
+          ['insert', 'insert a playlist item', 'playlistItemsInsert'],
+          ['update', 'update item\'s position in playlist',
+           'playlistItemUpdatePosition'],
+          ['delete', 'delete a playlist item', 'playlistItemsDelete']
+        ],
+        'playlists': [
+          ['list', 'list (all playlists for a channel)',
+           'playlistsListByChannelId'],
+          ['list', 'list (my playlists)', 'playlistsListMine'],
+          ['insert', 'insert', 'playlistsInsert'],
+          ['update'],
+          ['delete']
+        ],
+        'search': [
+          ['list', 'list (by keyword)', 'searchListByKeyword'],
+          ['list', 'list (by location)', 'searchListByLocation'],
+          ['list', 'list (live events)', 'searchListLiveEvents'],
+          ['list', 'list (my videos)', 'searchListMine'],
+          ['list', 'list (related videos)', 'searchListRelatedVideos'],
+        ],
+        'subscriptions': [
+          ['list', 'list (by channel ID)', 'subscriptionsListByChannelId'],
+          //['list', 'list (my subscribers)', 'subscriptionsListMySubscribers'],
+          ['list', 'list (my subscriptions)',
+           'subscriptionsListMySubscriptions'],
+          ['list', 'check whether a subscription exists',
+                   'subscriptionsListForChannelId'],
+          ['insert'],
+          ['delete'],
+        ],
+        'thumbnails': [
+          ['set', '', '', 'set']
+        ],
+        'videoAbuseReportReasons': [
+          ['list']
+        ],
+        'videoCategories': [
+          ['list'],
+          ['list', 'list (for a specific region)',
+           'videoCategoriesListForRegion']
+        ],
+        'videos': [
+          ['list', 'list (by video ID)', 'videosListById'],
+          ['list', 'list (multiple video IDs)', 'videosListMultipleIds'],
+          ['list', 'list (most popular videos)', 'videosListMostPopular'],
+          ['list', 'list (my liked videos)', 'videosListMyRatedVideos'],
+          ['getRating', '', '', 'getRating'],
+          ['insert', '', '', ''],
+          ['rate', '', '', 'rate'],
+          ['update', '', '', ''],
+          ['delete']
+        ],
+      },
+    };
+  }
+
+  /**
+   * This function defines variables that are passed to the generic functions
+   * that display and execute code snippets:
+   *   1. requiresAuth: This object identifies API samples that require user
+   *      authorization. If there are multiple samples for the same method, it
+   *      is possible that some require user authorization and some do not.
+   *      This information is used to determine whether to append information
+   *      indicating that user auth is necessary to the end of the snippet
+   *      descriptions.
+   *   2. replacements: An object that identifies strings that should be
+   *      replaced in code samples on a language by language basis. This
+   *      object attempts to identify strings that do not conform to a
+   *      standard rule used to identify and replace other values correctly.
+   *   3. examples: An object that defines request parameters used to generate
+   *      code snippets for different API use cases. Each example can include
+   *      a description.
+   */
+  function handleAPILoaded() {
+    var requiresAuth = {
+      'activitiesListMine': true,
+      'channelsListManagedByMe': true,
+      'channelsListMine': true,
+      'channelSectionsListMine': true,
+      'playlistsListMine': true,
+      'searchListMine': true,
+      'subscriptionsListForChannelId': true,
+      'subscriptionsListMySubscribers': true,
+      'subscriptionsListMySubscriptions': true,
+      'videosListMyRatedVideos': true,
+      'videosGetRating': true,
+    };
+
+    /**
+     * Define values that should be replaced in a particular language
+     * that do not appear to conform to a logical rule.
+     * @type {Object}
+     */
+    var replacements = {
+      ruby: {
+        'getRating_videos': 'get_video_rating',
+        'list_search': 'list_searches'
+      }
+    };
+
+/**
+ * TODO: These support onBehalfOfContentOwner:
+ *       broadcasts.list, captions.delete, captions.download, captions.insert,
+ *       captions.list, captions.update, channelBanners.insert,
+ *       channelSections.delete, channelSections.insert, channelSections.list,
+ *       channelSections.update, channels.list, channels.update,
+ *       playlistItems.delete, playlistItems.insert, playlistItems.list,
+ *       playlistItems.update, playlists.delete, playlists.insert,
+ *       playlists.list, playlists.update, search.list, subscriptions.list,
+ *       thumbnails.set, videos.delete, videos.getRating, videos.insert,
+ *       videos.list, videos.reportAbuse, videos.update, watermarks.set,
+ *       watermarks.unset
+ */
+
+    var examples = {
+      activitiesInsertChannelBulletin: {
+        description: 'This example creates and posts a new channel bulletin ' +
+            'for a video or playlist. The default settings create a bulletin ' +
+            'for a video.<br><br>' +
+            'To change the bulletin to promote a playlist, change the ' +
+            '<code>contentDetails.bulletin.resourceId.kind</code> property ' +
+            'value to <code>youtube#playlist</code> and set the ' +
+            '<code>contentDetails.bulletin.resourceId.playlistId</code> ' +
+            'property value to the desired playlist ID. Leave the ' +
+            '<code>contentDetails.bulletin.resourceId.videoId</code> ' +
+            'property value empty.',
+        goResponseType: 'ActivityListResponse',
+        javaObjects: {'resourceId': 'ResourceId'},
+        method: 'insert',
+        properties: {
+            'snippet.description': 'Check out this cool video.',
+            'contentDetails.bulletin.resourceId.kind': 'youtube#video',
+            'contentDetails.bulletin.resourceId.playlistId': '',
+            'contentDetails.bulletin.resourceId.videoId': 'PLAYLIST_ITEM_INSERT'
+        },
+        requestParameters: {'part': 'snippet,contentDetails'},
+        resource: 'activities'
+      },
+      activitiesList: {
+        description: ('This example retrieves the 25 most recent activities ' +
+            'for the ' + DEFAULTS['GOOGLE_DEVELOPERS_CHANNEL_LINK'] + ' ' +
+            'channel. It retrieves the <code>snippet</code> and ' +
+            '<code>contentDetails</code> parts for each ' +
+            '<code>activity</code> resource.'),
+        goResponseType: 'ActivityListResponse',
+        method: 'list',
+        requestParameters: {'channelId': 'GOOGLE_DEVELOPERS',
+                            'maxResults': '25',
+                            'part': 'snippet,contentDetails'},
+        resource: 'activities'
+      },
+      activitiesListMine: {
+        description: 'This example retrieves the 25 most recent ' +
+            'activities performed by the user authorizing the API request.',
+        goResponseType: 'ActivityListResponse',
+        method: 'list',
+        requestParameters: {'maxResults': '25',
+                            'mine': 'true',
+                            'part': 'snippet,contentDetails'},
+        resource: 'activities'
+      },
+      captionsDelete: {
+        description: 'This example deletes the specified caption track. ' +
+            'You must use the <code>id</code> parameter to specify a ' +
+            'caption track ID for the code sample to work.',
+        goResponseType: 'CaptionDeleteResponse',
+        method: 'delete',
+        requestParameters: {'id': '',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'captions'
+      },
+      captionsDownload: {
+        description: 'This example downloads the specified caption track. ' +
+            'You must use the <code>id</code> parameter to specify a ' +
+            'caption track ID for the code sample to work. The ' +
+            '<code>tfmt</code> and <code>tlang</code> parameters are both ' +
+            'optional and allow you to download a particular format or ' +
+            'machine translation of the track, respectively.',
+        goResponseType: 'CaptionDownloadResponse',
+        method: 'download',
+        requestParameters: {'id': '',
+                            'tfmt': '',
+                            'tlang': '',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'captions'
+      },
+      captionsInsert: {
+        description: 'This example adds a caption track to a video. The ' +
+            '<code>snippet.videoId</code>, <code>snippet.language</code>, ' +
+            'and <code>snippet.name</code> property values are all required. ' +
+            'The <code>snippet.isDraft</code> property value can optionally ' +
+            'be set to <code>true</code> to prevent the track from being ' +
+            'publicly available, and the optional <code>sync</code> ' +
+            'parameter indicates whether YouTube should automatically ' +
+            'synchronize the caption file with the video\'s audio track.',
+        goResponseType: 'CaptionInsertResponse',
+        fileUpload: true,
+        method: 'insert',
+        properties: {'snippet.language': '',
+                     'snippet.name': '',
+                     'snippet.videoId': '',
+                     'snippet.isDraft': ''},
+        requestParameters: {'part': 'snippet',
+                            'sync': '',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'captions'
+      },
+      captionsList: {
+        description: 'This example lists caption tracks available for the ' +
+            'Volvo Trucks ' +
+            '<a href="https://www.youtube.com/watch?v=M7FIvfx5J10">' +
+            '"Epic Split" commercial</a>, featuring Jean-Claude Van Damme. ' +
+            '(This video was selected because it has many available caption ' +
+            'tracks and also because it is awesome.)',
+        extraRequestParameters: {'videoId': 'videoId'},
+        goPrint: ['Id', 'Snippet.Language'],
+        goResponseType: 'CaptionListResponse',
+        method: 'list',
+        requestParameters: {'part': 'snippet',
+                            'videoId': 'VIDEO_WITH_CAPTIONS',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'captions'
+      },
+      captionsUpdate: {
+        description: 'This example updates a caption track. When updating ' +
+            'a track, you must set the <code>snippet.videoId</code>, ' +
+            '<code>snippet.language</code>, and <code>snippet.name</code> ' +
+            'property values to the values set for an existing caption ' +
+            'track.<br><br> You can change the <code>snippet.isDraft</code> ' +
+            'property to make the track public or private.<br><br>' +
+            'You can also modify the track itself by uploading a new file, ' +
+            'though that functionality is not supported in this interface. ' +
+            'If uploading a new file, you have the option of setting the ' +
+            '<code>sync</code> parameter to indicate whether YouTube should ' +
+            'automatically synchronize the caption file with the video\'s ' +
+            'audio track.',
+        goResponseType: 'CaptionUpdateResponse',
+        javaBooleans: ['snippet.isDraft'],
+        method: 'update',
+        properties: {'id': '',
+                     'snippet.language': '',
+                     'snippet.name': '',
+                     'snippet.videoId': '',
+                     'snippet.isDraft': ''},
+        requestParameters: {'part': 'snippet',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'captions',
+        skipLanguages: ['appsscript', 'go']
+      },
+      channelBannersInsert: {
+        description: 'This example uploads a channel banner image to ' +
+            'YouTube. After uploading a channel banner, your code should ' +
+            'extract the <code>url</code> property from the API response. ' +
+            'Then, your code should call the <code>channels.update</code> ' +
+            'method to set the ' +
+            '<code>brandingSettings.image.bannerExternalUrl</code> ' +
+            'property\'s value to that URL.',
+        fileLocation: 'sample_channel_banner.png',
+        fileUpload: true,
+        method: 'insert',
+        resource: 'channelBanners'
+      },
+      channelsListById: {
+        description: 'This example retrieves channel data for the ' +
+            '<code>GoogleDevelopers</code> YouTube channel. It uses ' +
+            'the <code><a href="' +
+            '/youtube/v3/docs/channels/list#id">id</a></code> request ' +
+            'parameter to identify the channel by its YouTube channel ID.',
+        goResponseType: 'ChannelListResponse',
+        method: 'list',
+        requestParameters: {'id': 'GOOGLE_DEVELOPERS',
+                            'part': 'snippet,contentDetails,statistics'},
+        resource: 'channels'
+      },
+      channelsListByUsername: {
+        description: 'This example retrieves channel data for the ' +
+            '<code>GoogleDevelopers</code> YouTube channel. It uses ' +
+            'the <code><a href="/youtube/v3/docs/channels/list#forUsername">' +
+            'forUsername</a></code> request parameter to identify the ' +
+            'channel by its YouTube username.',
+        goResponseType: 'ChannelListResponse',
+        method: 'list',
+        requestParameters: {'forUsername': 'FOR_USERNAME',
+                            'part': 'snippet,contentDetails,statistics'},
+        resource: 'channels'
+      },
+      channelsListManagedByMe: {
+        description: 'This example retrieves a list of channels managed ' +
+            'by the specified YouTube content owner.',
+        goResponseType: 'ChannelListResponse',
+        method: 'list',
+        requestParameters: {'managedByMe': 'true',
+                            'onBehalfOfContentOwner': '',
+                            'part': 'snippet,contentDetails,statistics'},
+        resource: 'channels'
+      },
+      channelsListMine: {
+        description: 'This example retrieves the channel data for the ' +
+            'authorized user\'s YouTube channel. It uses the <code><a href="' +
+            '/youtube/v3/docs/channels/list#mine">mine</a></code> ' +
+            'request parameter to indicate that the API should only return ' +
+            'channels owned by the user authorizing the request.',
+        goResponseType: 'ChannelListResponse',
+        method: 'list',
+        requestParameters: {'mine': 'true',
+                            'part': 'snippet,contentDetails,statistics'},
+        resource: 'channels'
+      },
+      channelsUpdateBrandingSettings: {
+        description: 'This example updates the description and default ' +
+            'language for the authorizing channel.',
+        goResponseType: 'ChannelUpdateResponse',
+        javaBooleans: ['brandingSettings.channel.showBrowseView',
+                       'brandingSettings.channel.showRelatedChannels'],
+        javaObjects: {'channel': 'ChannelSettings'},
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'brandingSettings.channel.description': '',
+                     'brandingSettings.channel.keywords': '',
+                     'brandingSettings.channel.defaultLanguage': '',
+                     'brandingSettings.channel.defaultTab': '',
+                     'brandingSettings.channel.moderateComments': '',
+                     'brandingSettings.channel.showRelatedChannels': '',
+                     'brandingSettings.channel.showBrowseView': '',
+                     'brandingSettings.channel.featuredChannelsTitle': '',
+                     'brandingSettings.channel.featuredChannelsUrls[]': '',
+                     'brandingSettings.channel.unsubscribedTrailer': ''},
+        requestParameters: {'part': 'brandingSettings',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'channels'
+      },
+      channelsUpdateChannelBanner: {
+        description: 'This example updates the channel banner for a channel. ' +
+            'The <code>brandingSettings.image.bannerExternalUrl</code> ' +
+            'property must specify a URL obtained from the response to a ' +
+            '<code>channelBanners.insert</code> request.',
+        goResponseType: 'ChannelUpdateResponse',
+        javaBooleans: ['brandingSettings.channel.showBrowseView',
+                       'brandingSettings.channel.showRelatedChannels'],
+        javaObjects: {'channel': 'ChannelSettings'},
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'brandingSettings.channel.description': '',
+                     'brandingSettings.channel.keywords': '',
+                     'brandingSettings.channel.defaultLanguage': '',
+                     'brandingSettings.channel.defaultTab': '',
+                     'brandingSettings.channel.moderateComments': '',
+                     'brandingSettings.channel.showRelatedChannels': '',
+                     'brandingSettings.channel.showBrowseView': '',
+                     'brandingSettings.channel.featuredChannelsTitle': '',
+                     'brandingSettings.channel.featuredChannelsUrls[]': '',
+                     'brandingSettings.image.bannerExternalUrl': ''},
+        requestParameters: {'part': 'brandingSettings',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'channels'
+      },
+      channelsUpdateInVideoPromotion: {
+        description: 'This example updates the in-video promotional campaign ' +
+            'data for the authorizing channel. An in-video promotional ' +
+            'campaign displays the thumbnail image of a promoted video ' +
+            'in the video player during playback of the channel\'s videos.',
+        goResponseType: 'ChannelUpdateResponse',
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'invideo.position.type': 'corner',
+                     'invideo.defaultTiming.durationMs': '7',
+                     'invideo.defaultTiming.offsetMs': '4',
+                     'invideo.defaultTiming.type': 'offsetFromStart',
+                     'invideo.items[].id.type': 'video',
+                     'invideo.items[].id.videoId': '7InRmTGU0Hg'},
+                     //'invideo.items[].id.websiteUrl': '',
+                     //'invideo.items[].timing.type': '',
+                     //'invideo.items[].timing.offsetMs': '',
+                     //'invideo.items[].customMessage': '',
+                     //'invideo.items[].promotedByContentOwner': ''},
+        requestParameters: {'part': 'invideoPromotion',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'channels'
+      },
+/*
+      channelsUpdateLocalizations: {
+        description: 'This example updates translations of the channel\'s ' +
+            'title and description.',
+        goResponseType: 'ChannelUpdateResponse',
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': ''
+        //           'localizations.(key)': '',
+        //           'localizations.(key).title': '',
+        //           'localizations.(key).description': ''
+        },
+        requestParameters: {'part': 'localizations',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'channels'
+      },
+*/
+      channelSectionsDelete: {
+        description: 'This example deletes the specified channel section. ' +
+            'You must use the <code>id</code> parameter to specify a ' +
+            'channel section ID for the code sample to work.',
+        goResponseType: 'ChannelSectionDeleteResponse',
+        method: 'delete',
+        requestParameters: {'id': '',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'channelSections'
+      },
+      channelSectionsInsert: {
+        description: 'This example adds a channel section to a channel. ' +
+            'The <code>snippet.type</code> and <code>snippet.style</code> ' +
+            'property values are required and identify the type of content ' +
+            'that appears in the section and whether the section displays ' +
+            'horizontally or vertically.',
+        goIntegers: ['snippet.position'],
+        goResponseType: 'ChannelSectionInsertResponse',
+        method: 'insert',
+        properties: {'snippet.type': '',
+                     'snippet.style': '',
+                     'snippet.title': '',
+                     'snippet.position': '',
+                     'snippet.defaultLanguage': '',
+                     'contentDetails.playlists[]': '',
+                     'contentDetails.channels[]': '',
+        //           'localizations.(key)': '',
+        //           'localizations.(key).title': '',
+                     'targeting.countries[]': '',
+                     'targeting.languages[]': '',
+                     'targeting.regions[]': ''},
+        requestParameters: {'part': 'snippet,contentDetails,targeting',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'channelSections'
+      },
+      channelSectionsListById: {
+        description: 'This example retrieves the channel sections ' +
+            'shown on the ' + DEFAULTS['GOOGLE_DEVELOPERS_CHANNEL_LINK'] +
+            ' channel, using the ' +
+            '<code><a href="/youtube/v3/docs/channelSections/list#channelId">' +
+            'channelId</a></code> request parameter to identify the channel.',
+        goPrint: ['Id', 'Snippet.Type'],
+        goResponseType: 'ChannelSectionListResponse',
+        method: 'list',
+        requestParameters: {'channelId': 'GOOGLE_DEVELOPERS',
+                            'part': 'snippet,contentDetails'},
+        resource: 'channelSections'
+      },
+      channelSectionsListMine: {
+        description: 'This example retrieves the channel sections shown on ' +
+            'the authorized user\'s channel. It uses the <code><a href="' +
+            '/youtube/v3/docs/channelSections/list#mine">mine</a></code> ' +
+            'request parameter to indicate that the API should return ' +
+            'channel sections on that channel.',
+        goResponseType: 'ChannelSectionListResponse',
+        goPrint: ['Id', 'Snippet.Type'],
+        method: 'list',
+        requestParameters: {'mine': 'true',
+                            'part': 'snippet,contentDetails'},
+        resource: 'channelSections'
+      },
+      channelSectionsUpdate: {
+        description: 'This example updates a channel section. The ' +
+            '<code>id</code>, <code>snippet.type</code> and ' +
+            '<code>snippet.style</code> property values are all required.',
+        goIntegers: ['snippet.position'],
+        goResponseType: 'ChannelSectionUpdateResponse',
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'snippet.type': '',
+                     'snippet.style': '',
+                     'snippet.title': '',
+                     'snippet.position': '',
+                     'snippet.defaultLanguage': '',
+                     'contentDetails.playlists[]': '',
+                     'contentDetails.channels[]': '',
+        //           'localizations.(key)': '',
+        //           'localizations.(key).title': '',
+                     'targeting.countries[]': '',
+                     'targeting.languages[]': '',
+                     'targeting.regions[]': ''},
+        requestParameters: {'part': 'snippet,contentDetails,targeting',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'channelSections'
+      },
+      commentsDelete: {
+        description: 'This example deletes the specified comment. ' +
+            'You must use the <code>id</code> parameter to specify a ' +
+            'comment ID for the code sample to work.',
+        goResponseType: 'CommentDeleteResponse',
+        method: 'delete',
+        requestParameters: {'id': ''},
+        resource: 'comments'
+      },
+      commentsInsert: {
+        description: 'This example adds a reply to an existing comment. ' +
+            'The <code>snippet.parentId</code> property identifies the ' +
+            'top-level comment that you are replying to. That property\'s ' +
+            'value specifies a comment thread ID. To add a top-level ' +
+            'comment instead of a reply, use the ' +
+            '<code>commentThreads.insert</code> method.',
+        goResponseType: 'CommentInsertResponse',
+        method: 'insert',
+        properties: {'snippet.parentId': '',
+                     'snippet.textOriginal': ''},
+        requestParameters: {'part': 'snippet'},
+        resource: 'comments'
+      },
+      commentsList: {
+        description: 'This example retrieves comment replies for a specified ' +
+            'comment, which is identified by the <code><a href="' +
+            '/youtube/v3/docs/comments/list#parentId">parentId</a></code> ' +
+            'request parameter. In this example, the parent comment is the ' +
+            'first comment on a video about Apps Script. The video was ' +
+            'chosen because this particular comment had multiple replies ' +
+            '(in multiple languages) and also because Apps Script is ' +
+            'really useful.',
+        goPrint: ['Id', 'Snippet.TextDisplay'],
+        goResponseType: 'CommentListResponse',
+        method: 'list',
+        requestParameters: {'parentId': 'PARENT_COMMENT',
+                            'part': 'snippet'
+        },
+        resource: 'comments'
+      },
+      commentsMarkAsSpam: {
+        description: 'This example marks the specified comment as spam. ' +
+            'You must use the <code>id</code> parameter to specify a ' +
+            'comment ID for the code sample to work.',
+        goResponseType: 'CommentMarkAsSpamResponse',
+        method: 'markAsSpam',
+        requestMethod: 'POST',
+        requestParameters: {'id': ''},
+        resource: 'comments'
+      },
+      commentsSetModerationStatus: {
+        description: 'This example sets the moderation status of one or ' +
+            'more comments to <code>heldForReview</code> You can also set ' +
+            'the moderation status to <code>published</code> or ' +
+            '<code>rejected</code>.',
+        goResponseType: 'CommentSetModerationStatusResponse',
+        method: 'setModerationStatus',
+        requestMethod: 'POST',
+        requestParameters: {'id': '',
+                            'moderationStatus': 'heldForReview'},
+        resource: 'comments'
+      },
+      commentsUpdate: {
+        description: 'This example updates the text of an existing comment, ' +
+            'which is identified by the <code>id</code> property value.',
+        goResponseType: 'CommentUpdateResponse',
+        method: 'update',
+        properties: {'id': '',
+                     'snippet.textOriginal': ''},
+        requestParameters: {'part': 'snippet'},
+        resource: 'comments'
+      },
+      commentThreadsInsert: {
+        description: 'This example adds a top-level comment to a video. ' +
+            '(To add a comment about a channel, leave the ' +
+            '<code>snippet.videoId</code> property value blank.)',
+        goResponseType: 'CommentThreadInsertResponse',
+        javaObjects: {'topLevelComment': 'Comment',
+                      'snippet': ['Snippet', '', 'CommentSnippet']},
+        method: 'insert',
+        properties: {'snippet.channelId': '',
+                     'snippet.videoId': '',
+                     'snippet.topLevelComment.snippet.textOriginal': ''},
+        requestParameters: {'part': 'snippet'},
+        resource: 'commentThreads'
+      },
+      commentThreadsListAllThreadsByChannelId: {
+        description: 'This example retrieves all comment threads associated ' +
+            'with a particular channel. The response could include comments ' +
+            'about the channel or about the channel\'s videos. The ' +
+            'request\'s <a href="/youtube/v3/docs/commentThreads/list' +
+            '#allThreadsRelatedToChannelId">' +
+            'allThreadsRelatedToChannelId</a></code> parameter identifies ' +
+            'the channel.',
+        goPrint: ['Id', 'Snippet.TopLevelComment.Snippet.TextDisplay'],
+        goResponseType: 'CommentThreadListResponse',
+        method: 'list',
+        requestParameters: {'allThreadsRelatedToChannelId': 'CHANNEL',
+                            'part': 'snippet,replies'},
+        resource: 'commentThreads'
+      },
+      commentThreadsListByChannelId: {
+        description: 'This example retrieves all comment ' +
+            'threads about the specified channel. The request\'s ' +
+            '<a href="/youtube/v3/docs/commentThreads/list#channelId">' +
+            'channelId</a></code> parameter identifies the channel. The ' +
+            'response does not include comments left on videos that the ' +
+            'channel uploaded.',
+        goResponseType: 'CommentThreadListResponse',
+        goPrint: ['Id', 'Snippet.TopLevelComment.Snippet.TextDisplay'],
+        method: 'list',
+        requestParameters: {'channelId': 'CHANNEL_WITH_COMMENTS',
+                            'part': 'snippet,replies'},
+        resource: 'commentThreads'
+      },
+      commentThreadsListByVideoId: {
+        description: 'This example retrieves all comment threads ' +
+            'associated with a particular video. The request\'s <a href="' +
+            '/youtube/v3/docs/commentThreads/list#videoId">videoId' +
+            '</a></code> parameter identifies the video.',
+        goPrint: ['Id', 'Snippet.TopLevelComment.Snippet.TextDisplay'],
+        goResponseType: 'CommentThreadListResponse',
+        method: 'list',
+        requestParameters: {'part': 'snippet,replies',
+                            'videoId': 'VIDEO_WITH_COMMENTS'},
+        resource: 'commentThreads'
+      },
+      commentThreadsUpdate: {
+        description: 'This example updates the text of an existing comment, ' +
+            'which is identified by the <code>id</code> property value.',
+        goResponseType: 'CommentThreadUpdateResponse',
+        javaObjects: {'topLevelComment': 'Comment',
+                      'snippet': ['Snippet', '', 'CommentSnippet']},
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'snippet.topLevelComment.snippet.textOriginal': ''},
+        requestParameters: {'part': 'snippet'},
+        resource: 'commentThreads'
+      },
+      i18nLanguagesList: {
+        description: 'This example retrieves a list of application languages ' +
+            'that the YouTube website supports. The example sets the <code>' +
+            '<a href="/youtube/v3/docs/i18nLanguages/list#hl">hl</a></code>' +
+            'parameter value to <code>es_MX</code>, indicating that text ' +
+            'values in the API response should be provided in that language. ' +
+            'That parameter\'s default value is <code>en_US</code>.',
+        goPrint: ['Snippet.Hl', 'Snippet.Name'],
+        goResponseType: 'I18nLanguageListResponse',
+        method: 'list',
+        requestParameters: {'hl': 'LANGUAGE',
+                            'part': 'snippet'},
+        resource: 'i18nLanguages'
+      },
+      i18nRegionsList: {
+        description: 'This example retrieves a list of content regions that ' +
+            'the YouTube website supports. The example sets the <code>' +
+            '<a href="/youtube/v3/docs/i18nLanguages/list#hl">hl</a></code>' +
+            'parameter value to <code>es_MX</code>, indicating that text ' +
+            'values in the API response should be provided in that language. ' +
+            'That parameter\'s default value is <code>en_US</code>.',
+        goPrint: ['Snippet.Gl', 'Snippet.Name'],
+        goResponseType: 'I18nRegionListResponse',
+        method: 'list',
+        requestParameters: {'hl': 'LANGUAGE',
+                            'part': 'snippet'},
+        resource: 'i18nRegions'
+      },
+
+      playlistItemsDelete: {
+        description: 'This example deletes the specified playlist item. ' +
+            'The request\'s <code><a href="' +
+            '/youtube/v3/docs/playlistItems/delete#id">id</a></code> ' +
+            'parameter identifies the playlist item.<br><br>If successful, ' +
+            'this method returns an HTTP 204 response code ' +
+            '(<code>No Content</code>).',
+        goResponseType: 'PlaylistItemDeleteResponse',
+        method: 'delete',
+        requestParameters: {'id': 'REPLACE_ME',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'playlistItems'
+      },
+      playlistItemsInsert: {
+        description: 'This example adds the video of the Volvo Trucks ' +
+            '<a href="https://www.youtube.com/watch?v=M7FIvfx5J10">' +
+            '"Epic Split" commercial</a>, featuring Jean-Claude Van Damme ' +
+            'to the specified playlist. You must specify a playlist ID in ' +
+            'your own account to actually execute the request.',
+        goResponseType: 'PlaylistItemInsertResponse',
+        javaObjects: {'resourceId': 'ResourceId'},
+        method: 'insert',
+        properties: {'snippet.playlistId': '',
+                     'snippet.resourceId.kind': 'youtube#video',
+                     'snippet.resourceId.videoId': 'PLAYLIST_ITEM_INSERT',
+                     'snippet.position': 0},
+        requestParameters: {'part': 'snippet',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'playlistItems'
+      },
+      playlistItemsListByPlaylistId: {
+        description: 'This example retrieves the list of videos in a ' +
+            'specified playlist. The request\'s <code><a href="' +
+            '/youtube/v3/docs/playlistItems/list#playlistId">playlistId' +
+            '</a></code> parameter identifies the playlist.<br><br>Note that ' +
+            'the API response does not include metadata about the playlist ' +
+            'itself, such as the playlist\'s title and description. ' +
+            'Additional metadata about the videos in the playlist can also ' +
+            'be retrieved using the <code><a href="' +
+            '/youtube/v3/docs/videos/list">videos.list</a></code> method.',
+        goResponseType: 'PlaylistItemListResponse',
+        method: 'list',
+        requestParameters: {'maxResults': '25',
+                            'part': 'snippet,contentDetails',
+                            'playlistId': 'PLAYLIST'},
+        resource: 'playlistItems'
+      },
+      playlistItemUpdatePosition: {
+        description: 'This example updates the position of an item in a ' +
+            'playlist. The request\'s contains the required <code><a href="' +
+            '"/youtube/v3/docs/playlistItems#id">id</a></code>, <code><a ' +
+            'href="/youtube/v3/docs/playlistItems#snippet.playlistId">' +
+            'snippet.playlistId</a></code>, and <code><a href="' +
+            '/youtube/v3/docs/playlistItems#snippet.resourceId">' +
+            'snippet.resourceId</a></code> properties, which identify the ' +
+            'playlist item being modified. The request modifies the <code><a ' +
+            'href="/youtube/v3/docs/playlistItems#snippet.position">' +
+            'snippet.position</a></code> property value.',
+        goIntegers: ['snippet.position'],
+        goResponseType: 'PlaylistItemUpdateResponse',
+        javaObjects: {'resourceId': 'ResourceId'},
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'snippet.playlistId': '',
+                     'snippet.resourceId.kind': 'video',
+                     'snippet.resourceId.videoId': '',
+                     'snippet.position': ''},
+        requestParameters: {'part': 'snippet',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'playlistItems'
+      },
+      playlistsDelete: {
+        description: 'This example deletes the specified playlist. ' +
+            'The request\'s <code><a href="' +
+            '/youtube/v3/docs/playlists/delete#id">id</a></code> ' +
+            'parameter identifies the playlist.<br><br>If successful, ' +
+            'this method returns an HTTP 204 response code ' +
+            '(<code>No Content</code>).',
+        goResponseType: 'PlaylistDeleteResponse',
+        method: 'delete',
+        requestParameters: {'id': 'REPLACE_ME',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'playlists'
+      },
+      playlistsInsert: {
+        description: 'This example creates a new playlist in your channel. ' +
+            'You must use the <code>snippet.title</code> property to set ' +
+            'the playlist\'s title. All of the other properties are optional.',
+        goResponseType: 'PlaylistInsertResponse',
+        method: 'insert',
+        properties: {'snippet.title': '',
+                     'snippet.description': '',
+                     'snippet.tags[]': '',
+                     'snippet.defaultLanguage': '',
+                     'status.privacyStatus': '',
+      //               'localizations.(key)': '',
+      //               'localizations.(key).title': '',
+      //               'localizations.(key).description': ''
+       },
+        requestParameters: {'part': 'snippet,status',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'playlists'
+      },
+      playlistsListByChannelId: {
+        description: 'This example retrieves playlists owned by ' +
+            'the YouTube channel that the request\'s <code><a href="' +
+            '/youtube/v3/docs/playlists/list#channelId">channelId</a></code> ' +
+            'parameter identifies.',
+        goResponseType: 'PlaylistListResponse',
+        method: 'list',
+        requestParameters: {'channelId': 'GOOGLE_DEVELOPERS',
+                            'maxResults': '25',
+                            'part': 'snippet,contentDetails'},
+        resource: 'playlists'
+      },
+      playlistsListMine: {
+        description: 'This example retrieves playlists created in the ' +
+            'authorized user\'s YouTube channel. It uses the <code><a href="' +
+            '/youtube/v3/docs/playlists/list#mine">mine</a></code> ' +
+            'request parameter to indicate that the API should only return ' +
+            'playlists owned by the user authorizing the request.<br><br>' +
+            'Content owners can also use the ' +
+            '<code>onBehalfOfContentOwner</code> and ' +
+            '<code>onBehalfOfContentOwnerChannel</code> parameters to ' +
+            'retrieve playlists for a particular owned channel.',
+        goResponseType: 'PlaylistListResponse',
+        method: 'list',
+        requestParameters: {'mine': 'true',
+                            'maxResults': '25',
+                            'part': 'snippet,contentDetails',
+                            'onBehalfOfContentOwner': '',
+                            'onBehalfOfContentOwnerChannel': ''},
+        resource: 'playlists'
+      },
+      playlistsUpdate: {
+        description: 'This example updates the specified playlist. ' +
+            'The <code>id</code> and <code>snippet.title</code> properties ' +
+            'are required, and all other properties are optional.',
+        goResponseType: 'PlaylistUpdateResponse',
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'snippet.title': '',
+                     'snippet.description': '',
+                     'snippet.tags[]': '',
+                     //'snippet.defaultLanguage': '',
+                     'status.privacyStatus': '',
+        //             'localizations.(key)': '',
+        //             'localizations.(key).title': '',
+        //             'localizations.(key).description': ''
+        },
+        requestParameters: {'part': 'snippet,status',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'playlists'
+      },
+      searchListByKeyword: {
+        description: 'This example retrieves the first 25 search results ' +
+            'associated with the keyword <b>surfing</b>. By default, the ' +
+            '<code><a href="' +
+            '/youtube/v3/docs/search/list#type">type</a></code> parameter ' +
+            'does not specify a value, which means the response could ' +
+            'include videos, playlists, and channels.',
+        goPrint: ['Id.VideoId', 'Snippet.Title'],
+        goResponseType: 'SearchListResponse',
+        method: 'list',
+        requestParameters: {'maxResults': '25',
+                            'part': 'snippet',
+                            'q': 'SEARCH_TERM',
+                            'type': ''},
+        resource: 'search'
+      },
+      searchListByLocation: {
+        description: 'This example retrieves search results associated ' +
+            'with the keyword <b>surfing</b> that also specify in their ' +
+            'metadata a geographic location within 10 miles of the point ' +
+            'identified by the ' +
+            '<code><a href="/youtube/v3/docs/search/list#location">location' +
+            '</a></code> parameter value. (The sample request specifies a ' +
+            'point on the North Shore of Oahu, Hawaii . The request ' +
+            'retrieves the top five results, which is the default number ' +
+            'returned when the ' +
+            '<code><a href="/youtube/v3/docs/search/list#maxResults">' +
+            'maxResults</a></code> parameter is not specified.',
+        goPrint: ['Id.VideoId', 'Snippet.Title'],
+        goResponseType: 'SearchListResponse',
+        method: 'list',
+        requestParameters: {'location': 'SEARCH_LOCATION',
+                            'locationRadius': 'SEARCH_LOCATION_RADIUS',
+                            'part': 'snippet',
+                            'q': 'SEARCH_TERM',
+                            'type': 'video'},
+        resource: 'search'
+      },
+      searchListLiveEvents: {
+        description: 'This example retrieves a list of active live ' +
+            'broadcasts (see the <code><a href="' +
+            '/youtube/v3/docs/search/list#eventType">eventType</a></code> ' +
+            'parameter value) that are associated with the keyword ' +
+            '<b>news</b>. Since the <code>eventType</code> parameter is set, ' +
+            'the request must also set the <code><a href="' +
+            '/youtube/v3/docs/search/list#type">type</a></code> parameter ' +
+            'value to <code>video</code>.',
+        goPrint: ['Id.VideoId', 'Snippet.Title'],
+        goResponseType: 'SearchListResponse',
+        method: 'list',
+        requestParameters: {'eventType': 'SEARCH_EVENT_TYPE',
+                            'maxResults': '25',
+                            'part': 'snippet',
+                            'q': 'SEARCH_TERM_EVENT',
+                            'type': 'video'},
+        resource: 'search'
+      },
+      searchListMine: {
+        description: 'This example searches within the authorized user\'s ' +
+            'videos for videos that match the keyword <b>fun</b>. The <code>' +
+            '<a href="/youtube/v3/docs/search/list#forMine">forMine' +
+            '</a></code> ' +
+            'parameter indicates that the response should only search within ' +
+            'the authorized user\'s videos. Also, since this request uses ' +
+            'the <code>forMine</code> parameter, it must also set the ' +
+            '<code><a href="' +
+            '/youtube/v3/docs/search/list#type">type</a></code> parameter ' +
+            'value to <code>video</code>.<br><br>If you have not uploaded ' +
+            'any videos associated with that term, you will not see any ' +
+            'items in the API response list.',
+        goPrint: ['Id.VideoId', 'Snippet.Title'],
+        goResponseType: 'SearchListResponse',
+        method: 'list',
+        requestParameters: {'maxResults': '25',
+                            'forMine': 'true',
+                            'part': 'snippet',
+                            'q': 'SEARCH_TERM_MINE',
+                            'type': 'video'},
+        resource: 'search'
+      },
+      searchListRelatedVideos: {
+        description: 'This example sets the <code><a href="' +
+            '/youtube/v3/docs/search/list#relatedToVideoId">relatedToVideoId' +
+            '</a></code> parameter to retrieve a list of videos related to ' +
+            'that video. Since the <code>relatedToVideoId</code> parameter ' +
+            'is set, the request must also set the <code><a href="' +
+            '/youtube/v3/docs/search/list#type">type</a></code> parameter ' +
+            'value to <code>video</code>.',
+        goPrint: ['Id.VideoId', 'Snippet.Title'],
+        goResponseType: 'SearchListResponse',
+        method: 'list',
+        requestParameters: {'part': 'snippet',
+                            'relatedToVideoId': 'VIDEO',
+                            'type': 'video'},
+        resource: 'search'
+      },
+      subscriptionsDelete: {
+        description: 'This example deletes the specified subscription. ' +
+            'The request\'s <code><a href="' +
+            '/youtube/v3/docs/subscriptions/delete#id">id</a></code> ' +
+            'parameter identifies the subscription.<br><br>If successful, ' +
+            'this method returns an HTTP 204 response code ' +
+            '(<code>No Content</code>).',
+        goResponseType: 'SubscriptionDeleteResponse',
+        method: 'delete',
+        requestParameters: {'id': ''},
+        resource: 'subscriptions'
+      },
+      subscriptionsInsert: {
+        description: 'This example subscribes the authorizing channel to ' +
+            'the GoogleDevelopers channel. You can change the channel being ' +
+            'subscribed to by updating the ' +
+            '<code>snippet.resourceId.channelId</code> property value.',
+        goResponseType: 'SubscriptionInsertResponse',
+        javaObjects: {'resourceId': 'ResourceId'},
+        method: 'insert',
+        properties: {'snippet.resourceId.kind': 'youtube#channel',
+                     'snippet.resourceId.channelId': 'GOOGLE_DEVELOPERS'},
+        requestParameters: {'part': 'snippet'},
+        resource: 'subscriptions'
+      },
+      subscriptionsListByChannelId: {
+        description: 'This example retrieves a list of channels ' +
+            'that the specified channel subscribes to. In this example, the ' +
+            'API response lists channels to which the <a href="' +
+            'https://www.youtube.com/user/GoogleDevelopers">GoogleDevelopers' +
+            '</a> channel subscribes.',
+        goResponseType: 'SubscriptionListResponse',
+        method: 'list',
+        requestParameters: {'channelId': 'GOOGLE_DEVELOPERS',
+                            'part': 'snippet,contentDetails'},
+        resource: 'subscriptions'
+      },
+      subscriptionsListForChannelId: {
+        description: 'This example determines whether the user authorizing ' +
+            'the API request subscribes to the channel that the ' +
+            '<code><a href="' +
+            '/youtube/v3/docs/subscriptions/list#forChannelId">' +
+            'forChannelId</a></code> parameter identifies. To check whether ' +
+            'another channel (instead of the authorizing user\'s channel) ' +
+            'subscribes to the specified channel, remove the ' +
+            '<code>mine</code> parameter from this request and add the ' +
+            '<code><a href="/youtube/v3/docs/subscriptions/list#channelId">' +
+            'channelId</a></code> parameter instead.<br><br>In this example, ' +
+            'the API response contains one item if you subscribe to the ' +
+            '<a href="https://www.youtube.com/user/GoogleDevelopers">' +
+            'GoogleDevelopers</a> channel. Otherwise, the request does not ' +
+            'return any items.',
+        goResponseType: 'SubscriptionListResponse',
+        method: 'list',
+        requestParameters: {'forChannelId': 'GOOGLE_DEVELOPERS',
+                            'mine': 'true',
+                            'part': 'snippet,contentDetails'},
+        resource: 'subscriptions'
+      },
+      subscriptionsListMySubscribers: {
+        description: 'This example uses the <code><a href="' +
+            '/youtube/v3/docs/subscriptions/list#mySubscribers">mySubscribers' +
+            '</a></code> parameter to retrieve the list of channels to which ' +
+            'the authorized user subscribes.',
+        goResponseType: 'SubscriptionListResponse',
+        method: 'list',
+        requestParameters: {'mySubscribers': 'true',
+                            'part': 'snippet,contentDetails,subscriberSnippet'},
+        resource: 'subscriptions'
+      },
+      subscriptionsListMySubscriptions: {
+        description: 'This example uses the <code><a href="' +
+          '/youtube/v3/docs/subscriptions/list#mine">mine</a></code> ' +
+          'parameter to retrieve a list of channels that subscribe to the ' +
+          'authenticated user\'s channel.',
+        goResponseType: 'SubscriptionListResponse',
+        method: 'list',
+        requestParameters: {'mine': 'true',
+                            'part': 'snippet,contentDetails'},
+        resource: 'subscriptions'
+      },
+      thumbnailsSet: {
+        description: 'This example uploads a custom thumbnail image ' +
+            'to YouTube and sets the image as the thumbnail for the ' +
+            'specified video. The <code>videoId</code> parameter is ' +
+            'required.',
+        goResponseType: 'ThumbnailSetResponse',
+        fileLocation: 'sample_thumbnail.png',
+        fileUpload: true,
+        method: 'set',
+        mimeType: 'image/png',
+        requestParameters: {'videoId': ''},
+                            //'onBehalfOfContentOwner': ''},
+        resource: 'thumbnails',
+        skipLanguages: ['java', 'js', 'ruby']
+      },
+      videoAbuseReportReasonsList: {
+        description: 'This example shows how to retrieve a ' +
+            'list of reasons that can be used to report abusive videos. You ' +
+            'can retrieve the text labels in other languages by specifying ' +
+            'a value for the <code><a href="' +
+            '/youtube/v3/docs/videoAbuseReportReasons/list#hl">hl</a></code> ' +
+            'request parameter.',
+        goPrint: ['Id', 'Snippet.Label'],
+        goResponseType: 'VideoAbuseReportReasonListResponse',
+        method: 'list',
+        requestParameters: {'part': 'snippet'},
+        resource: 'videoAbuseReportReasons'
+      },
+      videoCategoriesList: {
+        description: 'This example retrieves a list of categories that ' +
+            'can be associated with YouTube videos in the United States. ' +
+            'The <code><a href="' +
+            '/youtube/v3/docs/videoCategories/list#regionCode">regionCode' +
+            '</a></code> parameter specifies the country for which ' +
+            'categories are being retrieved.',
+        goResponseType: 'VideoCategoryListResponse',
+        method: 'list',
+        requestParameters: {'part': 'snippet',
+                            'regionCode': 'REGION_CODE_US'},
+        resource: 'videoCategories'
+      },
+      videoCategoriesListForRegion: {
+        description: 'This example uses the <code><a href="' +
+            '/youtube/v3/docs/videoCategories/list#regionCode">regionCode' +
+            '</a></code> to retrieve a list of categories that can be ' +
+            'associated with YouTube videos in Spain. It also uses the ' +
+            '<code><a href="/youtube/v3/docs/videoCategories/list#hl">hl' +
+            '</a></code> parameter to indicate that text labels in the ' +
+            'response should be specified in Spanish.',
+        goResponseType: 'VideoCategoryListResponse',
+        method: 'list',
+        requestParameters: {'hl': 'HL_ES',
+                            'part': 'snippet',
+                            'regionCode': 'REGION_CODE_ES'},
+        resource: 'videoCategories'
+      },
+      videosDelete: {
+        description: 'This example deletes the specified video. ' +
+            'You must use the <code>id</code> parameter to specify a ' +
+            'video ID for the code sample to work.',
+        goResponseType: 'VideoDeleteResponse',
+        method: 'delete',
+        requestParameters: {'id': '',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'videos'
+      },
+      videosGetRating: {
+        description: 'This example retrieves the rating that the user ' +
+            'authorizing the request gave to a particular video. In this ' +
+            'example, the video is of <a href="' +
+            'https://www.youtube.com/watch?v=Ks-_Mh1QhMc">Amy Cuddy\'s ' +
+            'TED talk about body language</a>.',
+        goPrint: ['Rating'],
+        goResponseType: 'VideoGetRatingResponse',
+        method: 'getRating',
+        requestParameters: {'id': 'VIDEO_LIST',
+                            'onBehalfOfContentOwner': ''},
+        resource: 'videos'
+      },
+      videosInsert: {
+        baseUrl: 'upload/youtube/v3/videos',
+        description: 'This example inserts a video that has its privacy ' +
+            'status set to <code>private</code>. The <code>id</code>, ' +
+            '<code>snippet.title</code>, and <code>snippet.categoryId</code> ' +
+            'properties are all required, and all other properties are ' +
+            'optional.',
+        goResponseType: 'VideoInsertResponse',
+        fileLocation: 'sample_video.flv',
+        fileUpload: true,
+        method: 'insert',
+        mimeType: 'video/*',
+        properties: {'snippet.categoryId': '22',
+                     'snippet.defaultLanguage': '',
+                     'snippet.description': 'Description of uploaded video.',
+                     'snippet.tags[]': '',
+                     'snippet.title': 'Test video upload',
+                     'status.embeddable': '',
+                     'status.license': '',
+                     'status.privacyStatus': 'private',
+                     'status.publicStatsViewable': ''
+        },
+        requestParameters: {'part': 'snippet,status'},
+        resource: 'videos'
+      },
+      videosListById: {
+        description: 'This example retrieves information about a specific ' +
+            'video. It uses the <code><a href="' +
+            '/youtube/v3/docs/videos/list#id">id</a></code> parameter to ' +
+            'identify the video.',
+        goResponseType: 'VideoListResponse',
+        method: 'list',
+        requestParameters: {'id': 'VIDEO',
+                            'part': 'snippet,contentDetails,statistics'},
+        resource: 'videos'
+      },
+      videosListMostPopular: {
+        description: 'This example retrieves a list of YouTube\'s ' +
+            'most popular videos. The <code><a href="' +
+            '/youtube/v3/docs/videos/list#regionCode">regionCode</a></code> ' +
+            'parameter identifies the country for which you are retrieving ' +
+            'videos. The sample code is set to default to return the most ' +
+            'popular videos in the United States. You could also use the ' +
+            '<code><a href="/youtube/v3/docs/videos/list#videoCategoryId">' +
+            'videoCategoryId</a></code> parameter to retrieve the most ' +
+            'popular videos in a particular <a href="' +
+            '/youtube/v3/docs/videoCategories">category</a></code>.',
+        goResponseType: 'VideoListResponse',
+        method: 'list',
+        requestParameters: {'chart': 'mostPopular',
+                            'regionCode': 'REGION_CODE_US',
+                            'part': 'snippet,contentDetails,statistics',
+                            'videoCategoryId': ''},
+        resource: 'videos'
+      },
+      videosListMultipleIds: {
+        description: 'This example retrieves information about a group of ' +
+            'videos. The <code><a href="/youtube/v3/docs/videos/list#id">id' +
+            '</a></code> parameter value is a comma-separated list of ' +
+            'YouTube video IDs. You might issue a request like this to ' +
+            'retrieve additional information about the items in a playlist ' +
+            'or the results of a ' +
+            '<a href="/youtube/v3/docs/search/list">search query</a>.',
+        goResponseType: 'VideoListResponse',
+        method: 'list',
+        requestParameters: {'id': 'VIDEO_LIST',
+                            'part': 'snippet,contentDetails,statistics'},
+        resource: 'videos'
+      },
+      videosListMyRatedVideos: {
+        description: 'This example retrieves a list of videos liked ' +
+            'by the user authorizing the API request. By setting the ' +
+            '<code>rating</code> parameter value to <code>dislike</code>, ' +
+            'you could also use this code to retrieve disliked videos.',
+        goResponseType: 'VideoListResponse',
+        method: 'list',
+        requestParameters: {'myRating': 'LIKE_RATING',
+                            'part': 'snippet,contentDetails,statistics'},
+        resource: 'videos'
+      },
+      videosRate: {
+        description: 'This example shows how to rate (like) a video. In ' +
+            'this case, you are indicating that you like a video montage ' +
+            'of Chuck Norris kicking things.<br><br>If you don\'t actually ' +
+            'like the video, you can change the rating to ' +
+            '<code>dislike</code>. Another option, of course, is to never ' +
+            'mention to anyone that you don\'t like the video and hope that ' +
+            'Chuck Norris has not already read your mind.',
+        goPrint: ['Rate'],
+        goResponseType: 'VideoRateResponse',
+        method: 'rate',
+        requestMethod: 'POST',
+        requestParameters: {'id': 'CHUCK_NORRIS',
+                            'rating': 'like'},
+        resource: 'videos'
+      },
+      videosUpdate: {
+        description: 'This example updates the specified video. ' +
+            'The <code>id</code>, <code>snippet.title</code>, and ' +
+            '<code>snippet.categoryId</code> properties are all required, ' +
+            'and all other properties are optional.',
+        goResponseType: 'VideoUpdateResponse',
+        loadableResource: 'id',
+        method: 'update',
+        properties: {'id': '',
+                     'snippet.categoryId': '',
+                     'snippet.defaultLanguage': '',
+                     'snippet.description': '',
+                     'snippet.tags[]': '',
+                     'snippet.title': '',
+                     //'status.embeddable': '',
+                     //'status.license': '',
+                     'status.privacyStatus': ''
+                     //'status.publicStatsViewable': '',
+        //             'localizations.(key)': '',
+        //             'localizations.(key).title': '',
+        //             'localizations.(key).description': ''
+        },
+        requestParameters: {'part': 'snippet,status'},
+        resource: 'videos'
+      },
+    };
+
+    return [examples, DEFAULTS, replacements, requiresAuth];
+  }
+
+  window['google_js_snippets_getConfigData'] = getConfigData;
+  window['google_js_snippets_handleAPILoaded'] = handleAPILoaded;
+
+})();

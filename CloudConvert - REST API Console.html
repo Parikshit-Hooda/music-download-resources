@@ -1,0 +1,3849 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://cloudconvert.com/api/console -->
+<html lang="en" id="cloudconvert"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="convert anything to anything - more than 200 different audio, video, document, ebook, archive, image, spreadsheet and presentation formats supported.">
+        
+        
+        <meta name="author" content="Lunaweb Ltd.">
+
+        <link rel="stylesheet" type="text/css" href="./CloudConvert - REST API Console_files/1508807074">
+<link rel="stylesheet" type="text/css" href="./CloudConvert - REST API Console_files/css">
+<script type="text/javascript" async="" src="./CloudConvert - REST API Console_files/ga.js.download"></script><script type="text/javascript" src="./CloudConvert - REST API Console_files/1508807074(1)"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+apiUrl = 'https://api.cloudconvert.com'; assetsBase = '/assets/11e13801';
+/*]]>*/
+</script>
+<title>CloudConvert - REST API Console</title>
+
+
+        <meta property="og:site_name" content="CloudConvert">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="CloudConvert - REST API Console">
+        <meta property="og:description" content="convert anything to anything - more than 200 different audio, video, document, ebook, archive, image, spreadsheet and presentation formats supported.">
+        <meta property="og:image" content="https://cloudconvert.com/blog/wp-content/uploads/2013/05/chrome_store_440.png">
+        <meta name="apple-itunes-app" content="app-id=842077384">
+        <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/hfpmbfgodkfcebpgheiedaddoikmljkk">
+
+
+        <link rel="shortcut icon" href="https://cloudconvert.com/assets/11e13801/img/logo_flat_32.png">
+        
+        <link rel="apple-touch-icon" sizes="57x57" href="https://cloudconvert.com/assets/11e13801/img/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="https://cloudconvert.com/assets/11e13801/img/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="https://cloudconvert.com/assets/11e13801/img/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="https://cloudconvert.com/assets/11e13801/img/apple-icon-144x144.png">
+                
+        
+
+    </head>
+    <body class="" data-spy="scroll" data-target="#sidebar">
+        
+
+
+
+        
+		<div class="navbar navbar-fixed-top navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+					<a class="brand" href="https://cloudconvert.com/" id="brand">Cloud<strong>Convert</strong></a>
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							<!--<li class="divider-vertical"></li>
+							<li class="active">
+							<a href="/">Converter</a>
+							</li> -->
+							<li><a href="https://cloudconvert.com/formats">Conversion Types</a>
+							</li>
+							<li><a href="https://cloudconvert.com/pricing">Pricing</a>
+                            </li>
+							<li class="active"><a href="https://cloudconvert.com/api">API</a>
+							</li>
+							<li>
+							    <a href="https://cloudconvert.com/blog/">Blog</a>
+							</li>
+
+
+						</ul>
+
+						<ul class="nav pull-right">
+
+
+
+
+							
+							
+							<li><a href="https://cloudconvert.com/user/registration">Sign Up</a>
+							</li>
+							<li class="dropdown">
+								<a class="dropdown-toggle" href="https://cloudconvert.com/user/login" data-toggle="dropdown">Login <strong class="caret"></strong></a>
+								<div class="dropdown-menu login-menu">
+
+									<form class="form-horizontal" method="post" action="https://cloudconvert.com/user/login">
+
+										<input type="text" name="UserLogin[username]" class="input-medium" placeholder="username or email">
+
+										<input type="password" name="UserLogin[password]" class="input-medium" placeholder="password">
+
+                                         <input type="hidden" value="0" name="UserLogin[rememberMe]">
+										<label class="checkbox">
+
+											<input type="checkbox" value="1" name="UserLogin[rememberMe]" checked="checked">
+											remember me </label>
+										<button type="submit" class="btn">
+											Login
+										</button>
+
+										
+
+
+									 
+							<a id="hybridauth-Google" class="hybridauth" href="https://cloudconvert.com/hybridauth/default/login/?provider=Google">
+				    
+				    <i class="ss-icon ss-social-circle"></i>				    
+			
+				</a>
+				
+								
+								 
+							<a id="hybridauth-Facebook" class="hybridauth" href="https://cloudconvert.com/hybridauth/default/login/?provider=Facebook">
+				    
+				    <i class="ss-icon ss-social-circle"></i>				    
+			
+				</a>
+				
+								
+								 
+							<a id="hybridauth-Twitter" class="hybridauth" href="https://cloudconvert.com/hybridauth/default/login/?provider=Twitter">
+				    
+				    <i class="ss-icon ss-social-circle"></i>				    
+			
+				</a>
+				
+								
+															</form>
+
+
+
+									<!-- Login form here -->
+								</div>
+							</li>
+													</ul>
+
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
+
+
+		<div class="container"><div class="mainAlert alert alert-error fade in"><button type="button" class="close" data-dismiss="alert">×</button> Request failed. Please try again later. (error) </div>
+	<div class="row-fluid">
+
+
+        <div class="span3" id="sidebar">
+
+        <ul class="nav nav-list condensednav">
+
+            <li class="nav-header"><a>CloudConvert API</a></li>
+
+            <li>
+                <a href="https://cloudconvert.com/api"> Overview</a>
+            </li>
+
+            <li class="active">
+                <a href="https://cloudconvert.com/api/console"> API Console</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/cli"> Command Line Interface</a>
+            </li>
+
+            <li class="nav-header"><a>File Conversions</a></li>
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#introduction"> Introduction</a>
+            </li>
+        
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#create"> Creating a process</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#start"> Starting a conversion</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#upload"> Upload of the input file</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#status"> Status of a conversion</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#download"> Download the output file</a>
+            </li>                          
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#delete"> Delete a conversion</a>
+            </li>  
+
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#callback"> Callback after conversion</a>
+            </li>           
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#list"> List your conversions</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/conversions#bestpractices"> Best practices</a>
+            </li>
+            <li class="nav-header"><a>Other Modes</a></li>
+            <li>
+                <a href="https://cloudconvert.com/api/info">Get file information</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/combine">Combine files to PDF</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/compresspdf">Compress, unlock, protect PDF</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/archive">Create archives</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/extract">Extract archives</a>
+            </li>
+            
+            <li class="nav-header"><a>Storage Integration</a></li>
+            <li>
+                <a href="https://cloudconvert.com/api/s3">Amazon S3</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/openstack">OpenStack</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/azure">Microsoft Azure</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/googlecloud">Google Cloud</a>
+            </li>
+
+            <li>
+                <a href="https://cloudconvert.com/api/ftp">FTP servers</a>
+            </li>
+
+            <li class="nav-header"><a>Examples</a></li>
+            <li>
+                <a href="https://cloudconvert.com/api/svgtopng"> Simple Conversion</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/videoconversion"> Video Conversion</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/websitetopng"> Website to PNG</a>
+            </li>
+            <li>
+                <a href="https://cloudconvert.com/api/mergepdf"> Merge PDFs</a>
+            </li>
+
+            <li class="nav-header"><a>Other APIs</a></li>
+
+            <li>
+                <a href="https://cloudconvert.com/api/account"> Account</a>
+            </li>
+
+            <li>
+                <a href="https://cloudconvert.com/api/conversiontypes"> Conversion types</a>
+            </li>
+
+            <li>
+                <a href="https://cloudconvert.com/api/hooks"> Hooks</a>
+            </li>
+
+            <li>
+                <a href="https://cloudconvert.com/api/presets"> Presets</a>
+            </li>
+
+            <li class="nav-header"><a>Links</a></li>
+            <li>
+                <a href="https://cloudconvert.com/blog/category/developer/"> Developer Blog</a>
+            </li>
+            <li>
+                <a href="https://status.cloudconvert.com/" target="_blank"> Service Status</a>
+            </li>
+        </ul>
+
+        </div><!-- sidebar -->
+
+
+    <div class="span9">
+
+        
+<section id="console">
+
+
+    <div class="page-header">
+        <h1>
+                    API Console
+                    </h1>
+    </div>
+
+
+    <p>
+        
+        The API Console generates requests for the <a href="https://cloudconvert.com/api/conversions#convert">convert
+             API</a>. Moreover you can find generated ready-to-use code snippets at the bottom of this page.
+    </p>
+
+
+    <div class="example request" style="">
+        <div class="row-fluid">
+            <div class="span10" style="word-break: break-all">
+                <span class="label" id="method"> POST <span class="caret" style="display: none;"></span></span> <span id="url"><span id="baseurl"><span class="muted">https:</span>//api.cloudconvert.com/convert</span><span id="urlparameters" style="display: none;"><span class="muted">?input=</span>upload<span class="muted">&amp;wait=</span>true<span class="muted">&amp;download=</span>inline</span></span>
+            </div>
+            <div class="span2 ">
+                <button id="exec" class="btn btn-danger btn-large pull-right" data-loading-text="Executing...">Execute
+                </button>
+            </div>
+        </div>
+    </div>
+    <pre class="prettyprint lang-js" id="requestbody"><span class="pun">{</span><span class="pln">
+    </span><span class="str">"input"</span><span class="pun">:</span><span class="pln"> </span><span class="str">"upload"</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">"wait"</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">"download"</span><span class="pun">:</span><span class="pln"> </span><span class="str">"inline"</span><span class="pln">
+</span><span class="pun">}</span></pre>
+<pre class="example response prettyprint lang-js hide" id="response" style="margin-bottom: 5px;"></pre>
+    <iframe id="iframe" name="iframe" frameborder="0" width="100%" height="500" class="hide" src="./CloudConvert - REST API Console_files/saved_resource.html"></iframe>
+    <form id="parameters" action="https://api.cloudconvert.com/convert">
+
+
+        <table class="table table-hover table-highlight">
+
+
+            <thead>
+            <tr>
+                <th colspan="3">
+                    <a class="btn pull-right hide" style="font-weight: normal;" id="hideresult"><i class="icon-chevron-up"></i> Hide Result</a>
+                    <h3>Basic Parameters</h3></th>
+            </tr>
+            </thead>
+            <thead>
+            <tr>
+                <th class="span2">Parameter</th>
+                <th class="span5">Description</th>
+                <th class="span5">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <strong>apikey</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    Your personal ApiKey. You can get it <a href="https://cloudconvert.com/user/profile">here</a>.
+                </td>
+                <td>
+                    <input type="text" placeholder="ApiKey" class="span12" value="">
+                </td>
+            </tr>
+            <tr class="hide">
+                <td>
+                    <strong>mode</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Mode of the process. Defaults to convert.
+                </td>
+                <td id="tdmode">
+                                    </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>inputformat</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    The format of the input file.
+                </td>
+                <td id="tdinputformat"><div class="btn-group">
+        <button class="btn dropdown-toggle formatSelector  " data-toggle="dropdown">
+
+            
+            select format
+            
+
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu formats">
+
+
+
+            
+
+
+
+
+            
+            
+            
+            
+            
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>archive</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="0">7z
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="1">ace
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="2">alz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="3">arc
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="4">arj
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="5">bz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="6">bz2
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="7">cab
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="8">cpio
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="9">deb
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="10">dmg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="11">gz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="12">img
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="13">iso
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="14">jar
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="15">lha
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="16">lz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="17">lzma
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="18">lzo
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="19">rar
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="20">rpm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="21">rz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="22">tar
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="23">tar.7z
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="24">tar.bz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="25">tar.bz2
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="26">tar.gz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="27">tar.lzo
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="28">tar.xz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="29">tar.Z
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="30">tbz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="31">tbz2
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="32">tgz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="33">tZ
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="34">tzo
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="35">xz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="36">z
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="37">zip
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>audio</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="38">aac
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="39">ac3
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="40">aif
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="41">aifc
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="42">aiff
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="43">amr
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="44">au
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="45">caf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="46">flac
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="47">m4a
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="48">m4b
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="49">mp3
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="50">oga
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="51">ogg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="52">sfark
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="53">voc
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="54">wav
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="55">weba
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="56">wma
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>cad</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="57">dwg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="58">dxf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>document</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="59">abw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="60">djvu
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="61">doc
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="62">docm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="63">docx
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="64">html
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="65">lwp
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="66">md
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="67">odt
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="68">pages
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="69">pages.zip
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="70">pdf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="71">rst
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="72">rtf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="73">sdw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="74">tex
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="75">txt
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="76">wpd
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="77">wps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="78">zabw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>ebook</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="79">azw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="80">azw3
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="81">azw4
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="82">cbc
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="83">cbr
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="84">cbz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="85">chm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="86">docx
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="87">epub
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="88">fb2
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="89">htm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="90">html
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="91">htmlz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="92">lit
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="93">lrf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="94">mobi
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="95">odt
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="96">pdb
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="97">pdf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="98">pml
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="99">prc
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="100">rb
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="101">rtf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="102">snb
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="103">tcr
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="104">txt
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="105">txtz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>font</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="106">eot
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="107">otf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="108">ttf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="109">woff
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>image</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="110">3fr
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="111">arw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="112">bmp
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="113">cr2
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="114">crw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="115">dcr
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="116">dng
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="117">eps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="118">erf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="119">gif
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="120">heic
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="121">icns
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="122">ico
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="123">jpeg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="124">jpg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="125">mos
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="126">mrw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="127">nef
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="128">odd
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="129">orf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="130">pdf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="131">pef
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="132">png
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="133">ppm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="134">ps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="135">psd
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="136">raf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="137">raw
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="138">svg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="139">svgz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="140">tif
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="141">tiff
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="142">webp
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="143">x3f
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="144">xcf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="145">xps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>presentation</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="146">dps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="147">key
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="148">key.zip
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="149">odp
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="150">pps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="151">ppsx
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="152">ppt
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="153">pptm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="154">pptx
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="155">ps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="156">sda
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>spreadsheet</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="157">csv
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="158">et
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="159">numbers
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="160">numbers.zip
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="161">ods
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="162">sdc
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="163">xls
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="164">xlsm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="165">xlsx
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>vector</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="166">ai
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="167">cdr
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="168">cgm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="169">emf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="170">eps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="171">pdf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="172">ps
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="173">sk
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="174">sk1
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="175">svg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="176">svgz
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="177">vsd
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="178">wmf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>video</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="179">3g2
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="180">3gp
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="181">3gpp
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="182">avi
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="183">cavs
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="184">dv
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="185">dvr
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="186">flv
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="187">gif
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="188">m2ts
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="189">m4v
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="190">mkv
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="191">mod
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="192">mov
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="193">mp4
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="194">mpeg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="195">mpg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="196">mts
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="197">mxf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="198">ogg
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="199">rm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="200">rmvb
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="201">swf
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="202">ts
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="203">vob
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="204">webm
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="205">wmv
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+                <li>
+                    <a data-format-id="206">wtv
+                        
+                    </a>
+                </li>
+
+
+                
+                
+            
+            
+            
+        </ul>
+        </li>
+        
+        
+
+
+        <li class="dropdown-submenu pull-left">
+            <a>website</a>
+
+            <ul class="dropdown-menu">
+
+                
+                <li>
+                    <a data-format-id="207">website
+                        
+                    </a>
+                </li>
+
+
+                
+                
+                
+            </ul>
+        </li>
+        
+        </ul>
+
+
+    </div></td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>outputformat</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    The format the file should be converted to.
+                </td>
+                <td id="tdoutputformat"><button class="btn disabled">select format</button></td>
+            </tr>
+            </tbody>
+            <thead>
+            <tr>
+                <th colspan="3"><h3>Input Parameters</h3></th>
+            </tr>
+            </thead>
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody id="inputparameters">
+            <tr>
+                <td>
+                    <strong>input</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    Set the method of uploading the input file.
+                </td>
+                <td id="tdinput">
+
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span>upload</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a>upload</a>
+                            </li>
+                            <li>
+                                <a>download</a>
+                            </li>
+                            <li>
+                                <a>s3</a>
+                            </li>
+                            <li>
+                                <a>openstack</a>
+                            </li>
+                            <li>
+                                <a>azure</a>
+                            </li>
+                            <li>
+                                <a>googlecloud</a>
+                            </li>
+                            <li>
+                                <a>ftp</a>
+                            </li>
+                            <li>
+                                <a>raw</a>
+                            </li>
+                            <li>
+                                <a>base64</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr style="">
+                <td>
+                    <strong>file</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    The input file.
+                </td>
+                <td>
+                    <input type="file" id="file">
+                </td>
+            </tr>
+            <tr style="display: none;">
+                <td>
+                    <strong>file</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    The download URL of the input file.
+                </td>
+                <td>
+                    <input type="text" placeholder="http://..." class="span12">
+                </td>
+            </tr>
+            <tr style="display: none;">
+                <td>
+                    <strong>file</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    The URL of the website to convert.
+                </td>
+                <td>
+                    <input type="text" placeholder="http://..." class="span12">
+                </td>
+            </tr>
+            <tr style="display: none;">
+                <td>
+                    <strong>file</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    The raw content of the input file to convert.
+                </td>
+                <td>
+                    <textarea class="form-control span12" rows="5"></textarea>
+                </td>
+            </tr>
+
+            <tr style="display: none;">
+                <td>
+                    <strong>file</strong>
+                    <br><span class="text-error">Required</span>
+                </td>
+                <td>
+                    The base64 encoded content of the input file to convert.
+                </td>
+                <td>
+                    <textarea class="form-control span12" rows="5"></textarea>
+                </td>
+            </tr>
+
+            
+
+
+            
+
+            
+
+
+            
+
+
+            
+
+            
+
+
+
+            
+
+            
+
+            
+
+            
+
+            
+            
+
+
+
+
+
+            
+
+            
+            
+            
+
+
+
+            
+            
+
+
+            
+
+            
+
+
+
+
+
+
+            
+            
+
+            
+
+
+            
+
+
+            
+
+
+            <tr class="filename">
+                <td>
+                    <strong>filename</strong>
+                    <br>
+                    <span class="muted">Optional</span>
+                    
+                </td>
+                <td>
+                    Override the input filename. Must include the input file extension.
+                </td>
+                <td>
+                    <input type="text" placeholder="filename.ext" class="span6">
+                </td>
+            </tr>
+
+
+            </tbody>
+            <thead>
+            <tr>
+                <th colspan="3"><h3>Conversion Parameters</h3></th>
+            </tr>
+            </thead>
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody id="conversionparameters">
+
+
+            <tr>
+                <td>
+                    <strong>timeout</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Timeout in seconds after the conversion will be cancelled. As default your account wide timeout will
+                    be used (5h for paid accounts).
+                </td>
+                <td>
+                    <input type="text" placeholder="" class="span2">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>preset</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Preset of conversion specific options. You can manage your presets <a href="https://cloudconvert.com/presets" target="_blank">here</a>.
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span>none</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a>none</a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>converteroptions</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Conversion specific options.
+                </td>
+                <td>
+
+                    <a class="btn" id="options" data-loading-text="Loading..." disabled=""><i class="ss-icon ss-wrench"></i></a>
+
+                    <div style="display: inline">
+
+                        <select class="span6" id="converteroptionsmanual_select" style="margin-bottom: 0;" disabled="">
+                            <option value="">set option manually...</option>
+
+                            
+
+                        </select>
+
+                    </div>
+
+                    <a class="btn" id="clearoptions" disabled="">Clear
+                        Options</a>
+
+                </td>
+            </tr>
+
+            
+            
+
+
+
+            </tbody>
+            <thead>
+            <tr>
+                <th colspan="3"><h3>Output Parameters</h3></th>
+            </tr>
+            </thead>
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody id="outputparameters">
+
+            <tr>
+                <td>
+                    <strong>output</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    The output storage for the converted file.
+                </td>
+                <td>
+
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span>none</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a>none</a>
+                            </li>
+                            <li>
+                                <a>dropbox</a>
+                            </li>
+                            <li>
+                                <a>googledrive</a>
+                            </li>
+                            <li>
+                                <a>onedrive</a>
+                            </li>
+                            <li>
+                                <a>box</a>
+                            </li>
+                            <li>
+                                <a>s3</a>
+                            </li>
+                            <li>
+                                <a>openstack</a>
+                            </li>
+                            <li>
+                                <a>azure</a>
+                            </li>
+                            <li>
+                                <a>googlecloud</a>
+                            </li>
+                            <li>
+                                <a>ftp</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </td>
+            </tr>
+
+
+
+
+
+            
+
+            
+
+            
+
+
+            
+
+
+            
+
+            
+
+            
+
+
+
+
+            
+
+            
+
+            
+
+            
+
+            
+            
+
+
+            
+
+            
+            
+            
+
+
+
+            
+            
+
+
+            
+
+            
+
+
+
+
+
+
+
+
+            
+            
+
+            
+
+
+            
+
+
+            
+
+
+            <tr>
+                <td>
+                    <strong>wait</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Block request until the converison is finished.
+                </td>
+                <td>
+                    <label class="checkbox">
+                        <input type="checkbox" checked="checked">
+
+                    </label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>callback</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Provide a callback URL for <a href="https://cloudconvert.com/api/conversions#callback" targe="_blank">notification when the conversion is finished</a>. You should disable the "wait"
+                    parameter if you use a callback.
+                </td>
+                <td>
+                    <input type="text" placeholder="http://.../your/script" class="span12">
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <strong>download</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Download output file after conversion is finished or display it in browser (inline).
+                </td>
+                <td>
+                    <label class="radio">
+                        <input type="radio">
+                        false <span class="muted">(no download)</span>
+                    </label>
+                    <label class="radio">
+                        <input type="radio" value="">
+                        true
+                    </label>
+                    <label class="radio">
+                        <input type="radio" value="inline" checked="checked">
+                        inline
+                    </label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>save</strong>
+                    <br><span class="muted">Optional</span>
+                </td>
+                <td>
+                    Save files on CloudConvert. Otherwise all files will be deleted immediately after the first
+                    download.
+                </td>
+                <td>
+                    <label class="checkbox">
+                        <input type="checkbox">
+
+                    </label>
+                </td>
+            </tr>
+
+
+
+            </tbody>
+        </table>
+    </form>
+
+
+    <h3>Code Snippets</h3>
+
+    <div id="codesnippets">
+
+
+    <ul class="nav nav-tabs codesnippets">
+
+        
+            <li class="active"><a href="https://cloudconvert.com/api/console#codesnippetsCurl">cURL</a></li>
+        
+            <li><a href="https://cloudconvert.com/api/console#codesnippetsCli">CLI</a></li>
+        
+            <li><a href="https://cloudconvert.com/api/console#codesnippetsPhp">PHP</a></li>
+        
+            <li><a href="https://cloudconvert.com/api/console#codesnippetsNode">node.js</a></li>
+        
+            <li><a href="https://cloudconvert.com/api/console#codesnippetsPython">Python</a></li>
+        
+            <li><a href="https://cloudconvert.com/api/console#codesnippetsHtml">HTML Form</a></li>
+        
+            <li><a href="https://cloudconvert.com/api/console#codesnippetsSwift">Swift</a></li>
+        
+
+    </ul>
+
+    <div class="tab-content codesnippets">
+        
+            <div class="tab-pane active" id="codesnippetsCurl"><pre class="prettyprint lang-basic prettyprinted"><span class="pln">curl </span><span class="pun">-</span><span class="pln">L </span><span class="str">"https://api.cloudconvert.com/convert"</span><span class="pln"> \ 
+     </span><span class="pun">-</span><span class="pln">F file</span><span class="pun">=@</span><span class="str">"inputfile.ext"</span><span class="pln"> \ 
+     </span><span class="pun">-</span><span class="pln">F </span><span class="str">"input=upload"</span><span class="pln"> \ 
+     </span><span class="pun">-</span><span class="pln">F </span><span class="str">"wait=true"</span><span class="pln"> \ 
+     </span><span class="pun">-</span><span class="pln">F </span><span class="str">"download=inline"</span><span class="pln"> \ 
+     </span><span class="pun">&gt;</span><span class="pln"> </span><span class="str">"outputfile.ext"</span><span class="pln"> </span></pre></div>
+        
+            <div class="tab-pane" id="codesnippetsCli"><div>
+        
+
+        <p>Using the <a href="https://cloudconvert.com/cli" target="_blank">CloudConvert CLI</a>. Install it using <code>npm install -g cloudconvert-cli</code>.
+        </p>
+        
+
+    <pre class="prettyprint prettyprinted"><span class="kwd">export</span><span class="pln"> CLOUDCONVERT_API_KEY</span><span class="pun">=</span><span class="str">"your_api_key"</span><span class="pln">
+
+cloudconvert inputfile</span><span class="pun">.</span><span class="pln">ext</span></pre>
+
+    </div></div>
+        
+            <div class="tab-pane" id="codesnippetsPhp"><div>
+    
+
+    <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-php" target="_blank">CloudConvert PHP Wrapper</a>.
+    </p>
+
+    
+
+    <pre class="prettyprint lang-php linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="pun">&lt;?</span><span class="pln">php</span></li><li class="L1"><span class="kwd">require</span><span class="pln"> __DIR__ </span><span class="pun">.</span><span class="pln"> </span><span class="str">'/vendor/autoload.php'</span><span class="pun">;</span></li><li class="L2"><span class="kwd">use</span><span class="pln"> \CloudConvert\Api</span><span class="pun">;</span></li><li class="L3"><span class="pln">&nbsp;</span></li><li class="L4"><span class="pln">$api </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Api</span><span class="pun">(</span><span class="str">"your_api_key"</span><span class="pun">);</span></li><li class="L5"><span class="pln">&nbsp;</span></li><li class="L6"><span class="pln">$api</span><span class="pun">-&gt;</span><span class="pln">convert</span><span class="pun">([</span></li><li class="L7"><span class="pln">    </span><span class="str">"input"</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="str">"upload"</span><span class="pun">,</span></li><li class="L8"><span class="pln">    </span><span class="str">"file"</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> fopen</span><span class="pun">(</span><span class="str">'inputfile.ext'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'r'</span><span class="pun">),</span></li><li class="L9"><span class="pun">])</span></li><li class="L0"><span class="pun">-&gt;</span><span class="pln">wait</span><span class="pun">()</span></li><li class="L1"><span class="pun">-&gt;</span><span class="pln">download</span><span class="pun">();</span></li><li class="L2"><span class="pun">?&gt;</span></li></ol></pre>
+
+    </div></div>
+        
+            <div class="tab-pane" id="codesnippetsNode"><div>
+        
+
+        <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-node" target="_blank">CloudConvert node.js Wrapper</a>. Install it using <code>npm install --save cloudconvert</code>.
+        </p>
+
+        
+
+    <pre class="prettyprint lang-js linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="kwd">var</span><span class="pln"> fs </span><span class="pun">=</span><span class="pln"> require</span><span class="pun">(</span><span class="str">'fs'</span><span class="pun">),</span></li><li class="L1"><span class="pln">    cloudconvert </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="pun">(</span><span class="pln">require</span><span class="pun">(</span><span class="str">'cloudconvert'</span><span class="pun">))(</span><span class="str">'your_api_key'</span><span class="pun">);</span></li><li class="L2"><span class="pln">&nbsp;</span></li><li class="L3"><span class="pln">fs</span><span class="pun">.</span><span class="pln">createReadStream</span><span class="pun">(</span><span class="str">'inputfile.ext'</span><span class="pun">)</span></li><li class="L4"><span class="pun">.</span><span class="pln">pipe</span><span class="pun">(</span><span class="pln">cloudconvert</span><span class="pun">.</span><span class="pln">convert</span><span class="pun">({</span></li><li class="L5"><span class="pln">    </span><span class="str">"input"</span><span class="pun">:</span><span class="pln"> </span><span class="str">"upload"</span></li><li class="L6"><span class="pun">}))</span></li><li class="L7"><span class="pun">.</span><span class="pln">pipe</span><span class="pun">(</span><span class="pln">fs</span><span class="pun">.</span><span class="pln">createWriteStream</span><span class="pun">(</span><span class="str">'outputfile.ext'</span><span class="pun">));</span></li></ol></pre>
+    </div></div>
+        
+            <div class="tab-pane" id="codesnippetsPython"><div>
+        
+
+        <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-python" target="_blank">CloudConvert Python Wrapper</a>. Install it using <code>pip install cloudconvert</code>.
+        </p>
+
+        
+
+    <pre class="prettyprint lang-python linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="kwd">import</span><span class="pln"> cloudconvert</span></li><li class="L1"><span class="pln">api </span><span class="pun">=</span><span class="pln"> cloudconvert</span><span class="pun">.</span><span class="typ">Api</span><span class="pun">(</span><span class="str">'your_api_key'</span><span class="pun">)</span></li><li class="L2"><span class="pln">&nbsp;</span></li><li class="L3"><span class="pln">process </span><span class="pun">=</span><span class="pln"> api</span><span class="pun">.</span><span class="pln">convert</span><span class="pun">({</span></li><li class="L4"><span class="pln">    </span><span class="str">"input"</span><span class="pun">:</span><span class="pln"> </span><span class="str">"upload"</span><span class="pun">,</span></li><li class="L5"><span class="pln">    </span><span class="str">"file"</span><span class="pun">:</span><span class="pln"> open</span><span class="pun">(</span><span class="str">'inputfile.ext'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'rb'</span><span class="pun">)</span></li><li class="L6"><span class="pun">})</span></li><li class="L7"><span class="pln">process</span><span class="pun">.</span><span class="pln">wait</span><span class="pun">()</span></li><li class="L8"><span class="pln">process</span><span class="pun">.</span><span class="pln">download</span><span class="pun">()</span></li></ol></pre>
+    </div></div>
+        
+            <div class="tab-pane" id="codesnippetsHtml"><pre class="prettyprint lang-html linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="tag">&lt;form</span><span class="pln"> </span><span class="atn">action</span><span class="pun">=</span><span class="atv">"https://api.cloudconvert.com/convert"</span><span class="pln"> </span><span class="atn">method</span><span class="pun">=</span><span class="atv">"POST"</span><span class="pln"> </span><span class="atn">enctype</span><span class="pun">=</span><span class="atv">"multipart/form-data"</span><span class="tag">&gt;</span></li><li class="L1"><span class="pln">    </span><span class="tag">&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"file"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"file"</span><span class="tag">&gt;</span></li><li class="L2"><span class="pln">    </span><span class="tag">&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"hidden"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"input"</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"upload"</span><span class="tag">&gt;</span></li><li class="L3"><span class="pln">    </span><span class="tag">&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"hidden"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"wait"</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"true"</span><span class="tag">&gt;</span></li><li class="L4"><span class="pln">    </span><span class="tag">&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"hidden"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"download"</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"inline"</span><span class="tag">&gt;</span></li><li class="L5"><span class="pln">    </span><span class="tag">&lt;input</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"submit"</span><span class="pln"> </span><span class="atn">value</span><span class="pun">=</span><span class="atv">"Convert!"</span><span class="tag">&gt;</span></li><li class="L6"><span class="tag">&lt;/form&gt;</span></li></ol></pre></div>
+        
+            <div class="tab-pane" id="codesnippetsSwift"><div>
+        
+
+        <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-swift" target="_blank">CloudConvert Swift Wrapper</a>.
+        </p>
+
+        
+
+    <pre class="prettyprint linenums prettyprinted"><ol class="linenums"><li class="L0"><span class="kwd">import</span><span class="pln"> </span><span class="typ">CloudConvert</span></li><li class="L1"><span class="pln">&nbsp;</span></li><li class="L2"><span class="typ">CloudConvert</span><span class="pun">.</span><span class="pln">apiKey </span><span class="pun">=</span><span class="pln"> </span><span class="str">"your_api_key"</span></li><li class="L3"><span class="pln">&nbsp;</span></li><li class="L4"><span class="typ">CloudConvert</span><span class="pun">.</span><span class="pln">convert</span><span class="pun">([</span></li><li class="L5"><span class="pln">    </span><span class="str">"input"</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="str">"upload"</span><span class="pun">,</span></li><li class="L6"><span class="pln">    </span><span class="str">"download"</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="str">"true"</span><span class="pun">,</span></li><li class="L7"><span class="pln">    </span><span class="str">"file"</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> NSURL</span><span class="pun">(</span><span class="pln">fileURLWithPath</span><span class="pun">:</span><span class="pln"> </span><span class="str">"inputfile.ext"</span><span class="pun">),</span></li><li class="L8"><span class="pun">],</span></li><li class="L9"><span class="pln">progressHandler</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">(</span><span class="pln">step</span><span class="pun">,</span><span class="pln"> percent</span><span class="pun">,</span><span class="pln"> message</span><span class="pun">)</span><span class="pln"> </span><span class="pun">-&gt;</span><span class="pln"> </span><span class="typ">Void</span><span class="pln"> </span><span class="kwd">in</span></li><li class="L0"><span class="pln">    println</span><span class="pun">(</span><span class="pln">step</span><span class="pun">!</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> </span><span class="str">" "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> percent</span><span class="pun">!.</span><span class="pln">description </span><span class="pun">+</span><span class="pln"> </span><span class="str">"%: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> message</span><span class="pun">!)</span></li><li class="L1"><span class="pun">},</span></li><li class="L2"><span class="pln">completionHandler</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">(</span><span class="pln">path</span><span class="pun">,</span><span class="pln"> error</span><span class="pun">)</span><span class="pln"> </span><span class="pun">-&gt;</span><span class="pln"> </span><span class="typ">Void</span><span class="pln"> </span><span class="kwd">in</span></li><li class="L3"><span class="pln">    </span><span class="kwd">if</span><span class="pun">(</span><span class="pln">error </span><span class="pun">!=</span><span class="pln"> </span><span class="kwd">nil</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span></li><li class="L4"><span class="pln">        println</span><span class="pun">(</span><span class="str">"failed: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> error</span><span class="pun">!.</span><span class="pln">description</span><span class="pun">)</span></li><li class="L5"><span class="pln">    </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span></li><li class="L6"><span class="pln">        println</span><span class="pun">(</span><span class="str">"done! output file saved to: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> path</span><span class="pun">!.</span><span class="pln">description</span><span class="pun">)</span></li><li class="L7"><span class="pln">    </span><span class="pun">}</span></li><li class="L8"><span class="pun">})</span></li></ol></pre>
+
+    </div></div>
+        
+    </div>
+    
+
+</div>
+
+    
+
+
+</section>
+<script id="templateFormatSelectorDropdown" type="text/html">
+
+    <div class="btn-group">
+        <button class="btn dropdown-toggle formatSelector  <%=(!formats || _.isEmpty(formats) ? 'disabled' : '')%>" data-toggle="dropdown">
+
+            <%
+            if(formats && select=='inputformats' && inputformat) { %>
+            <%=inputformat%>
+            <% } else if(formats && select=='outputformats' && mode && mode != 'convert' && mode != 'combine' && mode != 'archive') { %>
+            <%=mode%>
+            <% } else if(formats && select=='outputformats' && outputformat) { %>
+            <%=outputformat%>
+            <% } else if(!formats) { %>
+            loading...
+            <% } else if(_.isEmpty(formats)) { %>
+            format not supported
+            <% } else { %>
+            select format
+            <% } %>
+
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu formats">
+
+
+
+            <% if(_.some(formats, function(format) { return  format.mode && format.mode != 'convert' && format.mode != 'combine' && format.mode != 'archive'})) { %>
+            <% _.forEach(formats, function(format, id) { %>
+            <% if(format.mode && format.mode != 'convert'  && format.mode != 'combine' && format.mode != 'archive') { %>
+            <li>
+                <a data-format-id="<%=id%>"><%=format.mode%>
+                    <% if (!_.isEmpty(format.shortnote)) { %>
+                    <sup class="muted"><%=format.shortnote%></sup>
+                    <% } %>
+                </a>
+            </li>
+            <% } %>
+            <% }); %>
+            <li class="divider"></li>
+            <% } %>
+
+
+
+
+            <% var currentGroup = null; %>
+            <% _.forEach(formats, function(format, id) { %>
+            <% if(!format.mode  || format.mode == 'convert' ||  format.mode == 'combine' || format.mode == 'archive') { %>
+            <% if (format.group != currentGroup && useGroups) { %>
+            <% if (currentGroup != null) { %>
+        </ul>
+        </li>
+        <% } %>
+        <% currentGroup = format.group; %>
+
+
+        <li class="dropdown-submenu pull-left">
+            <a><%=currentGroup%></a>
+
+            <ul class="dropdown-menu">
+
+                <% } %>
+                <li>
+                    <a data-format-id="<%=id%>"><%=(select=='inputformats' ? format.inputformat : format.outputformat)%>
+                        <% if (!_.isEmpty(format.shortnote)) { %>
+                        <sup class="muted"><%=format.shortnote%></sup>
+                        <% } %>
+                    </a>
+                </li>
+
+
+                <% } %>
+                <% }); %>
+                <% if (currentGroup != null && useGroups) { %>
+            </ul>
+        </li>
+        <% } %>
+        </ul>
+
+
+    </div>
+</script>
+
+
+<script id="templateFormatSelectorOptionsDropdown" type="text/html">
+
+    <div class="btn-group">
+        <button class="btn options" data-loading-text="loading...">
+            <i class="ss-icon ss-wrench"></i>
+            <% if(preset) { %>
+             <%=preset.name%>
+            <% } %>
+        </button>
+
+        <% if(!_.isEmpty(presets)) { %>
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu presets">
+
+            <% if(preset) { %>
+            <li>
+                <a data-select-defaults="true">Default Settings</a>
+            </li>
+            <li class="divider"></li>
+            <% } %>
+
+            <% _.forEach(presets, function(preset) { %>
+            <li>
+                <a data-preset-id="<%=preset.id%>"><%=preset.name%>
+                    <!--<sup class="muted">preset</sup>-->
+                </a>
+            </li>
+            <% });  %>
+        </ul>
+        <% } %>
+    </div>
+
+
+</script>
+
+
+
+<script id="templateCodeSnippetTabs" type="text/html">
+
+
+    <ul class="nav nav-tabs codesnippets">
+
+        <% _.forEach(snippets, function(snippet, id) { %>
+            <li><a href="#<%=$target.attr('id') + _.upperFirst(id)%>"><%=snippet.name%></a></li>
+        <% });  %>
+
+    </ul>
+
+    <div class="tab-content codesnippets">
+        <% _.forEach(snippets, function(snippets, id) { %>
+            <div class="tab-pane" id="<%=$target.attr('id') + _.upperFirst(id)%>"></div>
+        <% });  %>
+    </div>
+    
+
+</script>
+
+
+
+<script id="templateCodeSnippetPhp" type="text/html">
+
+    <div>
+    <% if(snippet.useWrapperLink) { %>
+
+    <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-php" target="_blank">CloudConvert PHP Wrapper</a>.
+    </p>
+
+    <% } %>
+
+    <pre class="prettyprint lang-php linenums prettyprinted">&lt;?php<% if(snippet.useApiInit) { %>
+require __DIR__ . '/vendor/autoload.php';
+use \CloudConvert\Api;
+
+$api = new Api("<%=parameters['apikey'] ? parameters['apikey'] : 'your_api_key'%>");
+<% } %><% if(method=='convert') { %>
+$api->convert(<%=phpArray%>)<% if (parameters.wait !== false) { %>
+->wait()<% }  %><% if (parameters.download !== false) { %>
+->download()<% }  %>;
+<% } else if(method == 'create') { %>
+$process = $api->createProcess(<%=phpArray%>);
+<% } else if(method == 'start') { %>
+$process->start(<%=phpArray%>);
+<% } else if(method == 'upload') { %>
+$process->upload(fopen('inputfile.jpg', 'r'));
+<% } else if(method == 'refresh') { %>
+$process->refresh(); // fetch status from API
+$process->wait(); // wait until conversion completed
+echo $process->message; // access process data
+<% } else if(method == 'download') { %>
+$process->download("outputfile.ext");
+<% } else if(method == 'downloadmultiple') { %>
+foreach ($process->output->files as $file) {
+     $process->download("outputfile.ext", $file);
+}
+// or:
+$process->downloadAll('./somedirectory/');
+<% } else if(method == 'delete') { %>
+$process->delete();
+<% }  %>?&gt;
+</pre>
+
+    </div>
+
+</script>
+
+
+<script id="templateCodeSnippetNode" type="text/html">
+
+    <div>
+        <% if(snippet.useWrapperLink) { %>
+
+        <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-node" target="_blank">CloudConvert node.js Wrapper</a>. Install it using <code>npm install --save cloudconvert</code>.
+        </p>
+
+        <% } %>
+
+    <pre class="prettyprint lang-js linenums prettyprinted"><% if(snippet.useApiInit) { %>
+var fs = require('fs'),
+    cloudconvert = new (require('cloudconvert'))('<%=parameters['apikey'] ? parameters['apikey'] : 'your_api_key'%>');
+<% } %>
+<% if(method == 'convert') { %><% if(parameters.input == 'upload') { %>fs.createReadStream('inputfile.<%=_.get(parameters,"inputformat", "ext")%>')
+.pipe(<% } %>cloudconvert.convert(<%=nodeParameters%>)<% if(parameters.input == 'upload') { %>)<% } %><% if(parameters.download !== false) { %>
+.pipe(fs.createWriteStream('outputfile.<%=_.get(parameters,"outputformat", "ext")%>'))<% } %>;
+<%} else if(method=='create') { %>cloudconvert.createProcess(<%=nodeParameters%>, function(process) {
+
+});<%} else if(method=='start') { %>process.start(<%=nodeParameters%>);
+<%} else if(method=='upload') { %>process.upload(fs.createReadStream('inputfile.jpg'));
+<%} else if(method=='refresh') { %>
+process.refresh(); // fetch status from API
+process.wait(callback); // wait until conversion completed
+console.log(process.data.message); // access process data
+<%} else if(method=='download') { %>
+process.pipe(fs.createWriteStream('outputfile.ext'));
+<%} else if(method=='downloadmultiple') { %>
+process.data.output.files.forEach(function(file) {
+        process.download(fs.createWriteStream('outputfile.ext'), file, callback);
+});
+// or:
+process.downloadAll('directory/', callback);
+<%} else if(method=='delete') { %>
+process.delete();
+<% } %></pre>
+    </div>
+
+</script>
+
+<script id="templateCodeSnippetPython" type="text/html">
+
+    <div>
+        <% if(snippet.useWrapperLink) { %>
+
+        <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-python" target="_blank">CloudConvert Python Wrapper</a>. Install it using <code>pip install cloudconvert</code>.
+        </p>
+
+        <% } %>
+
+    <pre class="prettyprint lang-python linenums prettyprinted"><% if(snippet.useApiInit) { %>
+import cloudconvert
+api = cloudconvert.Api('<%=parameters['apikey'] ? parameters['apikey'] : 'your_api_key'%>')<% } %>
+<% if(method=='convert') { %>
+process = api.convert(<%=pythonArray%>)<% if (parameters.wait !== false) { %>
+process.wait()<% }  %><% if (parameters.download !== false) { %>
+process.download()<% }  %>
+<%} else if(method=='create') { %>process = api.createProcess(<%=pythonArray%>)
+<%} else if(method=='start') { %>process.start(<%=pythonArray%>)
+<%} else if(method=='upload') { %>process.start(<%=pythonArray%>)
+<%} else if(method=='refresh') { %>
+process.refresh() # fetch status from API
+process.wait() # wait until conversion completed
+print process['message'] #  access process data
+<%} else if(method=='download') { %>
+process.download('outputfile.ext')
+<%} else if(method=='downloadmultiple') { %>
+for file in process["output"]["files"]:
+        self.download(localfile="somefile.ext", remotefile=file)
+# or:
+process.downloadAll("directory/")
+<%} else if(method=='delete') { %>
+process.delete()
+<% } %></pre>
+    </div>
+
+</script>
+
+
+<script id="templateCodeSnippetSwift" type="text/html">
+
+    <div>
+        <% if(snippet.useWrapperLink) { %>
+
+        <p>Using the <a href="https://github.com/cloudconvert/cloudconvert-swift" target="_blank">CloudConvert Swift Wrapper</a>.
+        </p>
+
+        <% } %>
+
+    <pre class="prettyprint linenums prettyprinted"><% if(snippet.useApiInit) { %>
+import CloudConvert
+
+CloudConvert.apiKey = "<%=parameters['apikey'] ? parameters['apikey'] : 'your_api_key'%>"
+<% }  %>
+CloudConvert.convert(<%=swiftDict%>,
+progressHandler: { (step, percent, message) -> Void in
+    println(step! + " " + percent!.description + "%: " + message!)
+},
+completionHandler: { (path, error) -> Void in
+    if(error != nil) {
+        println("failed: " + error!.description)
+    } else {
+        println("done! output file saved to: " + path!.description)
+    }
+})
+</pre>
+
+    </div>
+
+</script>
+
+
+
+
+<script id="templateCodeSnippetCli" type="text/html">
+
+    <div>
+        <% if(snippet.useWrapperLink) { %>
+
+        <p>Using the <a href="/cli" target="_blank">CloudConvert CLI</a>. Install it using <code>npm install -g cloudconvert-cli</code>.
+        </p>
+        <% } %>
+
+    <pre class="prettyprint prettyprinted"><%=cmds%></pre>
+
+    </div>
+
+</script>
+
+
+    </div>
+
+</div>
+</div>
+
+
+
+
+			<footer class="footer">
+			       <div class="container">
+			           <hr>
+			    <div class="row-fluid">
+                  <div class="span5">
+
+                    <ul class="inline">
+
+                    <li><a href="https://cloudconvert.com/contact">Contact</a></li>
+                      <li><a href="https://cloudconvert.com/privacy">Privacy</a></li>
+                      <li><a href="https://cloudconvert.com/terms">Terms</a></li>
+                        <li>
+                            <a href="https://status.cloudconvert.com/" target="_blank">Status</a>
+                        </li>
+                       <li> <a href="https://twitter.com/CloudConvert" target="_blank"><i class="ss-icon ss-social-regular"></i></a></li>
+                        <li> <a href="https://www.facebook.com/CloudConvert" target="_blank"><i class="ss-icon ss-social-regular"></i></a></li>
+
+                    </ul>
+
+                                <p>
+                                    © 2017 Lunaweb Ltd. <span class="muted">- Made in Munich, Germany  </span>
+                                </p>
+
+                  </div>
+                  <div class="span7 text-center">
+                      <p class="lead muted">
+                         We've converted <strong><span id="stats_files">102,714,967</span> files</strong> with a total size of <strong><span id="stats_size">1,036</span> TB</strong>.
+
+                      </p>
+
+
+                  </div>
+
+                </div>
+
+		</div>
+
+			</footer>
+
+
+<script id="templateError" type="text/html">
+	<div class="mainAlert alert alert-error fade in"><button type="button" class="close" data-dismiss="alert">×</button> <%= message %> <%= typeof(code)!== 'undefined' ?  ' (Code ' + code + ')': '' %></div>
+</script>
+
+
+
+        
+            
+
+
+    <script type="text/javascript" src="./CloudConvert - REST API Console_files/1508807074(2)"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+
+$(function() {
+    apiConsole = new ApiConsole({});
+});
+
+/*]]>*/
+</script>
+
+
+</body></html>

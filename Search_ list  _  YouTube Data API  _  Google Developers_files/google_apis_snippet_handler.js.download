@@ -1,0 +1,3687 @@
+// Copyright 2016 Google Inc. All Rights Reserved.
+
+/**
+ * @fileoverview This JavaScript file contains code snippets that demonstrate
+ * how to call API methods using Google APIs client libraries. This file
+ * relies on a second file, like /youtube/js/data_api_snippets.js, to provide
+ * details specific to different API use cases.
+ * The file defines JavaScript functions that can be executed for each method
+ * and, in some cases, multiple functions representing different use cases for
+ * the same method.
+ *
+ * @see https://developers.google.com/youtube/v3/code_samples/code_snippets
+ *
+ * @author adiamondstein@google.com (Andy Diamondstein)
+ */
+
+// The client ID is obtained from the Google Developers Console
+// at https://console.developers.google.com/.
+// If you run this code from a server other than http://localhost,
+// you need to register your own client ID.
+var CONFIG = google_js_snippets_getConfigData();
+var TABS_WORK = false;
+
+var OAUTH2_CLIENT_ID = CONFIG['clientId'];
+var OAUTH2_SCOPES = CONFIG['scopes'];
+var RESOURCES = CONFIG['resources'];
+var auth2, googleUser;
+
+// Sort the list of resources so they display alphabetically.
+var resourceNames = Object.keys(RESOURCES).sort();
+
+// Identify the first method of the first listed resource. This will be
+// used when the page loads to display an API request and response.
+var firstMethod = RESOURCES[resourceNames[0]][0];
+var firstMethodName = (firstMethod.length > 2 ? firstMethod[2] :
+                                                firstMethod[0]);
+var firstPath = firstMethod.length > 3 ? firstMethod[3] : '';
+
+// Boolean that ensures we don't make an API request until the API is loaded.
+var API_LOADED = false;
+
+// Boilerplate code for each language. Used to generate full samples for
+// each snippet use case.
+var boilerplate = {'upload': {}};
+
+// Populated templates for each sample in each language.
+var codeSnippets = {};
+// Details of displayed sample so that sample can be executed without
+// re-calling displayCodeSample.
+var currentlyDisplayedSample = {};
+// Default parameter values for API requests. These can be modified in the tool.
+var defaultSamples = {};
+var EXAMPLES;
+// Examples that use file upload. Tool does not display option to execute these.
+var fileUploaders = {};
+// Editable parameters and properties for each use case.
+var editableParams = {};
+var CUSTOM_PARAMS = {'params': {}, 'props': {}};
+// Strings that identify start and end of code that should be hidden if empty.
+var HIE = 'STARTHIDE';
+var HIEE = 'ENDHIDE';
+// Properties that can identify a resource to load so that user doesn't need
+// to retype all information.
+var loadableResources = {};
+// Names of file being uploaded for samples that upload files.
+var mediaFilenames = {};
+// MIME types of files being uploaded for samples that upload files.
+var mimeTypes = {};
+// Description of each example.
+var methodDescriptions = {};
+// HTTP request method for each example.
+var requestMethods = {};
+// Resources to be used in insert/update/PUT/POST methods.
+var resourceBodies = {};
+// Examples that retrieve data but require authorization (e.g. list my stuff).
+var requiresAuth = {};
+
+// Default parameter values used in the API. For example, a default that
+// identifies the GoogleDevelopers channel ID.
+var DEFAULT_VALUES;
+// Default message to add to description of any method that requires auth.
+var REQUIRES_AUTH = '<b>Note:</b> This method requires user authorization.';
+// Object for language-specific replacements -- e.g. method names that
+// cannot be generated using a standard rule.
+var SPECIAL_REPLACEMENTS;
+// Resource loaded to set property values for another request.
+var LOADED_RESOURCE = {};
+
+// Boolean indicating whether the user has authorized the tool.
+// No need to retrieve responses if not.
+var isAuthorized = false;
+// Boolean to execute first request automatically on code snippet tool page.
+var executedFirstRequest = false;
+// Boolean to toggle snippets and full code samples.
+var SHOW_FULL_SAMPLE = false;
+// Boolean used to prompt user for authorization if user tries to load a
+// resource (for an update example, for example) and that fails with 401 or 403.
+var TRIED_AUTH = false;
+
+// Regular expressions to convert names (e.g. resource names) from plural to
+// singular.
+var SINGULAR_RULES = [
+  [new RegExp(/(x|ch|sh|ss)(?:es)?$/i), '$1'],
+  [new RegExp(/(ss)$/i), '$1'],
+  [new RegExp(/ies$/i), 'y'],
+  [new RegExp(/s$/i), '']];
+
+/*
+ * Languages for which snippets are available in the tool and characteristics
+ * of each language (such as syntax for comments). Properties are:
+ * - beautify - whether to use JSBeautify to fix indenting
+ * - comment - text that precedes a comment in this language
+ * - extension - file extension for files in downloadable zip for this language
+ * - fileUploadUnavailable - whether file upload samples aren't supported for
+ *   this language - currently used in Apps Script
+ * - hasExtraArguments - some languages handle all arguments as an object
+ *   and other languages identify some arguments separately. This indicates how
+ *   the code sample should be generated.
+ * - hasExtraRequestParams - some languages put all parameters into an object
+ *   and submit that object in the request. Other languages add some request
+ *   parameters as required parameters before the object. This indicates how
+ *   the code sample should be generated.
+ * - multilineComment - array showing beginning, middle, and ending text to
+ *   precede multiline comments in the language.
+ * - name - The name of the language.
+ * - quote - The appropriate quote mark for the language (single or double).
+ * - runScript - If zip file for downloadable examples should include a shell
+ *   script that can be used to run all examples, this text identifies the
+ *   text to precede the script name in the shell script. For example, if you
+ *   have the Go script foo.go, you need to run "go run foo.go", so the
+ *   runScript text is "go run".
+ * @type {Object}
+ */
+var LANGUAGES = {
+  'appsscript': {'beautify': false,
+                 'comment': '// ',
+                 'extension': '.gs',
+                 'fileUploadUnavailable': true,
+                 'hasExtraRequestParams': true,
+                 'indentArray': '           ',
+                 'indent': '    ',
+                 'multilineComment': ['/**', ' * ', ' */'],
+                 'name': 'Apps Script',
+                 'quote': '\''},
+  'go': {'beautify': false,
+         'comment': '// ',
+         'extension': '.go',
+         'hasExtraArguments': true,
+         'hasExtraRequestParams': true,
+         'indentArray': '           ',
+         'indent': '    ',
+         'name': 'Go',
+         'quote': '"',
+         'runScript': 'go run'},
+  'java': {'beautify': true,
+           'comment': '// ',
+           'extension': '.java',
+           'hasExtraRequestParams': true,
+           'indentArray': '           ',
+           'indent': '    ',
+           'multilineComment': ['/**', ' * ', ' */'],
+           'name': 'Java',
+           'quote': '"',
+           'runScript': 'java'},
+  'js': {'beautify': false,
+         'comment': '// ',
+         'extension': '.js',
+         'indentArray': '                 ',
+         'indent': '    ',
+         'multilineComment': ['/**', ' * ', ' */'],
+         'name': 'JavaScript',
+         'quote': '\''},
+  'php': {'beautify': false,
+          'comment': '// ',
+          'extension': '.php',
+          'hasExtraRequestParams': true,
+          'indentArray': '           ',
+          'indent': '    ',
+          'multilineComment': ['/*', ' * ', ' */'],
+          'name': 'PHP',
+          'paramSpacing': '            ',
+          'quote': '\'',
+          'runScript': 'php'},
+  'python': {'beautify': false,
+             'comment': '# ',
+             'extension': '.py',
+             'indentArray': '     ',
+             'indent': '    ',
+             'name': 'Python',
+             'paramSpacing': '    ',
+             'quote': '\'',
+             'runScript': 'python'},
+  'ruby': {'beautify': false,
+           'comment': '# ',
+           'extension': '.rb',
+           'hasExtraRequestParams': true,
+           'indentArray': '   ',
+           'indent': '  ',
+           'multilineComment': ['=begin', '', '=end'],
+           'name': 'Ruby',
+           'paramSpacing': '    ',
+           'quote': '\'',
+           'runScript': 'ruby'}
+};
+
+/**
+ * This object defines 'default' templates for code samples in different
+ * languages. The API-specific file can specify its own templates, though.
+ * The object keys are languages, and each language maps to an object in
+ * which the keys are method names. The 'list' template is the default
+ * template for any given language (if there's no  method-specific template).
+ *
+ * Templates contain a number of variables that are replaced with values
+ * from the API use cases:
+ *   - API
+ *   - APPSSCRIPT_SERVICE
+ *   - ARGUMENTS
+ *   - EXTRA_PHP_PARAMS
+ *   - false
+ *   - FUNCTION_NAME
+ *   - GO_METHOD
+ *   - GO_PRINT_ITEMS
+ *   - HTTP_REQUEST_METHOD
+ *   - JAVA_METHOD
+ *   - JAVA_RESOURCE
+ *   - JAVA_SERVICE
+ *   - MEDIA_FILE
+ *   - METHOD
+ *   - MIME_TYPE
+ *   - PARAM_LIST
+ *   - PATH
+ *   - PASSED_ARGUMENTS
+ *   - PHP_CLASS
+ *   - PHP_METHOD
+ *   - PROPERTY_OBJECT
+ *   - REQUEST_PARAMETERS
+ *   - RESOURCE
+ *   - RESPONSE_TYPE
+ *   - SINGLE_RESOURCE
+ *   - UPPER_RESOURCE
+ *   - true
+ *
+ * In addition, the text BPSPLIT in the template indicates that the template
+ * should be split into an array before being inserted into the boilerplate
+ * code to generate a full snippet. In the boilerplate, the text NONBP1 refers
+ * to the first element in the array, NONBP2 the second element, etc. There is
+ * no requirement to insert all elements in the array into the boilerplate.
+ *
+ * @type {Object}
+ */
+var TEMPLATES = {
+  appsscript: {
+    'delete':
+        'function FUNCTION_NAME(id, params) {\n' +
+        '  params = removeEmptyParams(params); ' +
+        '// See full sample for function\n\n' +
+        '  var response = APPSSCRIPT_SERVICE.RESOURCE.remove(id, params);\n' +
+        '  printResults(response);\n' +
+        '}\n\n' +
+        'function Main() {\n' +
+        '  FUNCTION_NAME(PASSED_ARGUMENTS,\n' +
+        '      {REQUEST_PARAMETERS});\n' +
+        '}',
+    'insert|update':
+        'function FUNCTION_NAME(part, params, properties) {\n' +
+        '  var resource = createResource(properties); ' +
+        '// See full sample for function\n' +
+        '  params = removeEmptyParams(params); ' +
+        '// See full sample for function\n\n' +
+        '  var response = APPSSCRIPT_SERVICE.RESOURCE.METHOD(resource,\n' +
+        '      PARAM_LIST,\n' +
+        '      params);\n' +
+        '  printResults(response);\n' +
+        '}\n\n' +
+        'function Main() {\n' +
+        '  FUNCTION_NAME(PASSED_ARGUMENTS,\n' +
+        '      {REQUEST_PARAMETERS},\n' +
+        '      PROPERTY_OBJECT);\n' +
+        '}',
+    'list|rate':
+        'function FUNCTION_NAME(PARAM_LIST, params) {\n' +
+        '  params = removeEmptyParams(params); ' +
+        '// See full sample for function\n\n' +
+        '  var response = APPSSCRIPT_SERVICE.RESOURCE.METHOD(PARAM_LIST,\n' +
+        '      params);\n' +
+        '  printResults(response);\n' +
+        '}\n\n' +
+        'function Main() {\n' +
+        '  FUNCTION_NAME(PASSED_ARGUMENTS, {REQUEST_PARAMETERS});\n' +
+        '}'
+  },
+  go: {
+    'delete|markAsSpam|rate|setModerationStatus':
+        'func FUNCTION_NAME(service *API.Service, ARGUMENTS) {\n' +
+        '	call := ' +
+             'service.RESOURCE.GO_METHOD(PARAM_LIST)\n' +
+        '	err := call.Do()\n' +
+        '	handleError(err, "")\n' +
+        '}\n\nBPSPLIT' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+    'list':
+        'func printRESOURCEGO_METHODResults(response *API.RESPONSE_TYPE) {\n' +
+        '	for _, item := range response.Items {\n' +
+        '		fmt.Println(GO_PRINT_ITEMS)\n' +
+        '	}\n' +
+        '}\n\n' +
+        'func FUNCTION_NAME(service *API.Service, ARGUMENTS) {\n' +
+        '	call := ' +
+             'service.RESOURCE.GO_METHOD(PARAM_LIST)REQUEST_PARAMETERS\n' +
+        '	response, err := call.Do()\n' +
+        '	handleError(err, "")\n' +
+        '	printRESOURCEGO_METHODResults(response)\n' +
+        '}\n\nBPSPLIT' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+    'insert|update':
+        'func ' +
+        'printRESOURCEGO_METHODResults(response *API.SINGLE_RESOURCE) {\n' +
+        '       // Handle response here\n' +
+        '}\n\n' +
+        'func FUNCTION_NAME(service *API.Service, ARGUMENTS, res string) {\n' +
+        '        resource := &API.SINGLE_RESOURCE{}\n' +
+        '        if err := json.NewDecoder(strings.NewReader(res)).' +
+        'Decode(&resource); err != nil {\n' +
+        '                log.Fatal(err)\n' +
+        '        }\n' +
+        '        call := service.RESOURCE.GO_METHOD(part, resource)\n' +
+        '        response, err := call.Do()\n' +
+        '        handleError(err, "")\n' +
+        '        printRESOURCEGO_METHODResults(response)\n' +
+        '}\n\nBPSPLIT' +
+        'properties := (map[string]stringPROPERTY_OBJECT)\n' +
+        '        res := createResource(properties)\n\n' +
+        '        // Note: service variable must already be defined.\n' +
+        '        FUNCTION_NAME(service, PASSED_ARGUMENTS, res)\n',
+    'mediaUpload':
+        'func ' +
+        'printRESOURCEGO_METHODResults(response *API.SINGLE_RESOURCE) {\n' +
+        '       // Handle response here\n' +
+        '}\n\n' +
+        'func FUNCTION_NAME(service *API.Service, ARGUMENTS, res string, ' +
+        'filename string) {\n' +
+        '        resource := &API.SINGLE_RESOURCE{}\n' +
+        '        if err := json.NewDecoder(strings.NewReader(res)).' +
+        'Decode(&resource); err != nil {\n' +
+        '                log.Fatal(err)\n' +
+        '        }\n' +
+        '        call := service.RESOURCE.GO_METHOD(part, resource)\n\n' +
+
+        '        file, err := os.Open(filename)\n' +
+        '        defer file.Close()\n' +
+        '        if err != nil {\n' +
+        '                log.Fatalf("Error opening %v: %v", filename, err)\n' +
+        '        }\n\n' +
+        '        response, err := call.Media(file).Do()\n' +
+        '        handleError(err, "")\n' +
+        '        printRESOURCEGO_METHODResults(response)\n' +
+        '}\n\nBPSPLIT' +
+        'properties := (map[string]stringPROPERTY_OBJECT)\n' +
+        '        res := createResource(properties)\n\n' +
+        'filename := "MEDIA_FILE"\n' +
+        '// Note: service variable must already be defined.\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS, res, filename)\n',
+    'mediaUploadWithoutBody':
+        'func printRESOURCEGO_METHODResults(response *API.RESPONSE_TYPE) {\n' +
+        '       // Handle response here\n' +
+        '}\n\n' +
+        'func FUNCTION_NAME(service *API.Service, ARGUMENTS, ' +
+        'filename string) {\n' +
+        '        call := service.RESOURCE.GO_METHOD(REQUEST_PARAMETERS)\n\n' +
+
+        '        file, err := os.Open(filename)\n' +
+        '        defer file.Close()\n' +
+        '        if err != nil {\n' +
+        '                log.Fatalf("Error opening %v: %v", filename, err)\n' +
+        '        }\n\n' +
+        '        response, err := call.Media(file).Do()\n' +
+        '        handleError(err, "")\n' +
+        '        printRESOURCEGO_METHODResults(response)\n' +
+        '}\n\nBPSPLIT' +
+        'filename := "MEDIA_FILE"\n' +
+        '// Note: service variable must already be defined.\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS, filename)\n'
+  },
+  java: {
+    'delete|markAsSpam|rate|setModerationStatus':
+        'public static void main(String[] args) throws IOException {\n' +
+        '  JAVA_SERVICE service = getJAVA_SERVICEService();\n' +
+        '  try {\nBPSPLIT' +
+        '    HashMap<String, String> parameters = new HashMap<>();\n' +
+        'PASSED_ARGUMENTS\n' +
+        '    JAVA_SERVICE.JAVA_RESOURCE.JAVA_METHOD FUNCTION_NAMERequest = ' +
+        'API.RESOURCE().METHOD(PARAM_LISTREQUEST_PARAMETERS\n' +
+        '    FUNCTION_NAMERequest.execute();\nBPSPLITFINAL' +
+        '  }\n' +
+        '}',
+    'insert|update':
+        'public static void main(String[] args) throws IOException {\n' +
+        '  JAVA_SERVICE service = getJAVA_SERVICEService();\n' +
+        '  try {\nBPSPLIT' +
+        '    HashMap<String, String> parameters = new HashMap<>();\n' +
+        'PASSED_ARGUMENTS\n' +
+        '    PROPERTY_OBJECT\n' +
+        '    JAVA_SERVICE.JAVA_RESOURCE.JAVA_METHOD FUNCTION_NAMERequest = ' +
+        'API.RESOURCE().METHOD(PARAM_LIST, SINGLE_RESOURCE);\n' +
+        '    REQUEST_PARAMETERS\n' +
+        '    UPPER_RESOURCE response = FUNCTION_NAMERequest.execute();\n' +
+        '    System.out.println(response);\nBPSPLITFINAL' +
+        '  }\n' +
+        '}',
+    'list':
+        'public static void main(String[] args) throws IOException {\n' +
+        '  JAVA_SERVICE service = getJAVA_SERVICEService();\n' +
+        '  try {\nBPSPLIT' +
+        '    HashMap<String, String> parameters = new HashMap<>();\n' +
+        'PASSED_ARGUMENTS\n' +
+        '    JAVA_SERVICE.JAVA_RESOURCE.JAVA_METHOD FUNCTION_NAMERequest = ' +
+        'API.RESOURCE().METHOD(PARAM_LISTREQUEST_PARAMETERS\n' +
+        '    RESPONSE_TYPE response = FUNCTION_NAMERequest.execute();\n' +
+        '    System.out.println(response);\nBPSPLITFINAL' +
+        '  }\n' +
+        '}',
+    'mediaUpload':
+        'public static void main(String[] args) throws IOException {\n' +
+        '  try {\nBPSPLIT' +
+        '  JAVA_SERVICE service = getJAVA_SERVICEService();\n' +
+        '  String mime_type = "MIME_TYPE";\n' +
+        '  String media_filename = "MEDIA_FILE";\n' +
+        '    HashMap<String, String> parameters = new HashMap<>();\n' +
+        'PASSED_ARGUMENTS\n' +
+        '    PROPERTY_OBJECT\n' +
+        '    InputStreamContent mediaContent = ' +
+        'new InputStreamContent(mime_type,\n' +
+        '        ApiExample.class.getResourceAsStream(media_filename));\n' +
+        '    JAVA_SERVICE.JAVA_RESOURCE.JAVA_METHOD FUNCTION_NAMERequest ' +
+        '= API.RESOURCE().METHOD(PARAM_LIST, SINGLE_RESOURCE, ' +
+        'mediaContent);\n' +
+        '    MediaHttpUploader uploader = ' +
+        'FUNCTION_NAMERequest.getMediaHttpUploader();\n' +
+        '    REQUEST_PARAMETERS\nBPSPLIT' +
+        '    UPPER_RESOURCE response = FUNCTION_NAMERequest.execute();\n' +
+        '    System.out.println(response);\nBPSPLIT' +
+        '  }\n' +
+        '}',
+  },
+  js: {
+    'delete|list':
+        'BPSPLIT// See full sample for buildApiRequest() code, which is not \n' +
+        '// specific to a particular API or API method.\n\n' +
+        'buildApiRequest(\'HTTP_REQUEST_METHOD\',\n' +
+        '                \'PATH\',\n' +
+        '                {REQUEST_PARAMETERS});\n',
+    'getRating|rate|setModerationStatus':
+        'function FUNCTION_NAME(params) {\n' +
+        '  params = removeEmptyParams(params); ' +
+        '// See full sample for function\n' +
+        '  var request = gapi.client.API.RESOURCE.METHOD(params);\n' +
+        '  executeRequest(request);\n' +
+        '}\n\nBPSPLIT' +
+        'FUNCTION_NAME({REQUEST_PARAMETERS});\n',
+    'insert|update':
+        'BPSPLIT// See full sample for buildApiRequest() code, which is not \n' +
+        '// specific to a particular API or API method.\n\n' +
+        'buildApiRequest(\'HTTP_REQUEST_METHOD\',\n' +
+        '                \'PATH\',\n' +
+        '                {REQUEST_PARAMETERS},\n' +
+        '                PROPERTY_OBJECT);\n',
+    'mediaUpload':
+        'BPSPLIT    var metadata = createResource(PROPERTY_OBJECT);\n' +
+        '    var token = getAccessToken();\n' +
+        '    if (!token) {\n' +
+        '      alert("You need to authorize the request to proceed.");\n' +
+        '      return;\n' +
+        '    }\n\n' +
+        '    if (!selectedFile) {\n' +
+        '      alert("You need to select a file to proceed.");\n' +
+        '      return;\n' +
+        '    }\n' +
+        '    var params = {REQUEST_PARAMETERS};\n\n' +
+
+        '    var uploader = new MediaUploader({\n' +
+        '        baseUrl: \'https://www.googleapis.com/BASEURL\',\n' +
+        '        file: selectedFile,\n' +
+        '        token: token,\n' +
+        '        metadata: metadata,\n' +
+        '        params: params,\n' +
+        '        onError: function(data) {\n' +
+        '          var message = data;\n' +
+        '          try {\n' +
+        '            var errorResponse = JSON.parse(data);\n' +
+        '            message = errorResponse.error.message;\n' +
+        '          } finally {\n' +
+        '            alert(message);\n' +
+        '          }\n' +
+        '        }.bind(this),\n' +
+        '        onProgress: function(data) {\n' +
+        '          var currentTime = Date.now();\n' +
+        '          console.log(\'Progress: \' + data.loaded + \' ' +
+        'bytes loaded out of \' + data.total);\n' +
+        '          var totalBytes = data.total;\n' +
+        '        }.bind(this),\n' +
+        '        onComplete: function(data) {\n' +
+        '          var uploadResponse = JSON.parse(data);\n' +
+        '          console.log(\'Upload complete for video \' + ' +
+        'uploadResponse.id);\n' +
+        '        }.bind(this)\n' +
+        '      });\n\n' +
+        '    uploader.upload();'
+  },
+  php: {
+    'list':
+        'function FUNCTION_NAME($service, $ARGUMENTS, $params) {\n' +
+        '    $params = array_filter($params);\n' +
+        '    $response = $service->RESOURCE->PHP_METHOD(\n' +
+        '        $DEFAULT_PARAM,\n' +
+        'EXTRA_PHP_PARAMS' +
+        '        $params\n' +
+        '    );\n\n' +
+        '    print_r($response);\n' +
+        '}\n\n' +
+        'FUNCTION_NAME($service,RETURNINDENTPASSED_ARGUMENTS));',
+    'insert|update':
+        'function FUNCTION_NAME($service, $properties, $DEFAULT_PARAM, ' +
+        '$params) {\n' +
+        '    $params = array_filter($params);\n' +
+        '    $propertyObject = createResource($properties); ' +
+        '// See full sample for function\n' +
+        '    $resource = new Google_Service_PHP_CLASS($propertyObject);\n' +
+        '    $response = $service->RESOURCE->PHP_METHOD($DEFAULT_PARAM, ' +
+        '$resource, $params);\n' +
+        '    print_r($response);\n' +
+        '}\n\n' +
+        'FUNCTION_NAME($service,RETURNINDENTPROPERTY_OBJECT,RETURNINDENTPASSED_ARGUMENTS));',
+    'mediaUpload':
+        'function FUNCTION_NAME($client, $service, $media_file, ' +
+        '$properties, $DEFAULT_PARAM, $params) {\n' +
+        '    $params = array_filter($params);\n' +
+        '    $propertyObject = createResource($properties); ' +
+        '// See full sample for function\n' +
+        '    $resource = new Google_Service_PHP_CLASS($propertyObject);\n' +
+        '    $client->setDefer(true);\n' +
+        '    $request = $service->RESOURCE->PHP_METHOD($DEFAULT_PARAM, ' +
+        '$resource, $params);\n' +
+        '    $client->setDefer(false);\n' +
+        '    $response = uploadMedia($client, $request, $media_file, ' +
+        '\'MIME_TYPE\');\n' +
+        '    print_r($response);\n' +
+        '}\n\n' +
+        '$media_file = \'MEDIA_FILE\';\n' +
+        'FUNCTION_NAME($client,RETURNINDENT$service,RETURNINDENT$media_file,' +
+        'RETURNINDENTPROPERTY_OBJECT,RETURNINDENTPASSED_ARGUMENTS));',
+    'mediaUploadWithoutBody':
+        'function FUNCTION_NAME($client, $service, $media_file, $params) {\n' +
+        '    $params = array_filter($params);\n' +
+        '    $client->setDefer(true);\n' +
+        '    $request = $service->RESOURCE->PHP_METHOD(join(\',\', ' +
+        '$params));\n' +
+        '    $client->setDefer(false);\n' +
+        '    $response = uploadMedia($client, $request, $media_file, ' +
+        '\'MIME_TYPE\');\n' +
+        '    print_r($response);\n' +
+        '}\n\n' +
+        '$media_file = \'MEDIA_FILE\';\n' +
+        'FUNCTION_NAME($client,RETURNINDENT$service,' +
+        'RETURNINDENT$media_file,RETURNINDENTPASSED_ARGUMENTS));'
+  },
+  python: {
+    'delete|list':
+        'def FUNCTION_NAME(service, **kwargs):\n' +
+        '  kwargs = remove_empty_kwargs(**kwargs) ' +
+        '# See full sample for function\n' +
+        '  results = service.RESOURCE().METHOD(\n' +
+        '    **kwargs\n' +
+        '  ).execute()\n\n' +
+        '  print_results(results)\n\n' +
+        'FUNCTION_NAME(service,RETURNINDENTPASSED_ARGUMENTS)',
+    'insert|update':
+        'def FUNCTION_NAME(properties, **kwargs):\n' +
+        '  resource = build_resource(properties) ' +
+        '# See full sample for function\n' +
+        '  kwargs = remove_empty_kwargs(**kwargs) ' +
+        '# See full sample for function\n' +
+        '  results = service.RESOURCE().METHOD(\n' +
+        '    body=resource,\n' +
+        '    **kwargs\n' +
+        '  ).execute()\n\n' +
+        '  print_results(results)\n\n' +
+        'FUNCTION_NAME(RETURNINDENTPROPERTY_OBJECT,' +
+        'RETURNINDENTPASSED_ARGUMENTS)',
+    'mediaUpload':
+        'def FUNCTION_NAME(properties, media_file, **kwargs):\n' +
+        '  resource = build_resource(properties) ' +
+        '# See full sample for function\n' +
+        '  kwargs = remove_empty_kwargs(**kwargs) ' +
+        '# See full sample for function\n' +
+        '  request = service.RESOURCE().METHOD(\n' +
+        '    body=resource,\n' +
+        '    media_body=MediaFileUpload(media_file, chunksize=-1,\n' +
+        '                               resumable=True),\n' +
+        '    **kwargs\n' +
+        '  )\n\n' +
+        '  resumable_upload(request, \'SINGLE_RESOURCE\', \'METHOD\') ' +
+        '# See full sample for function\n\n' +
+        'media_file = \'MEDIA_FILE\'\n' +
+        'if not os.path.exists(media_file):\n' +
+        '  exit(\'Please specify a valid file location.\')\n\n' +
+        'FUNCTION_NAME(RETURNINDENTPROPERTY_OBJECT,RETURNINDENTmedia_file,' +
+        'RETURNINDENTPASSED_ARGUMENTS)',
+    'mediaUploadWithoutBody':
+        'def FUNCTION_NAME(media_file, **kwargs):\n' +
+        '  kwargs = remove_empty_kwargs(**kwargs) ' +
+        '# See full sample for function\n' +
+        '  request = service.RESOURCE().METHOD(\n' +
+        '    media_body=MediaFileUpload(media_file, chunksize=-1,\n' +
+        '                               resumable=True),\n' +
+        '    **kwargs\n' +
+        '  )\n\n' +
+        '  resumable_upload(request, \'SINGLE_RESOURCE\', \'METHOD\') ' +
+        '# See full sample for function\n\n' +
+        'media_file = \'MEDIA_FILE\'\n' +
+        'if not os.path.exists(media_file):\n' +
+        '  exit(\'Please specify a valid file location.\')\n\n' +
+        'FUNCTION_NAME(media_file,RETURNINDENTPASSED_ARGUMENTS)',
+  },
+  ruby: {
+    'delete' :
+        'def FUNCTION_NAME(service, DEFAULT_PARAM, **params)\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.METHOD_SINGLE_RESOURCE(id, params)\n' +
+        '  print_results(response)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+    'getRating':
+        'def FUNCTION_NAME(service, ARGUMENTS, **params)\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.get_video_rating(PARAM_LIST, params)\n' +
+        '  print_results(response)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+    'list':
+        'def FUNCTION_NAME(service, ARGUMENTS, **params)\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.METHOD_RESOURCE(PARAM_LIST, params)\n' +
+        '  print_results(response)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+    'insert|update':
+        'def FUNCTION_NAME(service, properties, DEFAULT_PARAM, **params)\n' +
+        '  resource = create_resource(properties) ' +
+        '# See full sample for function\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.METHOD_SINGLE_RESOURCE(part, resource, ' +
+        'params)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service,RETURNINDENTPROPERTY_OBJECT,RETURNINDENTPASSED_ARGUMENTS)',
+    'markAsSpam': 'def FUNCTION_NAME(service, ARGUMENTS, **params)\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.mark_comment_as_spam(PARAM_LIST, params)\n' +
+        '  print_results(response)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+    'mediaUpload':
+        'def FUNCTION_NAME(service, properties, DEFAULT_PARAM, **params)\n' +
+        '  resource = create_resource(properties) ' +
+        '# See full sample for function\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.METHOD_SINGLE_RESOURCE(part, resource, ' +
+        'params)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, PROPERTY_OBJECT, PASSED_ARGUMENTS, ' +
+        'upload_source: \'MEDIA_FILE\')',
+    'mediaUploadWithoutBody':
+        'def FUNCTION_NAME(service, DEFAULT_PARAM, **params)\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.METHOD_SINGLE_RESOURCE(params)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, DEFAULT_PARAM, ' +
+        'upload_source: \'MEDIA_FILE\', content_type: \'MIME_TYPE\', ' +
+        'PASSED_ARGUMENTS)',
+    'rate':
+        'def FUNCTION_NAME(service, ARGUMENTS, **params)\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.METHOD_SINGLE_RESOURCE(PARAM_LIST, params)\n' +
+        '  print_results(response)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+    'setModerationStatus':
+        'def FUNCTION_NAME(service, ARGUMENTS, **params)\n' +
+        '  params = params.delete_if { |p, v| v == \'\'}\n' +
+        '  response = service.set_comment_moderation_status(' +
+        'PARAM_LIST, params)\n' +
+        '  print_results(response)\n' +
+        'end\n\n' +
+        'FUNCTION_NAME(service, PASSED_ARGUMENTS)',
+  }
+};
+
+// Object to identify templates that should be separated and inserted in
+// multiple places when placed in boilerplate code.
+var SPLIT_TEMPLATES = {};
+for (var lang in TEMPLATES) {
+  for (var custom in TEMPLATES[lang]) {
+    var methods = custom.split('|');
+    if (methods.length > 1) {
+      for (var cm = 0; cm < methods.length; cm++) {
+        TEMPLATES[lang][methods[cm]] = TEMPLATES[lang][custom];
+      }
+    }
+  }
+}
+
+// Allow custom templates to be set in API-specific file that defines use cases.
+if ('templates' in CONFIG && CONFIG['templates']) {
+  for (var lang in CONFIG['templates']) {
+    for (var custom in CONFIG['templates'][lang]) {
+      var custom_methods = custom.split('|');
+      for (var cm = 0; cm < custom_methods.length; cm++) {
+        TEMPLATES[lang][custom_methods[cm]] = (
+            CONFIG['templates'][lang][custom_methods[cm]]);
+      }
+    }
+  }
+}
+
+// Create arrays for templates that contain BPSPLIT, meaning the template
+// should be split into sections when generating the full sample.
+for (var lang in TEMPLATES) {
+  for (var method in TEMPLATES[lang]) {
+    if (/BPSPLIT/.test(TEMPLATES[lang][method])) {
+      if (!SPLIT_TEMPLATES[lang]) {
+        SPLIT_TEMPLATES[lang] = {};
+      }
+      SPLIT_TEMPLATES[lang][method] = true;
+    }
+  }
+}
+
+// This supports grouping of use cases in a different way. It's used in the
+// Analytics API where all requests to retrieve reports use the same API
+// method (reports.query), so we want to group those requests into requests
+// for "Basic stats," "Geographic reports," etc.
+var GROUPS = {};
+if ('useGroups' in CONFIG && CONFIG['useGroups'] && CONFIG['groups']) {
+  GROUPS = CONFIG['groups'];
+}
+
+
+/**
+ * Reorder properties alphabetically (default) or according to a specified
+ * rule for the API.
+ * @param {Array} props The properties to reorder.
+ * @param {string} value A parameter value to use to reorder the properties.
+ * @return {Object} The reordered properties.
+ */
+function reorderProperties(props, value) {
+  var rule = (CONFIG['propertyOrderRule']) ? CONFIG['propertyOrderRule'] :
+      'alpha';
+  props.sort(sortBy('name', false, function(a) { return a.toUpperCase()}));
+  if (rule == 'YouTubeDataApi' && value) {
+    var parts = value.split(',');
+    var orderedProps = [];
+    for (var p = 0; p < parts.length; p++) {
+      for (var i = 0; i < props.length; i++) {
+        if (p == 0 && props[i]['name'] == 'id') {
+          orderedProps.unshift(props[i]);
+        } else if (props[i]['name'].substr(0, parts[p].length) == parts[p]) {
+          orderedProps.push(props[i]);
+        }
+      }
+    }
+    return orderedProps;
+  }
+  return props;
+}
+
+/**
+ * This function displays the parameters used in the code sample so that
+ * the user can edit them. It retrieves the parameter values currently
+ * being used for the sample. Then it creates a <div> wrapper that contains
+ * an input and label for each parameter, adds them all to the page, and
+ * makes them visible.
+ * @param {string} resource The name of the API resource as it appears
+ *     in API calls (e.g. videos, activities).
+ * @param {string} method The name of the API method being called
+ *     (e.g. list, insert, etc.).
+ * @param {string} functionName The name of the function that uniquely
+ *     identifies the code snippet being called.
+ * @param {string} path The URL path associated with the API call. If the
+ *     user updates the params, this value is provided in a subsequent call
+ *     to displayCodeSample().
+ */
+function displayEditableParams(resource, method, functionName, path) {
+  // Remove the current set of parameter inputs.
+  $('#editable-params').html('');
+  // Hide update button
+  $('#update-example-params').css('display', 'none');
+  // Hide bad parameter values note
+  $('#bad-parameter-values').css('display', 'none');
+  // Get current parameters for selected snippet.
+
+  var params = getCurrentValues(functionName, 'params');
+  var props = getCurrentValues(functionName, 'props');
+  var modifyParams = $('<p style="margin-bottom: 0.4em;">' +
+                       'Modify parameters passed to this example:</p>');
+  var propertyLabel = $('<p id="editable-props-header" ' +
+      'style="margin-left: -25px">Modify properties used in this example:</p>');
+  var functionDetails = $('<input id="editable-param-inputs" ' + 'value="' +
+      resource + ',' + method + ',' + functionName + ',' + path + '" ' +
+      'type="hidden">');
+  var wrapper = $('<div id="editable-params-wrapper" ' +
+                  'style="margin-left: 25px;"></div>');
+  if (functionName in mediaFilenames) {
+    $('#code-snippet-method-restrict-media-file').css('display',
+                                                      'inline-block');
+    $('#code-snippet-method-restrict-mime-type').css('display',
+                                                      'inline-block');
+    $('#editable-param-input-media_filename').attr('value',
+        mediaFilenames[functionName]);
+    if (functionName in mimeTypes) {
+      $('#editable-param-input-mime_type').attr('value',
+          mimeTypes[functionName]);
+    }
+  } else {
+    $('#code-snippet-method-restrict-media-file').css('display', 'none');
+    $('#code-snippet-method-restrict-mime-type').css('display', 'none');
+  }
+  if ($('#code-snippet-method-restrict').html()) {
+    $('#editable-params').append([functionDetails, wrapper]);
+  } else {
+    $('#editable-params').append([modifyParams, functionDetails, wrapper]);
+  }
+  // Add new elements as children of 'editable-params' elements.
+  // Add wrapper, label, and input for each parameter.
+  var reorderParameterValue = '';
+  for (var i = 0; i < params.length; i++) {
+    addEditableItem(params[i], functionName);
+    if (CONFIG['propertyOrderParameter'] &&
+        CONFIG['propertyOrderRule'] &&
+        CONFIG['propertyOrderParameter'] == params[i]['name'] &&
+        props.length > 0) {
+      reorderParameterValue = params[i]['value'];
+    }
+  }
+  if (props.length > 0) {
+    $('#editable-params-wrapper').append(propertyLabel);
+  }
+  props = reorderProperties(props, reorderParameterValue);
+  for (var i = 0; i < props.length; i++) {
+    addEditableItem(props[i], functionName);
+  }
+  // Display update button again.
+  $('#update-example-params').css('display', 'inline-block');
+}
+
+/**
+ * Load property data for a resource for update methods so that the user
+ * does not have to retype all of the metadata.
+ * @param {string} propertyName The name of the property that contains the
+ *                              resource ID.
+ */
+function loadResource(propertyName) {
+  var idToLoad = $('#editable-param-input-' + propertyName).val();
+  var path = CONFIG['jsApi'];
+  if ('jsApiPath' in CONFIG && CONFIG['jsApiPath']) {
+    path = CONFIG['jsApiPath'];
+  }
+  var loadParams = {'id': idToLoad};
+  if ('defaultParam' in CONFIG && CONFIG['defaultParam']) {
+    for (var c = 0; c < currentlyDisplayedSample['params'].length; c++) {
+      if (currentlyDisplayedSample['params'][c]['name'] ==
+          CONFIG['defaultParam']) {
+        loadParams[CONFIG['defaultParam']] = (
+            currentlyDisplayedSample['params'][c]['value']);
+      }
+    }
+  } else if ('defaultParams' in CONFIG && CONFIG['defaultParams']) {
+    for (var dp = 0; dp < CONFIG['defaultParams'].length; dp++) {
+      for (var c = 0; c < currentlyDisplayedSample['params'].length; c++) {
+        if (currentlyDisplayedSample['params'][c]['name'] ==
+            CONFIG['defaultParams'][dp]) {
+          loadParams[CONFIG['defaultParams'][dp]] = (
+              currentlyDisplayedSample['params'][c]['value']);
+        }
+      }
+    }
+  }
+  path = ('/' + path + '/' + CONFIG['jsApiVersion'] + '/' +
+          currentlyDisplayedSample['resource']);
+
+  // Define the API request.
+  var request = gapi.client.request({
+    'method': 'GET',
+    'path': path,
+    'params': loadParams
+  });
+  // Execute the API request. When the response comes back, print it in
+  // the '#api-response' element and then run prettyPrint().
+  request.execute(function(response, rawResponse) {
+    if ('items' in response &&
+        response['items'].length > 0) {
+      LOADED_RESOURCE = response['items'][0];
+      updateExampleParameterValues();
+      TRIED_AUTH = false;
+    } else if ('items' in response) {
+      // TODO: What to do if items list is empty? This would happen if the
+      // returned list isn't called items, which may be true in other APIs.
+    } else if ('error' in response &&
+        !TRIED_AUTH &&
+        (response['error']['code'] == 401 ||
+         response['error']['code'] == 403)) {
+      gapi.auth2.getAuthInstance().signIn().then(function() {
+        loadResource(propertyName);
+        TRIED_AUTH = true;
+      });
+    }
+  });
+}
+
+/**
+ * Add an input field and label for an editable parameter or property.
+ * @param {Object} item The parameter or property being added (name and value).
+ * @param {string} functionName The use case associated with the item.
+ */
+function addEditableItem(item, functionName) {
+  var nameForId = item['name'].replace(/\./g, '-').replace(/[\[\]\(\)]/g, '');
+  var div = $('<div id="editable-param-' + nameForId + '">');
+  var label = $('<label for="editable-param-input-' + nameForId + '">' +
+                item['name'] + '</label>');
+  $('#editable-params-wrapper').append(div);
+  if (loadableResources[functionName] &&
+      loadableResources[functionName] == item['name']) {
+    var input = $('<input id="editable-param-input-' + nameForId + '" ' +
+                  'type="text" size="20" ' +
+                  'oninput="updateExampleParameterValues();">');
+    var loadButton = $('<button id="load-resource-button" ' +
+                       'class="button-blue" style="margin-left: 13px;" ' +
+                       'onclick="loadResource(\'' + nameForId + '\');"' +
+                       '>Load resource</button>');
+    $('#editable-param-' + nameForId).append([label, input, loadButton]);
+  } else {
+    var input = $('<input id="editable-param-input-' + nameForId + '" ' +
+                  'type="text" size="37" ' +
+                  'oninput="updateExampleParameterValues();">');
+    $('#editable-param-' + nameForId).append([label, input]);
+  }
+  $('#editable-param-input-' + nameForId).attr('value', item['value']);
+}
+
+/**
+ * Extract a property value from a resource.
+ * @param {Object} resource The resource.
+ * @param {string} property The property name.
+ * @return {string} The property value.
+ */
+function getPropertyValue(resource, property) {
+  var propArray = property.split('.');
+  var returnValue = resource;
+  for (var p = 0; p < propArray.length; p++) {
+    var propertyName = propArray[p];
+    if (propertyName.substr(-2, 2) == '[]') {
+      propertyName = propertyName.replace('[]', '');
+    }
+    if (returnValue[propertyName]) {
+      returnValue = returnValue[propertyName];
+      if (p == (propArray.length - 1)) {
+        if (returnValue.constructor === Array) {
+          return returnValue.join(',');
+        }
+        return returnValue;
+      }
+    }
+  }
+  return '';
+}
+
+/**
+ * Set the name of the media file being uploaded for a snippet that uploads
+ * a file, like youtube.videos.insert. The name can be set by the user.
+ * It retrieves information about the selected code sample from the <input>
+ * element with ID 'editable-param-inputs', which is created by the
+ * displayEditableParams() function.
+ */
+function updateMediaFilename() {
+  var resource, method, functionName, path;
+  // Hide bad-parameter-values message. (Useful if the message had been
+  // displayed, and then the user updated the values.)
+  $('#bad-parameter-values').css('display', 'none');
+  // Get list of inputs to displayCodeSample function.
+  var inputs = $('#editable-param-inputs').val().split(',');
+  resource = inputs[0];
+  method = inputs[1];
+  functionName = inputs[2];
+  path = inputs[3];
+  var regex = /[\"\<\>\\]/;
+  var value = $('#editable-param-input-media_filename').val();
+  var mimeType = $('#editable-param-input-mime_type').val();
+
+  if (value.toString().match(regex) || mimeType.toString().match(regex)) {
+    $('#bad-parameter-values').css('display', 'block');
+  } else {
+    mediaFilenames[functionName] = value;
+    mimeTypes[functionName] = mimeType;
+    displayCodeSample(resource, method, functionName, path, false, false);
+  }
+  devsite.framebox.AutoSizeClient.updateSize();
+}
+
+/**
+ * Updates the parameter values for the code snippet to reflect user input.
+ * It retrieves information about the selected code sample from the <input>
+ * element with ID 'editable-param-inputs', which is created by the
+ * displayEditableParams() function.
+ *
+ * For each parameter used in the snippet, the code retrieves the current
+ * value from the <input> element associated with that parameter. To prevent
+ * the possibility of any XSS badness, the code verifies that the value does
+ * not contain quotation marks or angle brackets. It stores each parameter
+ * value, so that the custom values could be used to generate complete code
+ * snippets and so that the custom values persist if the user clicks to
+ * another snippet and then back to the one with the custom values.
+ *
+ * As long as the none of the parameter values contain bad characters ["<>],
+ * the code calls displayCodeSample() to show the updated sample and
+ * response. If there are bad values, the code changes the CSS to display the
+ * 'bad-parameter-values' element, which shows a message explaining that there
+ * are bad values.
+ */
+function updateExampleParameterValues() {
+  var resource, method, functionName, path;
+  // Hide bad-parameter-values message. (Useful if the message had been
+  // displayed, and then the user updated the values.)
+  $('#bad-parameter-values').css('display', 'none');
+  // Get list of inputs to displayCodeSample function.
+  var inputs = $('#editable-param-inputs').val().split(',');
+  resource = inputs[0];
+  method = inputs[1];
+  functionName = inputs[2];
+  path = inputs[3];
+  // Boolean to check whether params are good.
+  onlyGoodParamInputs = true;
+  if (functionName in editableParams) {
+    // Create new array for custom parameter values. It's okay if there
+    // were already custom values ... this will just replace those values
+    // with the current ones.
+    //editableParams[functionName]['custom'] = {'params': [], 'props': []};
+    var customValues = {'params': [], 'props': []};
+    // Regular expression to identify bad characters.
+    var regex = /[\"\<\>\\]/;
+    var types = ['params', 'props'];
+    var editables = editableParams[functionName]['default'];
+    for (var t = 0; t < types.length; t++) {
+      var type = types[t];
+      for (var i = 0; i < editables[type].length; i++) {
+        var name = editables[type][i]['name'];
+        var nameForId = name.replace(/\./g, '-').replace(/[\[\]\(\)]/g, '');
+        var value = $('#editable-param-input-' + nameForId).val();
+        if (!$.isEmptyObject(LOADED_RESOURCE) && types[t] == 'props') {
+          value = getPropertyValue(LOADED_RESOURCE, name);
+          if (typeof(value) === 'string') {
+            value = value.replace(/ ?\" ?/g, ',');
+          }
+        }
+        // Make sure the parameter value doesn't contain XSS. If not, set
+        // the custom value. Otherwise, flip the Boolean.
+        if (value.toString().match(regex)) {
+          onlyGoodParamInputs = false;
+        } else {
+          customValues[type].push({'name': name,
+                                   'value': value});
+        }
+      }
+    }
+    editableParams[functionName]['custom'] = customValues;
+    if (editableParams[functionName]['custom']['props'].length > 0) {
+      resourceBodies[functionName] = makeResourceBody(
+          editableParams[functionName]['custom']['props'], true);
+    }
+  }
+  // As long as there aren't XSS concerns, show the code sample.
+  if (onlyGoodParamInputs) {
+    if ($.isEmptyObject(LOADED_RESOURCE)) {
+      displayCodeSample(resource, method, functionName, path, false, false);
+    } else {
+      displayCodeSample(resource, method, functionName, path, false, true);
+      LOADED_RESOURCE = {};
+    }
+  } else {
+    $('#bad-parameter-values').css('display', 'block');
+  }
+  devsite.framebox.AutoSizeClient.updateSize();
+}
+
+/**
+ * Get the current set of parameter values for the selected code snippet. If
+ * the user has specified custom parameter values, the function returns those.
+ * Otherwise, it returns the default values specified in the use case.
+ * @param {string} functionName The name of the function that uniquely
+ *     identifies the code snippet being called.
+ * @param {string} type Indicates whether we're getting 'params' or 'props'.
+ * @return {Object} The function's current set of parameters and values.
+ */
+function getCurrentValues(functionName, type) {
+  if (functionName in editableParams &&
+      'custom' in editableParams[functionName] &&
+      type in editableParams[functionName]['custom'] &&
+      editableParams[functionName]['custom'][type].length > 0) {
+    CUSTOM_PARAMS[type][functionName] = (
+        editableParams[functionName]['custom'][type]);
+    if (editableParams[functionName]['custom'][type].length ==
+        editableParams[functionName]['default'][type].length) {
+      return editableParams[functionName]['custom'][type];
+    } else {
+      // Handle case where user has entered a bad character (e.g. "\")
+      // in a parameter value, then switched to another use case, then
+      // switched back to the use case, where the bad parameter value
+      // wasn't set in the custom params. In this case, identify the
+      // missing parameters and add them back in with their default values.
+      for (var p = 0;
+           p < editableParams[functionName]['default'][type].length; p++) {
+        var item = editableParams[functionName]['default'][type][p];
+        var isMissingParameter = true;
+        for (var c = 0;
+          c < editableParams[functionName]['custom'][type].length; c++) {
+          if (editableParams[functionName]['custom'][type][c]['name'] ==
+              item['name']) {
+            isMissingParameter = false;
+          }
+        }
+        if (isMissingParameter) {
+          editableParams[functionName]['custom'][type].push(item);
+        }
+      }
+      return editableParams[functionName]['custom'][type];
+    }
+  } else if (functionName in CUSTOM_PARAMS[type] &&
+             CUSTOM_PARAMS[type][functionName]) {
+    return CUSTOM_PARAMS[type][functionName];
+  }
+  return editableParams[functionName]['default'][type];
+}
+
+/**
+ * Insert the current parameter values into the code snippet. When code
+ * snippets are generated, the snippets have placeholders for the actual
+ * values, like 'PARAM-i18nRegionsList-hl' where i18nRegionsList is
+ * a unique ID for the snippet, and 'hl' is the name of the parameter.
+ *
+ * Before displaying the snippet, this code replaces the placeholders with
+ * the current parameter value for each parameter.
+ * @param {string} snippet The code snippet for the selected use case with
+ *     placeholders for parameter values.
+ * @param {string} functionName The name of the function that uniquely
+ *     identifies the code snippet being called.
+ * @param {Array} params The list of parameters for the function.
+ * @param {Array} props The list of properties for the function.
+ * @param {string} language The selected language.
+ * @return {string} The modified code snippet.
+ */
+function insertCurrentValues(snippet, functionName, params, props, language) {
+  var replacements = params.concat(props);
+  var hideListRegex = new RegExp('STARTHIDE"".+\nMIDHIDE.+\nENDHIDE', 'g');
+  //var hideLongRegex = new RegExp('STARTHIDELONG[-\d]+"', 'g');
+  var hideLongRegex = /STARTHIDELONG-\d+"/g;
+  //var hideBoolRegex = /STARTHIDEBOOL-(true|false)/g;
+  var hideBoolRegex = /STARTHIDE(true|false)/g;
+  //var fixLongRegex = new RegExp(', LONG-(\d+)"', 'g');
+  var fixLongRegex = /, LONG-(\d+)"/g;
+  var hideRegex = new RegExp('STARTHIDE("|NaN)".+\nENDHIDE', 'g');
+  var startHideRegex = new RegExp('STARTHIDE"([^\"]+)"', 'g');
+  var endHideRegex = new RegExp('(MID|END)HIDE', 'g');
+  if (functionName in mediaFilenames) {
+    snippet = snippet.replace('PARAM-' + functionName + '-media_filename',
+                              mediaFilenames[functionName]);
+  }
+  if (functionName in mimeTypes) {
+    snippet = snippet.replace('PARAM-' + functionName + '-mime_type',
+                              mimeTypes[functionName]);
+  }
+  for (var i = 0; i < replacements.length; i++) {
+    // Create a regular expression to identify parameter placeholder.
+    var nameForId = replacements[i]['name'].replace(/\./g, '-').replace(
+        /[\[\]\(\)]/g, '');
+    var boolRegex = new RegExp('BOOL-PARAM-' + functionName + '-' + nameForId,
+                               'g');
+    var intRegex = new RegExp('INT64-PARAM-' + functionName + '-' + nameForId,
+                              'g');
+    var longRegex = new RegExp('LONG-PARAM-' + functionName + '-' + nameForId,
+                              'g');
+    var strRegex = new RegExp('(BOOL-|INT64-|LONG)?PARAM-' + functionName +
+                              '-' + nameForId, 'g');
+    var value = replacements[i]['value'];
+    // For Python, replace 'true' and 'false' with 'True' and 'False'.
+    if (language == 'python' && (value == 'true' || value == 'false')) {
+      value = capitalize(value);
+    }
+    // Replace placeholder in code snippet with current parameter value.
+    if (LANGUAGES[language]['quote'] == '\'') {
+      value = value.toString().replace(/\'/g, '\\\'');
+    } else if (LANGUAGES[language]['quote'] == '"') {
+      value = value.toString().replace(/\"/g, '\\\"');
+    }
+    if (!value) {
+      if (language == 'go') {
+        snippet = snippet.replace(intRegex, '0');
+        snippet = snippet.replace(boolRegex, 'false');
+      } else if (language == 'java') {
+        snippet = snippet.replace(boolRegex, 'false');
+        snippet = snippet.replace(longRegex, quote + quote);
+      } else {
+        var quote = LANGUAGES[language]['quote'];
+        snippet = snippet.replace(intRegex, quote + quote);
+        snippet = snippet.replace(boolRegex, quote + quote);
+      }
+    } else if (language == 'java' && value != 'true') {
+      snippet = snippet.replace(boolRegex, 'false');
+    }
+
+    snippet = snippet.replace(strRegex, value);
+
+    if (replacements[i]['name'] == 'part') {
+      parts_array = value.split(',');
+      var longest_part = parts_array[0];
+      for (var p = 0; p < parts_array.length; p++) {
+        if (parts_array[p].length > longest_part.length) {
+          longest_part = parts_array[p];
+        }
+      }
+      snippet = snippet.replace('LONGEST_PART', longest_part);
+    }
+  }
+  if (language == 'java') {
+      snippet = snippet.replace(hideListRegex, '');
+      snippet = snippet.replace(hideLongRegex, '');
+      snippet = snippet.replace(hideBoolRegex, '');
+      snippet = snippet.replace(fixLongRegex, ', $1L');
+      snippet = snippet.replace(hideRegex, '');
+      snippet = snippet.replace(startHideRegex, '');
+      snippet = snippet.replace(endHideRegex, '');
+  }
+  return snippet;
+}
+
+/**
+ * Update the curl URL shown to execute the snippet on the command line.
+ */
+function updateCurlUrl() {
+  var resource, method, functionName, path;
+  // Get list of inputs to displayCodeSample function.
+  var inputs = $('#editable-param-inputs').val().split(',');
+  resource = inputs[0];
+  method = inputs[1];
+  functionName = inputs[2];
+  path = inputs[3];
+
+  var urlParams = [];
+  if (functionName in editableParams) {
+    // Create new array for custom parameter values. It's okay if there
+    // were already custom values ... this will just replace those values
+    // with the current ones.
+    editableParams[functionName]['custom'] = {'params': [], 'props': []};
+    // Regular expression to identify bad characters.
+    //var regex = /[\"\<\>]/;
+    var params = editableParams[functionName]['default']['params'];
+    for (var p = 0; p < params.length; p++) {
+      var name = params[p]['name'];
+      var value = $('#editable-param-input-' + name).val();
+      // Not checking for XSS in parameter values since the URL is only
+      // being displayed and isn't being executed.
+      if (value) {
+        urlParams.push(name + '=' + encodeURIComponent(value));
+      }
+    }
+    if (resourceBodies[functionName]) {
+      var resourceString = JSON.stringify(resourceBodies[functionName]);
+      resourceString = encodeURIComponent(resourceString);
+      resourceString = resourceString.replace(/\%20/g, '+');
+      resourceString = resourceString.replace(/\%/g, '%25');
+      urlParams.push('resource=' + resourceString);
+    }
+  }
+
+  loadInExplorerLink = ('<a href="' +
+      'https://developers.google.com/apis-explorer/#p/' +
+      CONFIG['jsApi'] + '/' + CONFIG['jsApiVersion'] + '/' +
+      CONFIG['jsApi'] + '.' + resource + '.' + method + '?' +
+      urlParams.join('&') + '" target="_blank">Load in APIs Explorer</a>');
+  $('#load-in-explorer').html(loadInExplorerLink);
+
+  var apiUrl = (CONFIG['host'] + CONFIG['jsApi'] + '/' +
+                CONFIG['jsApiVersion'] + '/' + resource);
+  if (path != 'undefined') {
+    apiUrl += '/' + path;
+  }
+
+  var httpUrl = requestMethods[functionName] + ' ' + apiUrl + '?';
+
+  var curlUrl;
+  // Just: 'curl URL' for GETs that don't require auth.
+  // Otherwise: curl -H "Auth..." -d "params" URL
+  if (requestMethods[functionName] != 'GET') {
+    $('#selected-code-snippets-curl').html(
+        'curl samples are currently only supported for GET requests.');
+    return;
+  } else if (functionName in requiresAuth ||
+             'all' in requiresAuth) {
+    var curlParams = '-i';
+    var curlSpaces = '        ';
+    if (requestMethods[functionName] == 'GET') {
+      curlParams = '-i -G';
+      curlSpaces = '           ';
+    }
+
+    curlUrl = ('curl ' + curlParams + ' -H "Authorization: Bearer ' +
+               '<span class="code-var-color">ACCESS_TOKEN</span>"\n' +
+               curlSpaces + '-d "' + urlParams.join('&') + '"\n' +
+               curlSpaces + apiUrl);
+
+  } else {
+    urlParams.push('key={YOUR_API_KEY}');
+    curlUrl = 'curl -i -G -d "' + urlParams.join('&') + '"\n' +
+              '              ' + apiUrl;
+  }
+
+  var spaces = ' '.repeat(httpUrl.length - 1);
+  httpUrl += urlParams.join('\n' + spaces + '&');
+  $('#selected-code-snippets-curl').html('# curl URL:\n' + curlUrl + '\n\n' +
+                                         '# HTTP URL:\n' + httpUrl);
+}
+
+/**
+ * This function displays the code sample for the specified resource, method,
+ * and function name.
+ * @param {string} resource The name of the API resource as it appears
+ *     in API calls (e.g. videos, activities).
+ * @param {string} method The name of the API method being called
+ *     (e.g. list, insert, etc.).
+ * @return {string} The pretty code sample.
+ */
+function make_pretty(code, language) {
+  if (LANGUAGES[language]['beautify']) {
+    code = beautify.js_beautify(code);
+    if (language == 'java') {
+      code = code.replace(/ < > /g, '<>');
+      code = code.replace(/ <(\s*)([^\>]+)?\s>/g, '&lt;$2&gt;');
+    }
+  } else {
+    code = code.replace(/</g, '&lt;');
+    code = code.replace(/>/g, '&gt;');
+  }
+  return code;
+}
+
+/**
+ * This function displays the code sample for the specified resource, method,
+ * and function name.
+ * @param {string} resource The name of the API resource as it appears
+ *     in API calls (e.g. videos, activities).
+ * @param {string} method The name of the API method being called
+ *     (e.g. list, insert, etc.).
+ * @param {string} functionName The name of the function that uniquely
+ *     identifies the code snippet being called. This parameter is optional.
+ *     It is useful if there are multiple snippets demonstrating different
+ *     use cases of the same method, and, therefore, a need to identify those
+ *     snippets with a unique name other than resource + ucFirst(method).
+ * @param {string} path The URL path associated with the API call. If the
+ *     user updates the params, this value is provided in a subsequent call
+ *     to displayCodeSample().
+ * @param {boolean} isUserAuthorized Indicates whether an operation has been
+ *     explicitly authorized by the user. If set to false, the executeRequest()
+ *     function is not called for write operations.
+ * @param {boolean} rewriteEditableParams Indicates whether we need to rewrite
+ *     the editable parameters and values.
+ */
+function displayCodeSample(resource, method, functionName, path,
+                           isUserAuthorized, rewriteEditableParams) {
+  // Get default function name - resourceMethod - if one isn't specified.
+  if (!functionName || method == functionName) {
+    functionName = getFunctionName(resource, method);
+  }
+  if (fileUploaders[functionName]) {
+    $('#execute-request-button').css('display', 'none');
+    $('#execute-without-oauth').css('display', 'none');
+    $('#load-in-explorer').css('display', 'none');
+  } else {
+    $('#execute-request-button').css('display', 'block');
+    if (!auth2.isSignedIn.get()) {
+      $('#execute-without-oauth').css('display', 'inline-block');
+    }
+    $('#load-in-explorer').css('display', 'inline-block');
+  }
+  // Get current parameters for selected snippet.
+  var params = getCurrentValues(functionName, 'params');
+  var props = getCurrentValues(functionName, 'props');
+
+  // Insert the current parameter values in the selected code snippet
+  // for each language. Display a message if no code snippet is available.
+  for (var language in LANGUAGES) {
+    if (functionName in codeSnippets[language]) {
+      var snippet = insertCurrentValues(codeSnippets[language][functionName],
+                                        functionName,
+                                        params,
+                                        props,
+                                        language);
+      var comment = (LANGUAGES[language]['comment'] + 'Sample ' + language +
+                     ' code for ' + resource + '.' + method + '\n\n');
+
+      if (SHOW_FULL_SAMPLE &&
+          language in SPLIT_TEMPLATES &&
+          (method in SPLIT_TEMPLATES[language] ||
+           ('list' in SPLIT_TEMPLATES[language] &&
+            !(method in TEMPLATES[language])))) {
+        //var thisCodeSample = boilerplate[language];
+        var thisCodeSample = getFunctionBoilerplate(functionName, language);
+        snippet_parts = snippet.split('BPSPLIT');
+        for (var b = 0; b < snippet_parts.length; b++) {
+          if (snippet_parts[b].substring(0, 5) == 'FINAL') {
+            break;
+          }
+          thisCodeSample = thisCodeSample.replace('NONBP' + (b + 1).toString(),
+              snippet_parts[b]);
+        }
+
+        thisCodeSample = thisCodeSample.replace(/NONBP\d/, '');
+        thisCodeSample = make_pretty(thisCodeSample, language);
+
+        $('#selected-code-snippets-' + language).html(thisCodeSample);
+      } else if (SHOW_FULL_SAMPLE) {
+        var thisCodeSample = getFunctionBoilerplate(functionName, language);
+        var thisCodeSample = thisCodeSample.replace('NONBOILERPLATE',
+            comment + snippet).replace(/BPSPLIT/g, '');
+        thisCodeSample = thisCodeSample.replace('NONBP\d', '');
+        thisCodeSample = make_pretty(thisCodeSample, language);
+        $('#selected-code-snippets-' + language).html(thisCodeSample);
+      } else {
+        snippet = snippet.replace(/BPSPLIT(FINAL)?/g, '');
+        snippet = make_pretty(snippet, language);
+        $('#selected-code-snippets-' + language).html(comment + snippet);
+      }
+    } else {
+      $('#selected-code-snippets-' + language).html(
+          LANGUAGES[language]['comment'] +
+          'Interactive ' + LANGUAGES[language]['name'] +
+          ' code snippets are not currently supported for this example.');
+    }
+  }
+
+  // Print the method description
+  if (functionName in methodDescriptions) {
+    var description = methodDescriptions[functionName];
+    // If the function requires user authorization, append a standard
+    // string, if available, to the method description.
+    if (((functionName in requiresAuth) || ('all' in requiresAuth)) &&
+          REQUIRES_AUTH) {
+      description += '<br><br>' + REQUIRES_AUTH;
+    }
+    $('#selected-code-sample-description').html(description);
+  }
+  currentlyDisplayedSample = {'resource': resource,
+                              'method': method,
+                              'functionName': functionName,
+                              'params': params,
+                              'path': path,
+                              'isUserAuthorized': isUserAuthorized};
+  if (isAuthorized &&
+      !$('#code-snippet-method-restrict').html() &&
+      executedFirstRequest == false) {
+    executeRequest();
+    executedFirstRequest = true;
+  } else {
+    $('#api-response-wrapper').css('display', 'none');
+  }
+  if (rewriteEditableParams) {
+    displayEditableParams(resource, method, functionName, path);
+  }
+  updateCurlUrl(path);
+  prettyPrint();
+  //devsite.openInJsfiddle.init();
+  devsite.darkCodeToggle.init();
+  devsite.clickToCopy.init();
+  // The first time the function is called, make the tabs work.
+  if (!TABS_WORK) {
+    makeTabsWork();
+    displayClientLibraryDescription('curl');
+    setBoilerplate();
+    TABS_WORK = true;
+  }
+}
+
+/**
+ * Displays a description about the client library for the selected language.
+ * The function runs when the user changes the selected language tab.
+ * @param {string} selectedLanguage The selected language.
+ */
+function displayClientLibraryDescription(selectedLanguage) {
+  description = '';
+  if (!$('#code-snippet-method-restrict').html()) {
+    if ($('#client-library-description-' + selectedLanguage)) {
+      description = $('#client-library-description-' + selectedLanguage).html();
+    }
+  }
+
+  // Print the method description
+  $('#client-library-description').html(description);
+}
+
+/**
+ * Determine correct HTTP request method for a sample if it is not explicitly
+ * specified.
+ * @param {string} method The name of the API method being called
+ *     (e.g. list, insert, etc.).
+ * @return {string} The HTTP request method to call.
+ */
+function getRequestMethod(method) {
+  if (method == 'delete') {
+    return 'DELETE';
+  } else if (method == 'insert') {
+    return 'POST';
+  } else if (method == 'update') {
+    return 'PUT';
+  }
+  return 'GET';
+}
+
+/**
+ * Return the status string for the status code for display above HTTP response.
+ * @param {number} statusCode The HTTP status code.
+ * @return {string} A string that explains the response's HTTP status code.
+ */
+function getStatusString(statusCode) {
+  var statusCodeString = '';
+  switch (statusCode) {
+    case 200:
+      statusCodeString = 'OK';
+      break;
+    case 201:
+      statusCodeString = 'Created';
+      break;
+    case 202:
+      statusCodeString = 'Accepted';
+      break;
+    case 203:
+      statusCodeString = 'Non-Authoritative Information';
+      break;
+    case 204:
+      statusCodeString = 'No Content';
+      break;
+    case 205:
+      statusCodeString = 'Reset Content';
+      break;
+    case 206:
+      statusCodeString = 'Partial Content';
+      break;
+    case 300:
+      statusCodeString = 'Multiple Choices';
+      break;
+    case 301:
+      statusCodeString = 'Moved Permanently';
+      break;
+    case 302:
+      statusCodeString = 'Found';
+      break;
+    case 303:
+      statusCodeString = 'See Other';
+      break;
+    case 304:
+      statusCodeString = 'Not Modified';
+      break;
+    case 305:
+      statusCodeString = 'Use Proxy';
+      break;
+    case 307:
+      statusCodeString = 'Temporary Redirect';
+      break;
+    case 400:
+      statusCodeString = 'Bad Request';
+      break;
+    case 401:
+      statusCodeString = 'Unauthorized';
+      break;
+    case 402:
+      statusCodeString = 'Payment Required';
+      break;
+    case 403:
+      statusCodeString = 'Forbidden';
+      break;
+    case 404:
+      statusCodeString = 'Not Found';
+      break;
+    case 405:
+      statusCodeString = 'Method Not Allowed';
+      break;
+    case 406:
+      statusCodeString = 'Not Acceptable';
+      break;
+    case 407:
+      statusCodeString = 'Proxy Authentication Required';
+      break;
+    case 408:
+      statusCodeString = 'Request Timeout';
+      break;
+    case 409:
+      statusCodeString = 'Conflict';
+      break;
+    case 410:
+      statusCodeString = 'Gone';
+      break;
+    case 411:
+      statusCodeString = 'Length Required';
+      break;
+    case 412:
+      statusCodeString = 'Precondition Failed';
+      break;
+    case 413:
+      statusCodeString = 'Request Entity Too Large';
+      break;
+    case 414:
+      statusCodeString = 'Request-URI Too Long';
+      break;
+    case 415:
+      statusCodeString = 'Unsupported Media Type';
+      break;
+    case 416:
+      statusCodeString = 'Requested Range Not Satisfiable';
+      break;
+    case 417:
+      statusCodeString = 'Expectation Failed';
+      break;
+    case 428:
+      statusCodeString = 'Precondition Required';
+      break;
+    case 429:
+      statusCodeString = 'Too Many Requests';
+      break;
+    case 431:
+      statusCodeString = 'Request Header Fields Too Large';
+      break;
+    case 500:
+      statusCodeString = 'Internal Server Error';
+      break;
+    case 501:
+      statusCodeString = 'Not Implemented';
+      break;
+    case 502:
+      statusCodeString = 'Bad Gateway';
+      break;
+    case 503:
+      statusCodeString = 'Service Unavailable';
+      break;
+    case 504:
+      statusCodeString = 'Gateway Timeout';
+      break;
+    case 505:
+      statusCodeString = 'HTTP Version Not Supported';
+      break;
+    case 511:
+      statusCodeString = 'Network Authentication Required';
+      break;
+  }
+  return statusCodeString;
+}
+
+/**
+ * Set the status bar colors for the HTTP response.
+ * @param {number} statusCode The HTTP status code.
+ */
+function setStatusBar(statusCode) {
+  if (statusCode >= 200 && statusCode < 300) {
+    $('#api-response-status-bar').addClass('success-status');
+    $('#api-response').addClass('success-status');
+  } else if (statusCode >= 400) {
+    $('#api-response-status-bar').addClass('fail-status');
+    $('#api-response').addClass('fail-status');
+  }
+  var statusString = getStatusString(statusCode);
+  if (statusString) {
+    $('#api-response-status-bar').html(statusCode.toString() + ' ' +
+                                       '(' + statusString + ')');
+  } else {
+    $('#api-response-status-bar').html(statusCode.toString());
+  }
+}
+
+/**
+ * Execute an API request that performs a write operation. Write operations
+ * require the user to not just click the 'execute' button but also confirm
+ * that they want to proceed with the write operation.
+ * @param {boolean} confirmationStatus Will be true, indicating that user
+ *     has confirmed desire to perform the write request.
+ */
+function executeRequestAfterUserConfirmation(confirmationStatus) {
+  currentlyDisplayedSample['isUserAuthorized'] = confirmationStatus;
+  executeRequest();
+}
+
+/**
+ * Get the URL path for the API request.
+ * @param {string} addedPath A string to append to the typical generated
+ *     path. For example, when calling youtube.videos.rate, the path 'rate'
+ *     is appended to /youtube/v3/videos', yielding '/youtube/v3/videos/rate'.
+ * @param {string} resource The resource associated with the request.
+ * @return {string} The path for the request.
+ */
+function getPath(addedPath, resource) {
+  // If addedPath is empty string, leave it like that. Otherwise, prepend
+  // a forward slash -- e.g. if addedPath = 'getRating' make it '/getRating'.
+  if (addedPath != 'undefined' && typeof addedPath !== 'undefined') {
+    addedPath = addedPath == '' ? '' : '/' + addedPath;
+  } else {
+    addedPath = '';
+  }
+
+  // Handle case where URI is different from JS API name -- e.g.
+  // youtubePartner vs. youtube/partner.
+  var jsApiPath = CONFIG['jsApi'];
+  if ('jsApiPath' in CONFIG && CONFIG['jsApiPath']) {
+    jsApiPath = CONFIG['jsApiPath'];
+  }
+
+  var path = ('/' + jsApiPath + '/' + CONFIG['jsApiVersion'] + '/' +
+              resource + addedPath);
+  // There is an option to define the path for every snippet if they
+  // aren't standard.
+  if ('explicitPaths' in CONFIG && CONFIG['explicitPaths'] && addedPath) {
+    path = '/' + jsApiPath + '/' + CONFIG['jsApiVersion'] + addedPath;
+  }
+  return path;
+}
+
+/**
+ * Execute an API request using the JS client library.
+ */
+function executeRequest() {
+  var resource = currentlyDisplayedSample['resource'];
+  var method = currentlyDisplayedSample['method'];
+  var functionName = currentlyDisplayedSample['functionName'];
+  var params = currentlyDisplayedSample['params'];
+  var addedPath = currentlyDisplayedSample['path'];
+  var isUserAuthorized = currentlyDisplayedSample['isUserAuthorized'];
+  $('#api-response-wrapper').css('display', 'block');
+  $('#api-response').html('');
+  $('#api-response-status-bar').removeClass();
+  $('#api-response').removeClass();
+  requestParams = {};
+  // Build an object of request parameters than can be sent in the
+  // JS Client Library request.
+  for (var i = 0; i < params.length; i++) {
+    if (params[i]['value']) {
+      requestParams[params[i]['name']] = params[i]['value'].replace(/\'/g, '');
+    }
+  }
+  var originalAddedPath = addedPath;
+  var path = getPath(addedPath, resource);
+
+  if (requestMethods[functionName] == 'GET' || isUserAuthorized) {
+    // Define the API request.
+    var request = gapi.client.request({
+      'method': requestMethods[functionName],
+      'path': path,
+      'params': requestParams
+    });
+    if (resourceBodies[functionName]) {
+      request = gapi.client.request({
+          'body': resourceBodies[functionName],
+          'method': requestMethods[functionName],
+          'path': path,
+          'params': requestParams
+        });
+    }
+    // Execute the API request. When the response comes back, print it in
+    // the '#api-response' element.
+    request.execute(function(response, rawResponse) {
+      var str = JSON.stringify(response, null, 2);
+      var json = JSON.parse(rawResponse);
+      var statusCode = json['gapiRequest']['data']['status'];
+
+      setStatusBar(statusCode);
+      if (str != undefined) {
+        $('#api-response').html('/**\n&nbsp;* API response\n&nbsp;*/\n' + str);
+      } else if (statusCode == 204) {
+        $('#api-response').html('// There is no content in this response.');
+      } else {
+        $('#api-response').html('// There is nothing to see here. :(');
+      }
+    });
+  } else {
+    // When user tries to execute a write operation, request an additional
+    // confirmation that the user wants to perform that operation in their
+    // account. Also explain in the response area why there's no response yet.
+    $('#api-response-status-bar').html('No Operation');
+    $('#api-response').html(
+        '<b>Note:</b> This request performs a write operation.\n\n' +
+        '      It inserts, updates, or deletes a resource associated with\n' +
+        '      the authorized account.\n\n' +
+        '      Click that button to confirm that you want to execute this ' +
+        'request:\n\n' +
+        '      <button onclick="executeRequestAfterUserConfirmation(true);">' +
+                                              'Execute request</button>');
+  }
+}
+
+/**
+ * The Google APIs JS client automatically invokes this callback function
+ * after loading.
+ */
+function handleClientLoad() {
+  // Load the API client and auth2 library
+  gapi.load('client:auth2', initClient);
+}
+
+/**
+ * Initialize the API client after it and the auth2 module have loaded.
+ */
+function initClient() {
+  var discoveryUrl = ('https://www.googleapis.com/discovery/v1/apis/' +
+                      CONFIG['jsApi'] + '/' + CONFIG['jsApiVersion'] + '/rest');
+  gapi.client.init({
+      apiKey: CONFIG['apiKey'],
+      discoveryDocs: [discoveryUrl],
+      clientId: OAUTH2_CLIENT_ID,
+      scope: OAUTH2_SCOPES.join(' ')
+  }).then(function() {
+    loadAPIClientInterfaces();
+    auth2 = gapi.auth2.getAuthInstance();
+    googleUser = auth2.currentUser.get();
+    // Listen for sign-in state changes.
+    auth2.isSignedIn.listen(updateSigninStatus);
+    // Handle the initial sign-in state.
+    setSigninStatus(auth2.isSignedIn.get());
+    $('#execute-request-button').click(function() {
+      handleAuthClick(event);
+    });
+    // The download samples button is only shown internally for now.
+    $('#download-samples-button').click(function() {
+      downloadZipFile(event);
+    });
+    $('#execute-request-button').css('display', 'block');
+    // Offer option to execute without OAuth if user hasn't granted access.
+    if (!auth2.isSignedIn.get()) {
+      $('#execute-without-oauth').css('display', 'block');
+    }
+    $('#execute-without-oauth').click(function() {
+      executeRequest();
+    });
+  });
+}
+
+/**
+ * Set the user's sign-in status.
+ * @param {boolean} isSignedIn Indicates whether user is signed in.
+ */
+function setSigninStatus(isSignedIn) {
+  if (isSignedIn) {
+    $('#execute-request-button').html('Execute');
+    $('#execute-without-oauth').css('display', 'none');
+    $('#unauthorized-message').css('display', 'none');
+    isAuthorized = true;
+  } else {
+    isAuthorized = false;
+  }
+}
+
+/**
+ * Update the user's sign-in status and execute a request when the user
+ * signs in.
+ * @param {boolean} isSignedIn Indicates whether user is signed in.
+ */
+function updateSigninStatus(isSignedIn) {
+  setSigninStatus(isSignedIn);
+  executeRequest();
+}
+
+/**
+ * Handle a click to execute a request.
+ * @param {Object} event Object representing the click event.
+ */
+function handleAuthClick(event) {
+  if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
+    executeRequest();
+  } else {
+    gapi.auth2.getAuthInstance().signIn();
+  }
+}
+
+/**
+ * Download a zip file containing all code samples for the language.
+ * @param {Object} event Object representing the click event.
+ */
+function downloadZipFile(event) {
+  var selectedLanguage = (
+      $('#code-snippets .kd-buttonbar .selected').attr('value'));
+
+  //var newCompleteSnippets = {};
+  if (selectedLanguage in codeSnippets) {
+    var zip = new JSZip();
+    var zip_filename = 'api_snippets_' + selectedLanguage + '.zip';
+    if (CONFIG['zipFile']) {
+      zip_filename = CONFIG['zipFile'];
+    }
+    var shell_filename = zip_filename.replace('.zip', 'sh');
+    var shellScriptContent = '#! /bin/bash\n\n';
+    shellScriptContent += '#set -e\n\n';
+    for (var functionName in codeSnippets[selectedLanguage]) {
+      // Define variable for samples that will be "written" to file.
+      var thisCodeSample;
+      var zip_example = (toUnderscore(functionName) +
+                         LANGUAGES[selectedLanguage]['extension']);
+
+      // Get current parameters for selected snippet.
+      var method = EXAMPLES[functionName]['method'];
+      var resource = EXAMPLES[functionName]['resource'];
+      var params = getCurrentValues(functionName, 'params');
+      var props = getCurrentValues(functionName, 'props');
+      // Call insertCurrentValues() to replace parameter placeholders
+      // with current parameter values for each snippet.
+      var comment = (LANGUAGES[selectedLanguage]['comment'] + 'Sample ' +
+          selectedLanguage + ' code for ' + resource + '.' + method + '\n\n');
+      var populatedSnippet = insertCurrentValues(
+          codeSnippets[selectedLanguage][functionName], functionName,
+          params, props, selectedLanguage);
+
+      if (selectedLanguage in SPLIT_TEMPLATES &&
+          (method in SPLIT_TEMPLATES[selectedLanguage] ||
+           ('list' in SPLIT_TEMPLATES[selectedLanguage] &&
+            !(method in TEMPLATES[selectedLanguage])))) {
+        //var thisCodeSample = comment + boilerplate[selectedLanguage];
+        var thisCodeSample = comment + getFunctionBoilerplate(functionName,
+            selectedLanguage);
+        snippet_parts = populatedSnippet.split('BPSPLIT');
+        for (var b = 0; b < snippet_parts.length; b++) {
+          if (snippet_parts[b].substring(0, 5) == 'FINAL') {
+            break;
+          }
+          thisCodeSample = thisCodeSample.replace('NONBP' + (b + 1).toString(),
+              snippet_parts[b]);
+        }
+        thisCodeSample = thisCodeSample.replace('NONBP\d', '');
+        if (LANGUAGES[selectedLanguage]['beautify']) {
+          thisCodeSample = beautify.js_beautify(thisCodeSample);
+        }
+        //newCompleteSnippets[functionName] = thisCodeSample;
+      } else {
+        var thisCodeSample = getFunctionBoilerplate(functionName,
+            selectedLanguage);
+        thisCodeSample = thisCodeSample.replace('NONBOILERPLATE',
+            comment + populatedSnippet).replace(/BPSPLIT/g, '');
+/*
+        var thisCodeSample = boilerplate[selectedLanguage].replace(
+            'NONBOILERPLATE', comment + populatedSnippet).replace(
+            /BPSPLIT/g, '');
+*/
+        if (LANGUAGES[selectedLanguage]['beautify']) {
+          thisCodeSample = beautify.js_beautify(thisCodeSample);
+        }
+        //newCompleteSnippets[functionName] = thisCodeSample;
+      }
+      if (thisCodeSample) {
+        thisCodeSample = thisCodeSample.replace('&lt;', '<');
+        thisCodeSample = thisCodeSample.replace('&gt;', '>');
+        zip.file(zip_example, thisCodeSample);
+        if ('runScript' in LANGUAGES[selectedLanguage]) {
+          shellScriptContent += (LANGUAGES[selectedLanguage]['runScript'] +
+                                 ' ' + zip_example + '\n');
+        }
+      }
+    }
+    if ('runScript' in LANGUAGES[selectedLanguage]) {
+      zip.file(shell_filename, shellScriptContent);
+    }
+    var zipped = zip.generate({type: 'blob'});
+    saveAs(zipped, zip_filename);
+  }
+}
+
+/**
+ * Attempt immediate OAuth 2.0 client flow as soon as the page loads. If the
+ * currently logged-in Google Account has previously authorized the client
+ * specified as the OAUTH2_CLIENT_ID, then the authorization succeeds with no
+ * user intervention. Otherwise, it fails and the user sees a message that is
+ * specific to this app, not an automatic part of the auth flow, indicating
+ * that the user needs to authorize the app to actually execute requests.
+ */
+function checkAuth() {
+  gapi.auth.authorize({
+    client_id: OAUTH2_CLIENT_ID,
+    scope: OAUTH2_SCOPES,
+    immediate: true
+  }, handleAuthResult);
+}
+
+/**
+ * Handle the result of a gapi.auth.authorize() call.
+ * @param {Object} authResult The result object returned by the
+ *     gapi.auth.authorize() call.
+ */
+function handleAuthResult(authResult) {
+  // Show message above API response area if user hasn't authorized the app
+  // to explain that API responses are only visible if user completes auth flow.
+  if (!authResult || authResult.error) {
+    $('#execute-without-oauth').css('display', 'block');
+    if ($('#code-snippet-method-restrict').html()) {
+      $('#api-response-wrapper').css('display', 'none');
+    } else {
+      $('#unauthorized-message').css('display', 'block');
+    }
+    $('#execute-request-button').click(function() {
+      if (isAuthorized) {
+        executeRequest();
+      } else {
+        gapi.auth.authorize({
+          client_id: OAUTH2_CLIENT_ID,
+          scope: OAUTH2_SCOPES,
+          immediate: false
+          }, handleAuthResult);
+      }
+    });
+  } else {
+    // If app is authorized, change button for authorizing requests and hide
+    // the unauthorized message. This does not currently catch or do anything
+    // to handle the case where the user authorizes the app, then goes to
+    // https://www.google.com/accounts and revokes that authorization. In that
+    // case, the app still shows as being authorized until the page refreshes.
+    $('#execute-request-button').html('Execute');
+    $('#execute-without-oauth').css('display', 'none');
+    $('#unauthorized-message').css('display', 'none');
+    isAuthorized = true;
+    $('#execute-request-button').click(function() {
+      executeRequest();
+    });
+    if ($('#code-snippet-method-restrict').html()) {
+      if (currentlyDisplayedSample.hasOwnProperty('resource')) {
+        executeRequest();
+      }
+    }
+    $('#api-response-wrapper').css('display', 'block');
+  }
+  $('#execute-request-button').css('display', 'block');
+}
+
+/**
+ * Add parameters and properties and sort them.
+ * @param {Object} sortedHash The object to which the values are added.
+ * @param {Object} params A set of key-value pairs representing request
+ *    parameters or resource properties.
+ * @param {string} example The use case associated with the parameters.
+ * @param {string} type Indicates whether the values are added to 'params'
+ *     or to 'props'.
+ * @return {Object} The object with the values added.
+ */
+function addSortableValues(sortedHash, params, example, type) {
+  var keys = {};
+  var values = [];
+  for (var i = 0; i < params[example]['default'][type].length; i++) {
+    keys[params[example]['default'][type][i]['name']] = i;
+    values.push(params[example]['default'][type][i]['name']);
+  }
+  // Sort list of parameter names by length
+  values = values.sort(function(a, b) {
+    return b.length = a.length;
+  });
+  // Add each parameter to array in descending order of parameter name length.
+  for (var v = 0; v < values.length; v++) {
+    sortedHash[example]['default'][type].push(
+        params[example]['default'][type][keys[values[v]]]);
+  }
+  return sortedHash;
+}
+
+
+/**
+ * Sort a list of parameters in descending order of parameter name length.
+ * The generated code snippets contain placeholders for parameter values so
+ * that the current values input by the user can be substituted into the
+ * sample. Sorting by length ensures that if we have two parameters like
+ * "location" and "location-radius", where the entire shorter parameter's
+ * name appears at the beginning of the longer parameter name, that we replace
+ * the placeholder for the longer parameter first. This means we replace
+ * "PLACEHOLDER-location-radius" with the location-radius value and
+ * "PLACEHOLDER-location" with the location value rather than replacing both
+ * with the location value. For example, if your code has a string like:
+ *   The location is PLACEHOLDER-location and the radius is
+ *   PLACEHOLDER-location-radius.
+ * you want the replacements to wind up having a value like:
+ *   The location is 122.444, -87.111 and the radius is 10mi.
+ * not:
+ *   The location is 122.444, -87.111 and the radius is 122.444, -87.111-radius.
+ * @param {Object} params The set of parameters to be sorted.
+ * @return {Object} The sorted list of parameters.
+ */
+function sortEditableParams(params) {
+  var sortedItems = {};
+  for (var example in params) {
+    sortedItems[example] = {'default': {'params': [], 'props': []}};
+    sortedItems = addSortableValues(sortedItems, params, example, 'params');
+    sortedItems = addSortableValues(sortedItems, params, example, 'props');
+  }
+  return sortedItems;
+}
+
+/**
+ * This function builds a resource to insert based on the properties and values
+ * entered in the form.
+ * @param {Object} properties An object containing a list of properties.
+ * @param {boolean} normalizeData Whether to normalize the data.
+ * @return {Object} The resource to insert.
+ */
+function makeResourceBody(properties, normalizeData) {
+  var response = {};
+  var normalizedProps = properties;
+  if (normalizeData) {
+    normalizedProps = {};
+    for (var p in properties) {
+      var value = properties[p]['value'];
+      if (properties[p]['name'].substr(-2, 2) == '[]' && value) {
+        var adjustedName = properties[p]['name'].replace('[]', '');
+        normalizedProps[adjustedName] = value.split(',');
+      } else {
+        normalizedProps[properties[p]['name']] = value;
+      }
+    }
+  }
+  for (var p in normalizedProps) {
+    // Leave properties that don't have values out of inserted resource.
+    if (normalizedProps.hasOwnProperty(p) && normalizedProps[p]) {
+      var propArray = p.split('.');
+      var ref = response;
+      for (var pa = 0; pa < propArray.length; pa++) {
+        var key = propArray[pa];
+        if (pa == propArray.length - 1) {
+          ref[key] = normalizedProps[p];
+        } else {
+          ref = ref[key] = ref[key] || {};
+        }
+      }
+    }
+  }
+  return response;
+}
+
+/**
+ * Populate templates for each language with the data for each use case.
+ * @param {Object} examples The use cases for this API. Each use case
+ *     identifies the resource, method, parameters, etc. for the API request.
+ * @return {Object[]} An array of objects. The first object contains all of the
+ *     generated code samples, keyed by language and then snippet ID. The
+ *     second object contains the default parameters for each snippet.
+ */
+function formatCodeSamples(examples) {
+  var defaultParams = {};
+  var generatedSamples = {};
+  var snippetRequestMethods = {};
+  var firstSamples = {};
+  var selectedResource, selectedMethod;
+  if ($('#code-snippet-method-restrict').html()) {
+    var methodInfo = $('#code-snippet-method-restrict').html().split('|');
+    selectedResource = methodInfo[0];
+    selectedMethod = methodInfo[1];
+  }
+  for (language in TEMPLATES) {
+    generatedSamples[language] = {};
+    for (var example in examples) {
+      if (examples[example]['fileUpload'] &&
+          LANGUAGES[language]['fileUploadUnavailable']) {
+        continue;
+      } else if (examples[example]['skipLanguages'] &&
+                 examples[example]['skipLanguages'].indexOf(language) > -1) {
+        continue;
+      }
+      var sample = examples[example];
+
+      // Add description for sample to global methodDescriptions object.
+      if ('description' in sample) {
+        methodDescriptions[example] = sample['description'];
+      }
+
+      // Get method and resource name and values used in replacements.
+      var method = sample['method'];
+      var resource = sample['resource'];
+      var path = getPath(sample['path'], resource);
+      if ((selectedResource && selectedMethod) &&
+          (resource != selectedResource || method != selectedMethod)) {
+        continue;
+      }
+      var firstSample = resource + '.' + method;
+      var upperMethod = capitalize(method);
+      var upperResource = capitalize(resource);
+      if ('requestMethod' in sample) {
+        snippetRequestMethods[example] = sample['requestMethod'];
+      } else {
+        snippetRequestMethods[example] = getRequestMethod(sample['method']);
+      }
+      if (!firstSamples[firstSample]) {
+        firstSamples[firstSample] = example;
+      }
+
+      // Choose appropriate template for language and method.
+      // Some languages have different syntax depending on method.
+      var code = TEMPLATES[language]['list'];
+      if (sample['fileUpload'] && 'mediaUpload' in TEMPLATES[language]) {
+        code = TEMPLATES[language]['mediaUpload'];
+        if (!('properties' in sample) &&
+            'mediaUploadWithoutBody' in TEMPLATES[language]) {
+          code = TEMPLATES[language]['mediaUploadWithoutBody'];
+        }
+      } else if (method in TEMPLATES[language]) {
+        code = TEMPLATES[language][method];
+      }
+
+      // Get object containing language-specific set of values to replace.
+      // These are strings that aren't easily identified with a standard rule.
+      var specialReplacements = ((language in SPECIAL_REPLACEMENTS) ?
+                                 SPECIAL_REPLACEMENTS[language] : {});
+
+      /*
+       * If there's a default parameter used in the code snippet. This is
+       * used, for example, if a particular parameter is handled differently
+       * than other parameters. In the YouTube API, the 'part' parameter
+       * is sometimes passed different in a request than all of the other
+       * parameters. For example, if 'params' is a mapping of parameters to
+       * values, in the YouTube Data API, it might not include the 'part'
+       * parameter and the request is called like this:
+       *     request(part, params)
+       * instead of:
+       *     request(params)
+       */
+      var defaultParam = '';
+      var defaultParamList = [];
+      if ('requestParameters' in sample) {
+        if ('methodSpecificDefaultParams' in CONFIG &&
+            CONFIG['methodSpecificDefaultParams'] &&
+            method in CONFIG['methodSpecificDefaultParams'] &&
+            CONFIG['methodSpecificDefaultParams'][method]) {
+          defaultParamList = (
+              CONFIG['methodSpecificDefaultParams'][method]);
+        } else if ('defaultParam' in CONFIG && CONFIG['defaultParam']) {
+          defaultParamList.push(CONFIG['defaultParam']);
+        } else if ('defaultParams' in CONFIG &&
+                   CONFIG['defaultParams'] &&
+                   CONFIG['defaultParams'].length > 0) {
+          defaultParamList = CONFIG['defaultParams'];
+        }
+      }
+      var defaultParamArray = [];
+      for (var dp = 0; dp < defaultParamList.length; dp++) {
+        var defaultParamValue = null;
+        if (defaultParamList[dp] in sample['requestParameters']) {
+        //if (sample['requestParameters'][defaultParamList[dp]]) {
+          defaultParamValue = defaultParamList[dp];
+          if (language == 'appsscript' ||
+              language == 'go' ||
+              language == 'js') {
+            defaultParamValue = removeHyphens(defaultParamList[dp]);
+          }
+          if (language == 'java') {
+            defaultParamValue = ('parameters.get("' + defaultParamList[dp] +
+                                 '").toString()\n');
+          }
+          if (language == 'python' || language == 'ruby') {
+            defaultParamValue = toUnderscore(defaultParamList[dp]);
+          }
+        }
+        if (defaultParamValue) {
+          defaultParamArray.push(defaultParamValue);
+        }
+      }
+      defaultParam = defaultParamArray.join(', ');
+      if (language == 'php') {
+        defaultParam = defaultParamArray.join(', $');
+      }
+      var baseUrl = (sample['baseUrl']) ? sample['baseUrl'] : '';
+
+      // An object with all of the values to replace.
+      var replacements = {'api': CONFIG['jsApi'],
+                          'arguments': '',
+                          'baseUrl': baseUrl,
+                          'defaultParam': defaultParam,
+                          'extraPhpParams': '',
+                          'false': 'false',
+                          'functionName': example,
+                          'httpRequestMethod': snippetRequestMethods[example],
+                          'mediaFunctionName': example,
+                          'mimeType': example,
+                          'method': method,
+                          'paramList': defaultParam,
+                          'part': '',
+                          'path': path,
+                          'passedArguments': '',
+                          'propertyObject': '',
+                          'requestParameters': '',
+                          'resource': resource,
+                          'singleResource': singularize(resource),
+                          'special': specialReplacements,
+                          'true': 'true'};
+
+      // Generate strings that will be used in code snippet for arguments,
+      // passed arguments etc.
+      var formattedData = formatArguments(example, sample, language,
+                                          replacements);
+      replacements = formattedData[0];
+      defaultParams[example] = {'default': {'params': formattedData[1],
+                                            'props': formattedData[2]}};
+      if (!resourceBodies[example] && formattedData[2].length > 0) {
+        resourceBodies[example] = makeResourceBody(formattedData[2], false);
+      }
+
+      // Replace values per language, as needed. Currently none for 'js'.
+      if (language == 'appsscript') {
+        replacements['appsScriptService'] = CONFIG['appsScriptService'];
+        replacements['resource'] = upperResource;
+      } else if (language == 'go') {
+        if ('goApi' in CONFIG) {
+          replacements['api'] = CONFIG['goApi'];
+        }
+        printString = 'item.Id, ": ", item.Snippet.Title';
+        if (sample['goPrint']) {
+          printString = ('item.' + sample['goPrint'].join(', ": ", item.'));
+        }
+        replacements['goPrintItems'] = printString;
+        replacements['responseType'] = upperResource + upperMethod;
+        if ('goResponseType' in sample) {
+          replacements['responseType'] = sample['goResponseType'];
+        }
+        replacements['goMethod'] = upperMethod;
+        replacements['resource'] = upperResource;
+        replacements['singleResource'] = singularize(upperResource);
+      } else if (language == 'java') {
+        if ('javaResponseType' in sample) {
+          replacements['responseType'] = sample['javaResponseType'];
+        } else if ('goResponseType' in sample) {
+          replacements['responseType'] = sample['goResponseType'];
+        }
+        replacements['javaMethod'] = upperMethod;
+        replacements['javaResource'] = upperResource;
+        replacements['javaService'] = CONFIG['javaService'];
+        if (replacements['paramList'] != '' &&
+            !(method in CONFIG['javaResourceMethods'])) {
+          replacements['paramList'] += ');';
+        }
+        replacements['upperResource'] = singularize(upperResource);
+        //replacements['singleResource'] = singularize(resource);
+      } else if (language == 'php') {
+        replacements['phpMethod'] = method;
+        if (method == 'list') {
+          replacements['phpMethod'] = method + upperResource;
+        }
+        var singleUpperResource = singularize(capitalize(resource));
+        replacements['phpClass'] = (CONFIG['phpService'] + '_' +
+                                    singleUpperResource);
+      } else if (language == 'python') {
+        replacements['functionName'] = toUnderscore(example);
+        replacements['false'] = 'False';
+        replacements['true'] = 'True';
+      } else if (language == 'ruby') {
+        replacements['functionName'] = toUnderscore(example);
+        replacements['resource'] = toUnderscore(resource);
+        replacements['singleResource'] = singularize(toUnderscore(resource));
+      }
+      // Process replacements of special template values -- e.g. METHOD --
+      // that have special replacement values before everything else. This
+      // is useful if, say, a resource name is plural in a place where it
+      // normally would be singular. We don't want to scrap the whole
+      // template or write special code to make a value plural instead of
+      // singular, etc.
+      if ('replacements' in sample && sample['replacements']) {
+        for (var sub in sample['replacements']) {
+          code = code.replace(sub, sample['replacements'][sub]);
+        }
+      }
+
+      // Do all of the replacements.
+      code = replaceCodeVariables(code, replacements, language);
+
+      // Set the generated sample for this language-snippet combo.
+      generatedSamples[language][example] = code;
+    }
+  }
+  return [generatedSamples, defaultParams, snippetRequestMethods, firstSamples];
+}
+
+/**
+ * Check whether a parameter is a default parameter.
+ * @param {string} param The name of the request parameter.
+ * @param {string} method The method for the API request. As an example,
+ *     many YouTube Data API methods use 'part' as a default parameter,
+ *     but delete methods use 'id' as a default.
+ * @return {boolean} Indication of whether it is a default parameter.
+ */
+function isDefaultParam(param, method) {
+  var isDefault = false;
+  if ('methodSpecificDefaultParams' in CONFIG &&
+      CONFIG['methodSpecificDefaultParams'] &&
+      method in CONFIG['methodSpecificDefaultParams'] &&
+      CONFIG['methodSpecificDefaultParams'][method].indexOf(param) != -1) {
+    return true;
+  } else if ('defaultParam' in CONFIG && param == CONFIG['defaultParam']) {
+    return true;
+  } else if ('defaultParams' in CONFIG &&
+             CONFIG['defaultParams'].indexOf(param) != -1) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Convert a string with a hyphen to camelcase.
+ * @param {string} str The string to be modified.
+ * @return {string} The modified string. Yay, camelcase!
+ */
+function removeHyphens(str) {
+  return str.replace(/\-([a-z])/g,
+                     function($1) { return $1[1].toUpperCase();});
+}
+
+/**
+ * Convert a camelCase value to underscore (camel_case).
+ * @param {string} str The string to be modified.
+ * @return {string} The modified string. Yay, underscores!
+ */
+function toUnderscore(str) {
+  str = str.replace(/\-/g, '_');
+  return str.replace(/([A-Z])/g,
+                     function($1) { return '_' + $1.toLowerCase();});
+}
+
+/**
+ * Make the first character in a string lowercase.
+ * @param {string} str The string to modify.
+ * @return {string} The lowercased string.
+ */
+function uncapitalize(str) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+/**
+ * Make the first character in a string uppercase.
+ * @param {string} str The string to modify.
+ * @return {string} The capitalized string.
+ */
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * Make a string singular instead of plural.
+ * @param {string} str The string to be singularized. Should be a plural noun.
+ * @return {string} The singular noun.
+ */
+function singularize(str) {
+  for (var sr = 0; sr < SINGULAR_RULES.length; sr++) {
+    if (SINGULAR_RULES[sr][0].test(str)) {
+      var singular = str.replace(SINGULAR_RULES[sr][0], SINGULAR_RULES[sr][1]);
+      return singular;
+    }
+  }
+  return str;
+}
+
+/**
+ * Sort an array of objects by property value.
+ * @param {string} field The name of the property for which to sort values.
+ *     For example, 'name' if you want to sort values by name.
+ * @param {boolean} reverse True to sort A-Z or in ascending order.
+ * @param {function} primer How to convert values to sortable entities.
+ * @return {string} The singular noun.
+ */
+var sortBy = function(field, reverse, primer) {
+ var key = primer ?
+     function(x) {return primer(x[field])} :
+     function(x) {return x[field]};
+
+ reverse = !reverse ? 1 : -1;
+
+ return function(a, b) {
+   return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+ }
+};
+
+/**
+ * Replace variables in templates (e.g. METHOD) with appropriate values.
+ * @param {string} code The code snippet in which values are being replaced.
+ * @param {Object} replacements The variables that are to be replaced, mapped
+ *     to the replacement values.
+ * @param {string} language The code snippet's language.
+ * @return {string} The updated code sample.
+ */
+function replaceCodeVariables(code, replacements, language) {
+  code = code.replace(/FUNCTION_NAME/g, replacements['functionName']);
+  if (replacements['appsScriptService']) {
+    code = code.replace(/APPSSCRIPT_SERVICE/g,
+                        replacements['appsScriptService']);
+  }
+  if (replacements['baseUrl']) {
+    code = code.replace(/BASEURL/g, replacements['baseUrl']);
+  }
+  if (replacements['extraPhpParams']) {
+    code = code.replace(/EXTRA_PHP_PARAMS/g,
+                        '        ' + replacements['extraPhpParams'] + '\n');
+  } else {
+    code = code.replace(/EXTRA_PHP_PARAMS/g, '');
+  }
+  if (replacements['goMethod']) {
+    code = code.replace(/GO_METHOD/g, replacements['goMethod']);
+  }
+  if (replacements['goPrintItems']) {
+    code = code.replace(/GO_PRINT_ITEMS/g, replacements['goPrintItems']);
+  }
+  if (language == 'java') {
+    code = code.replace(/JAVA_METHOD/g, replacements['javaMethod']);
+    code = code.replace(/JAVA_RESOURCE/g, replacements['javaResource']);
+    code = code.replace(/JAVA_SERVICE/g, replacements['javaService']);
+    code = code.replace(/UPPER_RESOURCE/g, replacements['upperResource']);
+  }
+  if (replacements['phpClass']) {
+    code = code.replace(/PHP_CLASS/g, replacements['phpClass']);
+  }
+  if (replacements['phpMethod']) {
+    code = code.replace(/PHP_METHOD/g, replacements['phpMethod']);
+  }
+  if (replacements['responseType']) {
+    code = code.replace(/RESPONSE_TYPE/g, replacements['responseType']);
+  }
+  code = code.replace(/DEFAULT_PARAM/g, replacements['defaultParam']);
+  code = code.replace(/HTTP_REQUEST_METHOD/g,
+                      replacements['httpRequestMethod']);
+  code = code.replace(/MEDIA_FILE/g,
+      'PARAM-' + replacements['mediaFunctionName'] + '-media_filename');
+  code = code.replace(/METHOD/g, replacements['method']);
+  code = code.replace(/MIME_TYPE/g,
+      'PARAM-' + replacements['mimeType'] + '-mime_type');
+  code = code.replace(/PARAM_LIST/g, replacements['paramList']);
+  // PASSED_ARGUMENTS before ARGUMENTS to avoid incorrect substitution
+  code = code.replace(/PASSED_ARGUMENTS/g, replacements['passedArguments']);
+  code = code.replace(/ARGUMENTS/g, replacements['arguments']);
+  code = code.replace(/PATH/g, replacements['path']);
+  code = code.replace(/PROPERTY_OBJECT/g, replacements['propertyObject']);
+  code = code.replace(/REQUEST_PARAMETERS/g, replacements['requestParameters']);
+  code = code.replace(/RETURNARRAYINDENT/g,
+                      '\n' + LANGUAGES[language]['indentArray']);
+  code = code.replace(/RETURNINDENT/g, '\n' + LANGUAGES[language]['indent']);
+  code = code.replace(/SINGLE_RESOURCE/g, replacements['singleResource']);
+  code = code.replace(/RESOURCE/g, replacements['resource']);
+  code = code.replace(/false/g, replacements['false']);
+  code = code.replace(/true/g, replacements['true']);
+  code = code.replace(/API/g, replacements['api']);
+  // If there are lingering values in the code samples, perhaps because of
+  // empty parameter values, remove them:
+  //       , $  : )
+  //       (,   : (
+  //       ,{}) : )
+  code = code.replace(/, \$?\)/g, ')');
+  code = code.replace(/\(,/g, '(');
+  code = code.replace(/\(,\s*$/g, '(');
+  if (language != 'appsscript') {
+    code = code.replace(/,?\s*\{\}\)/g, ')');
+  }
+
+  // Replace strings that can't easily be identified by a rule.
+  for (var special in replacements['special']) {
+    var regex = new RegExp(special, 'g');
+    code = code.replace(regex, replacements['special'][special]);
+  }
+  return code;
+}
+
+/**
+ * Make sure Booleans are specified using the proper syntax for the language.
+ * @param {string} language The language for the value.
+ * @param {string} partValue The current parameter value.
+ * @return {string} The modified part value.
+ */
+function fixBooleanValues(language, partValue) {
+  if (language == 'python' && (partValue == 'true' || partValue == 'false')) {
+    return capitalize(partValue);
+  }
+  return partValue;
+}
+
+/**
+ * Generate arguments, passed arguments, and request parameters for
+ * function calls in different languages.
+ * @param {string} functionName The name of the function that uniquely
+ *     identifies the code snippet being called.
+ * @param {Object} example The use case information from the API-specific
+ *     JS file.
+ * @param {string} language The current language.
+ * @param {Object} replacements A map of variables that will be replaced
+ *     in the code snippet and their replacement values.
+ * @return {Object[]} An array of objects. The first contains the modified
+ *     set of replacement values. The second contains editable parameters
+ *     for the example.
+ */
+function formatArguments(functionName, example, language, replacements) {
+  var args = [];
+  var editableParameters = [];
+  var editableProps = [];
+  var modifiedNames = {};
+  var params = [];
+  var paramString = '';
+  var passedArgs = [];
+  var props = [];
+  // This is for go code.
+  var goValues = [];
+
+  // Use single quote for all languages except go.
+  var quote = LANGUAGES[language]['quote'];
+
+  var defaultParam = '';
+  var defaultParamList = [];
+  var defaultParamArray = [];
+  if ('requestParameters' in example) {
+    if ('methodSpecificDefaultParams' in CONFIG &&
+        CONFIG['methodSpecificDefaultParams'] &&
+        example['method'] in CONFIG['methodSpecificDefaultParams'] &&
+        CONFIG['methodSpecificDefaultParams'][example['method']]) {
+      defaultParamList = (
+          CONFIG['methodSpecificDefaultParams'][example['method']]);
+    } else if ('defaultParam' in CONFIG && CONFIG['defaultParam']) {
+      defaultParamList.push(CONFIG['defaultParam']);
+    } else if ('defaultParams' in CONFIG &&
+               CONFIG['defaultParams'] &&
+               CONFIG['defaultParams'].length > 0) {
+      defaultParamList = CONFIG['defaultParams'];
+    }
+    if ('extraRequestParameters' in example &&
+        example['extraRequestParameters'] &&
+        'hasExtraRequestParams' in LANGUAGES[language] &&
+        LANGUAGES[language]['hasExtraRequestParams']) {
+      for (var erp in example['extraRequestParameters']) {
+        defaultParamList.push(erp);
+      }
+    }
+    for (var dp = 0; dp < defaultParamList.length; dp++) {
+      if (defaultParamList[dp] in example['requestParameters']) {
+        var defaultParamArgument = defaultParamList[dp];
+        if (language == 'appsscript' ||
+            language == 'go' ||
+            language == 'js' ||
+            language == 'php') {
+          defaultParamArgument = removeHyphens(defaultParamList[dp]);
+        } else if (language == 'python' || language == 'ruby') {
+          defaultParamArgument = toUnderscore(defaultParamList[dp]);
+        }
+        args.push(defaultParamArgument);
+        var partValue = (
+            example['requestParameters'][defaultParamList[dp]]);
+        if (language == 'java') {
+          passedArgs.push('  parameters.put(' + quote + defaultParamList[dp] +
+                          quote + ', ' + quote + 'PARAM-' + functionName + '-' +
+                          defaultParamList[dp] + quote + ');\n');
+        } else if (language == 'python') {
+          passedArgs.push(defaultParamList[dp] + '=' + quote +
+                          'PARAM-' + functionName + '-' +
+                          defaultParamList[dp] + quote);
+        } else {
+          passedArgs.push(quote + 'PARAM-' + functionName + '-' +
+                          defaultParamList[dp] + quote);
+        }
+        if (!('extraRequestParameters' in example &&
+              example['extraRequestParameters'] &&
+              defaultParamList[dp] in example['extraRequestParameters'])) {
+          if (partValue in DEFAULT_VALUES) {
+            editableParameters.push({'name': defaultParamList[dp],
+                                     'value': DEFAULT_VALUES[partValue]});
+          } else if (partValue) {
+            value = fixBooleanValues(language, partValue);
+            editableParameters.push({'name': defaultParamList[dp],
+                                     'value': partValue});
+          } else {
+            editableParams[defaultParamList[dp]] = '';
+            editableParameters.push({'name': defaultParamList[dp],
+                                     'value': ''});
+          }
+        }
+        goValues.push(removeHyphens(defaultParamList[dp]) + ' string');
+      }
+    }
+
+    firstPhpParam = true;
+    for (var param in example['requestParameters']) {
+      // Skip the default param. It may still be handled later for some
+      // languages. (See "else if" blocks that continue this "if" statement.
+      if (!isDefaultParam(param, example['method'])) {
+        // Set the name of the argument.
+        var argName = param;
+        if (language == 'go' && param == 'type') {
+          // Rename 'type' to 'typeArgument'; 'type' has special meaning in go.
+          argName = 'typeArgument';
+        } else if (language == 'appsscript' ||
+                   language == 'go' ||
+                   language == 'js' ||
+                   language == 'php') {
+          argName = removeHyphens(param);
+        } else if (language == 'python' || language == 'ruby') {
+          argName = toUnderscore(param);
+        }
+        if ('hasExtraArguments' in LANGUAGES[language] &&
+            LANGUAGES[language]['hasExtraArguments']) {
+          if (!('extraRequestParameters' in example) ||
+              !(example['extraRequestParameters']) ||
+              !(param in example['extraRequestParameters'])) {
+            args.push(argName);
+          }
+        }
+
+        // Some functions just handle parameters differently in the client
+        // libraries. The YouTube Data API's captions.list method is an
+        // example. Instead of being called like this (note this is
+        // pseudo-code), where 'params' is an object containing the videoId
+        // parameter:
+        //    captions.list(part, params)
+        // that method is called like this:
+        //    captions.list(part, videoId, params)
+
+        if ('hasExtraRequestParams' in LANGUAGES[language] &&
+            LANGUAGES[language]['hasExtraRequestParams'] &&
+            example['extraRequestParameters'] &&
+            param in example['extraRequestParameters']) {
+          if (language == 'java') {
+            var thisJavaParam = 'parameters.get("' + param + '").toString()';
+            if (replacements['paramList']) {
+              replacements['paramList'] += ', ' + thisJavaParam;
+            } else {
+              replacements['paramList'] = thisJavaParam;
+            }
+          } else if (language == 'php') {
+            replacements['extraPhpParams'] += '$' + param + ', ';
+          } else if (language == 'ruby') {
+            if (replacements['paramList']) {
+              replacements['paramList'] += ', ' + argName;
+            } else {
+              replacements['paramList'] = argName;
+            }
+          } else {
+            if (replacements['paramList']) {
+              replacements['paramList'] += ', ' + param;
+            } else {
+              replacements['paramList'] = param;
+            }
+          }
+        // Add parameter to params object for all other methods/languages.
+        } else {
+          if (language == 'appsscript' || language == 'js') {
+            params.push('\'' + param + '\': \'PARAM-' + functionName + '-' +
+                                            removeHyphens(param) + '\'');
+          } else if (language == 'go') {
+            var variableValue = example['requestParameters'][param];
+            var variableType = 'int64';
+            if (!variableValue || isNaN(variableValue)) {
+              variableType = ((variableValue == 'true' ||
+                               variableValue == 'false') ? 'bool' : 'string');
+            }
+            var goValue = (param == 'type') ? 'typeArgument' : param;
+            // This makes the end of a YouTube Analytics query, for example,
+            // look like ).Dimensions(dimensions).Filters(filters).Sort(sort)...
+            // TODO: Make this a binary rather than based on method name.
+            if (example['method'] == 'delete' ||
+                example['method'] == 'getRating' ||
+                example['method'] == 'list' ||
+                example['method'] == 'query') {
+              paramString += ('\n' +
+                              '        if ' + removeHyphens(goValue));
+              if (variableType == 'string') {
+                paramString += ' != ""';
+              } else if (variableType == 'int64') {
+                paramString += ' != 0';
+              }
+              paramString += (' {\n' +
+                              '                call = call.' +
+                              param.charAt(0).toUpperCase() +
+                              removeHyphens(param.slice(1)) +
+                              '(' + removeHyphens(goValue) + ')\n' +
+                              '        }');
+            } else {
+              paramString += (goValue);
+            }
+          } else if (language == 'java') {
+            var variableValue = example['requestParameters'][param];
+            var variableType = 'long';
+            if (!variableValue || isNaN(variableValue)) {
+              variableType = ((variableValue == 'true' ||
+                               variableValue == 'false') ? 'bool' : 'string');
+            }
+            if (variableType == 'string') {
+              paramString += (
+                  '\n    if (parameters.containsKey("' + param + '") &&\n' +
+                  '        parameters.get("' + param + '") != "") {\n' +
+                  '        ' + functionName + 'Request.set' +
+                  param.charAt(0).toUpperCase() +
+                  removeHyphens(param.slice(1)) +
+                  '(parameters.get("' + removeHyphens(param) +
+                  '").toString());\n' +
+                  '    }\n');
+            } else if (variableType == 'bool') {
+              paramString += (
+                  '\n    if (parameters.containsKey("' + param + '") &&\n' +
+                  '          parameters.get("' + param + '") != "") {\n' +
+                  '      boolean ' + removeHyphens(param) + ' = ' +
+                  '(parameters.get("' + param + '") == "true") ? ' +
+                  'true : false;\n' +
+                  '        ' + functionName + 'Request.set' +
+                  param.charAt(0).toUpperCase() +
+                  removeHyphens(param.slice(1)) + '(' + removeHyphens(param) + ');\n' +
+                  '    }\n');
+            } else {
+              paramString += (
+                  '\n    if (parameters.containsKey("' + param + '")) {\n' +
+                  '        ' + functionName + 'Request.set' +
+                  param.charAt(0).toUpperCase() +
+                  removeHyphens(param.slice(1)) +
+                  '(Long.parseLong(parameters.get("' +
+                  removeHyphens(param) + '").toString()));\n' +
+                  '    }\n');
+            }
+          } else if (language == 'php') {
+            params.push('\'' + param + '\' => $' + removeHyphens(param));
+          } else if (language == 'python') {
+            thisParamName = param.replace('-', '_');
+            params.push(thisParamName + '=' + argName);
+          } else if (language == 'ruby') {
+            params.push(':' + argName + ' => ' + argName);
+          } else {
+            params.push(param + '=' + argName);
+          }
+        }
+
+        // Add default value to passed arguments when calling function.
+        var value = example['requestParameters'][param];
+
+        // Go arguments need to specify the content type. The argument
+        // is a string if there's no value or value isn't a number.
+        // Default is int64. If there's no value or value's not a number,
+        // the value is bool (if it's 'true' or 'false') or string otherwise.
+        var argType = 'int64';
+        if (!value || isNaN(value)) {
+          argType = (value == 'true' || value == 'false') ? 'bool' : 'string';
+        } else if (language == 'java') {
+          argType = 'long';
+        }
+        if (!('hasExtraRequestParams' in LANGUAGES[language] &&
+              LANGUAGES[language]['hasExtraRequestParams'] &&
+              example['extraRequestParameters'] &&
+              param in example['extraRequestParameters'])) {
+          goValues.push(removeHyphens(argName) + ' ' + argType);
+        }
+
+        // Create placeholders for parameter values. Put string values
+        // in quotes (single or double, whatever's right for the language).
+        if (language != 'appsscript') {
+          var passedArgValue = 'PARAM-' + functionName + '-' + param;
+          if (argType == 'string' ||
+              argType == 'long' ||
+              (argType == 'bool' && language == 'java')) {
+            passedArgValue = quote + passedArgValue + quote;
+          } else {
+            // Don't put quotes around int64, boolean, long values
+            passedArgValue = argType.toUpperCase() + '-' + passedArgValue;
+          }
+          if (language == 'java') {
+            passedArgValue = ('  parameters.put(' + quote + param + quote +
+                              ', ' + passedArgValue + ');\n');
+          } else if (language == 'php') {
+            passedArgValue = quote + param + quote + ' => ' + passedArgValue;
+            if (firstPhpParam) {
+              if (!('hasExtraRequestParams' in LANGUAGES[language] &&
+                  LANGUAGES[language]['hasExtraRequestParams'] &&
+                  example['extraRequestParameters'] &&
+                  param in example['extraRequestParameters'])) {
+                passedArgValue = 'RETURNINDENTarray(' + passedArgValue;
+                firstPhpParam = false;
+              } else {
+                passedArgValue = 'RETURNARRAYINDENT' + passedArgValue;
+              }
+            }
+          } else if (language == 'python') {
+            passedArgValue = param + '=' + passedArgValue;
+          } else if (language == 'ruby') {
+            passedArgValue = argName + ': ' + passedArgValue;
+          }
+          if (!('hasExtraRequestParams' in LANGUAGES[language] &&
+              LANGUAGES[language]['hasExtraRequestParams'] &&
+              example['extraRequestParameters'] &&
+              param in example['extraRequestParameters'])) {
+            passedArgs.push(passedArgValue);
+          }
+        }
+
+        // Set editable parameter values, substituting in default values
+        // as appropriate. For example, the YouTube code might specify a
+        // default channel ID, with a value identified as "CHANNEL_ID"
+        // instead of the actual value. This subs in the actual value.
+        if (value in DEFAULT_VALUES) {
+          editableParameters.push({'name': param,
+                                   'value': DEFAULT_VALUES[value]});
+        } else if (value) {
+          value = fixBooleanValues(language, value);
+          editableParameters.push({'name': param, 'value': value});
+        } else {
+          editableParams[param] = '';
+          editableParameters.push({'name': param, 'value': ''});
+        }
+      } else if (language == 'js') {
+        params.push('\'' + param + '\': \'PARAM-' + functionName + '-' +
+                                        removeHyphens(param) + '\'');
+      } else if (language == 'python') {
+        params.push(toUnderscore(param) + '=' + toUnderscore(param));
+      }
+    }
+  }
+  if (example['properties']) {
+    for (var property in example['properties']) {
+      editableProps = addValueToArray(editableProps, example, property);
+    }
+    if (language == 'java') {
+      replacements['propertyObject'] = buildJavaResource(example,
+          functionName, example['properties'], replacements['singleResource']);
+    } else {
+      replacements['propertyObject'] = buildPropertyObject(example,
+          functionName, language, example['properties']);
+    }
+  }
+  // PHP passed arguments need to pass array() if there aren't addl params.
+  if (language == 'php' && firstPhpParam) {
+    passedArgs.push('array(');
+  }
+
+  // Create argument and passed argument strings.
+  replacements['arguments'] = args.join(', ');
+  replacements['passedArguments'] = passedArgs.join(', ');
+  var spacing = (('paramSpacing' in LANGUAGES[language]) ?
+                  LANGUAGES[language]['paramSpacing'] : '');
+  if (language == 'go') {
+    replacements['arguments'] = goValues.join(', ');
+    replacements['requestParameters'] = paramString;
+  } else if (language == 'java') {
+    replacements['passedArguments'] = passedArgs.join('');
+    replacements['requestParameters'] = paramString;
+  } else if (language == 'php') {
+    replacements['arguments'] = args.join(', \$');
+    replacements['requestParameters'] = (
+        'array(\n' +
+        spacing + params.join(',\n' + spacing) + '\n' +
+        '        )');
+  } else if (language == 'python' || language == 'ruby') {
+    replacements['passedArguments'] = passedArgs.join(',RETURNINDENT');
+  } else if (language == 'js') {
+    replacements['requestParameters'] = params.join(',RETURNARRAYINDENT');
+  } else {
+    replacements['requestParameters'] = params.join(',\n' + spacing);
+  }
+  return [replacements, editableParameters, editableProps];
+}
+
+/**
+ * This function formats a value that will be set as a property value in a
+ * Java code snippet.
+ * @param {Object} example Information about the use case.
+ * @param {string} functionName The name of the code sample.
+ * @param {string} key The name of the property.
+ * @param {string} propertyObject A string representation of the property
+ *     object as it would appear in Java code.
+ * @param {string} indent Spaces to use to ensure proper indentation.
+ * @return {string} A string representation of the property value.
+ */
+function getJavaPropValue(example, functionName, key, propertyObject, indent) {
+  var nameForId = key.replace(/\./g, '-').replace(/[\[\]\(\)]/g, '');
+  if (key.substr(-2, 2) == '[]') {
+    var thisKey = key.replace('[]', '').split('.').pop();
+    propertyObject += (HIE + '"PARAM-' + functionName + '-' + nameForId + '"' +
+                       indent + 'List<String> ' + thisKey + 'List' +
+                       ' = Arrays.asList(' +
+                       '"PARAM-' + functionName + '-' + nameForId + '"' +
+                       '.split(","));\nMIDHIDE');
+    return [propertyObject, thisKey + 'List', 'list'];
+  }
+  if (example['goIntegers'] &&
+      example['goIntegers'].indexOf(key) > -1) {
+    return [propertyObject, 'LONG-PARAM-' + functionName + '-' + nameForId +
+            '"', 'long'];
+  } else if (example['javaBooleans'] &&
+             example['javaBooleans'].indexOf(key) > -1) {
+    return [propertyObject, 'BOOL-PARAM-' + functionName + '-' + nameForId,
+            'bool'];
+  } else {
+    var keyParts = key.split('.');
+    return [propertyObject, '"PARAM-' + functionName + '-' + nameForId + '"',
+            'str'];
+  }
+}
+
+/**
+ * This function builds a Java object that can be passed into an insert/update
+ * function in Java code snippets.
+ * @param {Object} example Information about the use case.
+ * @param {string} functionName The name of the code sample.
+ * @param {Object} props The properties to be included in the object.
+ * @param {string} resource The name of the API resource.
+ * @return {string} A string representation of the property object to be
+ *                  included in the displayed code snippet for the language.
+ */
+function buildJavaResource(example, functionName, props, resource) {
+  var upperResource = capitalize(resource);
+  var keys = Object.keys(props);
+
+
+  var indent = '        ';
+  var propertyObject = ('\n' + indent + upperResource + ' ' + resource +
+                        ' = new ' + upperResource + '();\n');
+  keys.sort();
+  var createdObjects = {'0': {}};
+  hasDuplicate = {};
+  setDuplicate = false;
+  var specialNameVars = {};
+  for (var i = 0; i < keys.length; i++) {
+    var keyParts = keys[i].split('.');
+    for (var kp = 0; kp < keyParts.length; kp++) {
+      // Set a property value.
+      if (kp == keyParts.length - 1) {
+        var propDetails = getJavaPropValue(example, functionName, keys[i],
+                                           propertyObject, indent);
+        propertyObject = propDetails[0];
+        var hide = (propDetails[2] == 'list') ? '' : (HIE + propDetails[1]);
+
+        if (keyParts[kp].substr(-2, 2) == '[]') {
+          keyParts[kp] = keyParts[kp].replace('[]', '');
+        }
+        if (kp == 0) {
+          propertyObject += (hide + indent +
+                             resource + '.set("' + keyParts[0] + '"' +
+                             ', ' + propDetails[1] + ');\n' + HIEE);
+        } else if (keyParts[kp - 1] in specialNameVars) {
+          propertyObject += (hide + indent +
+                             specialNameVars[keyParts[kp - 1]] + '.set("' +
+                             keyParts[kp] + '"' +
+                             ', ' + propDetails[1] + ');\n' + HIEE);
+        } else if (keyParts[kp - 1] in createdObjects[(kp - 1).toString()]) {
+          propertyObject += (hide + indent +
+                             keyParts[kp - 1] + '.set("' + keyParts[kp] + '"' +
+                             ', ' + propDetails[1] + ');\n' + HIEE);
+        }
+      // Create top-level objects.
+      } else if (kp == 0 && !(keyParts[kp] in createdObjects['0'])) {
+        var javaObject = upperResource + capitalize(keyParts[kp]);
+        propertyObject += (indent + javaObject + ' ' + keyParts[kp] +
+                           ' = new ' + javaObject + '();\n');
+        createdObjects['0'][keyParts[kp]] = resource;
+      } else {
+        var javaObjectName = '';
+        var javaVariableName = keyParts[kp];
+        if ('javaObjects' in example &&
+            keyParts[kp] in example['javaObjects']) {
+          if (example['javaObjects'][keyParts[kp]].constructor === Array) {
+            if (kp > 0) {
+              setDuplicate = true;
+            }
+            javaObjectName = example['javaObjects'][keyParts[kp]][kp];
+          } else {
+            javaObjectName = example['javaObjects'][keyParts[kp]];
+          }
+        } else {
+          javaObjectName = upperResource;
+          for (var poc = 0; poc <= kp; poc++) {
+            javaObjectName += capitalize(keyParts[poc]);
+          }
+        }
+        // We need a different variable name if the object's name
+        // is the same as the resource's name.
+        if (keyParts[kp] == resource || setDuplicate) {
+          javaVariableName = uncapitalize(javaObjectName);
+          specialNameVars[keyParts[kp]] = javaVariableName;
+          if (setDuplicate) {
+            hasDuplicate[javaVariableName] = keyParts[kp];
+            setDuplicate = false;
+          }
+        }
+        if (!(kp.toString() in createdObjects)) {
+          createdObjects[kp.toString()] = {};
+        }
+        if (!(javaVariableName in createdObjects[kp.toString()])) {
+          propertyObject += (indent + javaObjectName + ' ' + javaVariableName +
+                             ' = new ' + javaObjectName + '();\n');
+          createdObjects[kp.toString()][javaVariableName] = keyParts[kp - 1];
+        }
+      }
+    }
+  }
+  propertyObject += '\n';
+  var sortedObjects = [];
+  var objKeys = Object.keys(createdObjects);
+  objKeys.sort();
+  for (var ok = objKeys.length - 1; ok >= 0; ok--) {
+    var nestingLevel = ok.toString();
+    for (var nestedObject in createdObjects[nestingLevel]) {
+      if (resource in specialNameVars &&
+          specialNameVars[resource] == nestedObject) {
+        propertyObject += (indent + createdObjects[nestingLevel][nestedObject] +
+                           '.set' + capitalize(resource) +
+                           '(' + nestedObject + ');\n');
+      } else if (nestedObject in hasDuplicate) {
+        propertyObject += (indent + createdObjects[nestingLevel][nestedObject] +
+                           '.set' + capitalize(hasDuplicate[nestedObject]) +
+                           '(' + nestedObject + ');\n');
+      } else {
+        propertyObject += (indent + createdObjects[nestingLevel][nestedObject] +
+                           '.set' + capitalize(nestedObject) +
+                           '(' + nestedObject + ');\n');
+      }
+    }
+  }
+  return propertyObject;
+}
+
+/**
+ * Build an object that can be passed as a parameter in samples that pass a
+ * group of properties to a code snippet.
+ * @param {Object} example The example associated with the property object.
+ * @param {string} functionName The name of the code sample.
+ * @param {string} language The language of the code sample.
+ * @param {Object} props The properties to be included in the object.
+ * @return {string} A string representation of the property object to be
+ *                  included in the displayed code snippet for the language.
+ */
+function buildPropertyObject(example, functionName, language, props) {
+  var propertyObject = '{';
+  var propertyList = [];
+  var quote = LANGUAGES[language]['quote'];
+  var separator = ': ';
+  var goInteger = '|int';
+  if (language == 'php') {
+    propertyObject = 'array(';
+    separator = ' => ';
+  }
+  for (var prop in props) {
+    var nameForId = prop.replace(/\./g, '-').replace(/[\[\]\(\)]/g, '');
+    // In Go, we need to identify properties that have integer values so that
+    // the value is passed/typed correctly.
+    if (language == 'go' &&
+        example['goIntegers'] &&
+        example['goIntegers'].indexOf(prop) > -1) {
+      prop += '|int';
+    } else if (language == 'ruby') {
+      prop = toUnderscore(prop);
+    }
+    propertyList.push(quote + prop + quote + separator +
+        quote + 'PARAM-' + functionName + '-' + nameForId + quote);
+  }
+  if (language == 'js' ||
+      language == 'php' ||
+      language == 'python' ||
+      language == 'ruby') {
+    propertyObject += propertyList.join(',RETURNARRAYINDENT');
+  } else {
+    propertyObject += propertyList.join(',\n       ');
+  }
+  if (language == 'go') {
+    propertyObject += ',\n      }';
+  } else if (language == 'php') {
+    propertyObject += ')';
+  } else if (language == 'python' || language == 'ruby') {
+    propertyObject += '}';
+  } else {
+    propertyObject += '\n      }';
+  }
+  return propertyObject;
+}
+
+/**
+ * Add an editable property to an existing array of properties.
+ * @param {array} list The list of properties.
+ * @param {array} example The example for which the property is being added.
+ * @param {string} property The property being added.
+ * @return {array} The modified list of properties.
+ */
+function addValueToArray(list, example, property) {
+  var value = example['properties'][property];
+  if (value in DEFAULT_VALUES) {
+    list.push({'name': property, 'value': DEFAULT_VALUES[value]});
+  } else if (value) {
+    value = fixBooleanValues(language, value);
+    list.push({'name': property, 'value': value});
+  } else {
+    list[property] = '';
+    list.push({'name': property, 'value': ''});
+  }
+  return list;
+}
+
+/**
+ * Load the client interface for the API specified in the
+ * config data. For more information, see:
+ * https://developers.google.com/api-client-library/javascript/reference/referencedocs
+ */
+function loadAPIClientInterfaces() {
+  gapi.client.load(CONFIG['jsApi'], CONFIG['jsApiVersion'], function() {
+    // Retrieve use cases, etc. from API-specific file.
+    var response = google_js_snippets_handleAPILoaded();
+    var examples = response[0];
+    EXAMPLES = examples;
+    DEFAULT_VALUES = response[1];
+    SPECIAL_REPLACEMENTS = response[2];
+    requiresAuth = response[3];
+
+    // Populate templates with code samples and get editable parameters.
+    var processedSamples = formatCodeSamples(examples);
+    codeSnippets = processedSamples[0];
+    editableParams = sortEditableParams(processedSamples[1]);
+    requestMethods = processedSamples[2];
+    //defaultSamples = processedSamples[3];
+
+    for (var example in examples) {
+      if (examples[example]['loadableResource']) {
+        loadableResources[example] = examples[example]['loadableResource'];
+      }
+      if (examples[example]['fileUpload']) {
+        fileUploaders[example] = true;
+      }
+      if (examples[example]['fileLocation']) {
+        mediaFilenames[example] = examples[example]['fileLocation'];
+      }
+      if (examples[example]['mimeType']) {
+        mimeTypes[example] = examples[example]['mimeType'];
+      }
+    }
+
+    if ($('#code-snippet-method-restrict').html()) {
+      var methodInfo = $('#code-snippet-method-restrict').html().split('|');
+      var selectedResource = methodInfo[0];
+      var selectedMethod = methodInfo[1];
+      var selectedMethodName, selectedPath;
+      if (methodInfo.length > 2) {
+        selectedMethodName = methodInfo[2];
+      } else if (defaultSamples[selectedResource + '.' + selectedMethod]) {
+        selectedMethodName = (defaultSamples[selectedResource + '.' +
+                              selectedMethod]);
+      }
+      if (methodInfo.length > 3) {
+        selectedPath = methodInfo[3];
+      }
+      if (RESOURCES[selectedResource]) {
+        var methods = RESOURCES[selectedResource];
+        for (var i = 0; i < methods.length; i++) {
+          if (methods[i].length > 3 &&
+              methods[i][2] &&
+              methods[i][2] == selectedMethodName) {
+            selectedPath = methods[i][3];
+            break;
+          } else if (methods[i].length > 3 && methods[i][0] == selectedMethod) {
+            selectedPath = methods[i][3];
+            break;
+          }
+        }
+      }
+      if (!currentlyDisplayedSample.hasOwnProperty('functionName') ||
+          currentlyDisplayedSample['functionName'] != selectedMethodName) {
+        displayCodeSample(selectedResource, selectedMethod,
+                          selectedMethodName, selectedPath, false, true);
+      }
+    } else {
+      // Identify selected resource and method.
+      var selectedResource = (
+          $('input[name=resource-type]').filter(':checked').val());
+      var selectedResource = (
+          selectedResource ? selectedResource : resourceNames[0]);
+
+      var selectedMethodDetails = (
+          $('input[name=method-name]').filter(':checked').attr('onchange'));
+
+      // Show the code sample for the selected method or for the first resource
+      // and method if one isn't selected.
+      stillNeedCodeSample = true;
+      if (selectedMethodDetails && selectedMethodDetails.length > 0) {
+        var methodDetails = (
+            selectedMethodDetails.split('(')[1].split(')')[0].split(','));
+        if (methodDetails.length > 3) {
+          var selectedResource = methodDetails[0].replace(/[\']/g, '').trim();
+          var selectedMethod = methodDetails[1].replace(/[\']/g, '').trim();
+          var selectedMethodName = methodDetails[2].replace(/[\']/g, '').trim();
+          var selectedPath = methodDetails[3].replace(/[\']/g, '').trim();
+          displayCodeSample(selectedResource, selectedMethod,
+                            selectedMethodName, selectedPath, false, true);
+          stillNeedCodeSample = false;
+        }
+      }
+      if (stillNeedCodeSample) {
+        displayCodeSample(resourceNames[0], firstMethod[0], firstMethodName,
+                          firstPath, false, true);
+      }
+    }
+    API_LOADED = true;
+  });
+}
+
+/**
+ * This function creates an option list for resources.
+ */
+function listResources() {
+  var resourceList = ('<select id="select-resource" name="resource-type" ' +
+                      'onchange="listMethods(this.value);">');
+  var count = 0;
+  var checked = 'checked="checked"';
+  var selectedResource = '';
+  for (var resource in RESOURCES) {
+    if (count > 0) {
+      checked = '';
+    } else {
+      selectedResource = resource;
+    }
+    count += 1;
+    if (CONFIG['useGroups'] && GROUPS) {
+      resourceList += ('<input id="' + resource + '" ' + 'type="hidden" ' +
+                       'name="resource-type" value="' + resource + '">');
+      for (var group in GROUPS) {
+        resourceList += ('<div class="google-code-sample-group-header">' +
+                         group + '</div>');
+        for (var groupItem in GROUPS[group]) {
+          var thisGroup = GROUPS[group][groupItem];
+          resourceId = (resource + '|' + group + '|' +
+                        thisGroup['name']).replace(' ', '-');
+          resourceList += (
+              '<input id="' + resourceId + '" ' + 'type="radio" ' +
+              'name="resource-type" value="' + resourceId + '" ' +
+              'onchange="listMethods(this.value);"' + checked + '>' +
+              thisGroup['name'] + '<br>');
+          checked = '';
+        }
+      }
+    } else {
+      resourceList += ('<option value="' + resource + '" ' + checked + '>' +
+                       resource + '</option>');
+    }
+  }
+  resourceList += '</select>';
+  $('#resource-list').html(resourceList);
+}
+
+/**
+ * Call the listMethods function to list the snippets for the first resource
+ * listed on the page. The function runs when the page loads to ensure that
+ * the list of snippets is populated and the first snippet is selected.
+ */
+function listFirstResourceMethods() {
+  for (var resource in RESOURCES) {
+    if (CONFIG['useGroups'] && GROUPS) {
+      for (var group in GROUPS) {
+        for (var groupItem in GROUPS[group]) {
+          var thisGroup = GROUPS[group][groupItem];
+          resourceId = (resource + '|' + group + '|' +
+                        thisGroup['name']).replace(' ', '-');
+          listMethods(resourceId);
+          break;
+        }
+        break;
+      }
+    } else {
+      listMethods(resource);
+    }
+    break;
+  }
+}
+
+/**
+ * Create and display a list of radio buttons for the selected resource's use
+ * cases. By default, the tool selects and displays the first sample.
+ * @param {string} resource The name of the resource, as it appears in the
+ *     Google APIs JS client library calls.
+ */
+function listMethods(resource) {
+  resetCodeSample();
+  var methodList = '';
+  var firstGroupItem = '';
+  if (CONFIG['useGroups'] && GROUPS) {
+    var groupInfo = resource.split('|');
+    for (var group in GROUPS) {
+      if (group != groupInfo[1]) {
+        continue;
+      }
+      for (var g = 0; g < GROUPS[group].length; g++) {
+        var thisGroup = GROUPS[group][g];
+        var groupName = thisGroup['name'].replace(' ', '-');
+        if (groupName != groupInfo[2]) {
+          continue;
+        }
+        var resource = groupInfo[0];
+        for (var i = 0; i < thisGroup['items'].length; i++) {
+          var alwaysSelect = (i == 0) ? ' checked' : '';
+          var item = thisGroup['items'][i];
+          methodList += ('<input id="' + resource + '-' + i + '" ' +
+                         'type="radio" name="method-name" ' +
+                         'value="' + item['id'] + '" ' +
+                         'onchange="displayCodeSample(\'' + resource + '\', ' +
+                         '\'' + RESOURCES[resource][0][0] + '\', ' +
+                         '\'' + item['id'] + '\', ' +
+                         '\'' + '\', ' +
+                         'false, true);"' +
+                         alwaysSelect + '>' + item['name'] + '<br>');
+          if (i == 0) {
+            firstGroupItem = item['id'];
+          }
+        }
+      }
+    }
+  } else if (RESOURCES[resource]) {
+    var methods = RESOURCES[resource];
+
+    for (var i = 0; i < methods.length; i++) {
+      var alwaysSelect = (i == 0) ? ' checked' : '';
+      if (alwaysSelect == ' checked') {
+        defaultSamples[resource + '.' + methods[i][0]] = (
+            methods[i][2]);
+      }
+
+      var inputText = methods[i][0];
+      if (methods[i].length > 1 && methods[i][1]) {
+        inputText = methods[i][1];
+      }
+
+      var inputValue = methods[i][0];
+      if (methods[i].length > 2 && methods[i][2]) {
+        inputValue = methods[i][2];
+      }
+
+      var methodPath = '';
+      if (methods[i].length > 3 && methods[i][3]) {
+        methodPath = methods[i][3];
+      }
+      methodList += ('<input id="' + resource + '-' + i + '" ' +
+                     'type="radio" name="method-name" ' +
+                     'value="' + inputValue + '" ' +
+                     'onchange="displayCodeSample(\'' + resource + '\', ' +
+                     '\'' + methods[i][0] + '\', ' +
+                     '\'' + inputValue + '\', ' +
+                     '\'' + methodPath + '\', ' +
+                     'false, true);"' +
+                     alwaysSelect + '>' + '<code>' + inputText + '</code><br>');
+    }
+  }
+  $('#method-list').html(methodList);
+  if (API_LOADED) {
+    var path = '';
+    if (RESOURCES[resource][0].length > 3 && RESOURCES[resource][0][3]) {
+      path = RESOURCES[resource][0][3];
+    }
+    if (RESOURCES[resource][0].length > 2) {
+      displayCodeSample(resource, RESOURCES[resource][0][0],
+                        RESOURCES[resource][0][2], path, false, true);
+    } else {
+      if (CONFIG['useGroups'] && GROUPS && firstGroupItem) {
+        displayCodeSample(resource, RESOURCES[resource][0][0], firstGroupItem,
+                          '', false, true);
+      } else {
+        displayCodeSample(resource, RESOURCES[resource][0][0], '', path,
+                          false, true);
+      }
+    }
+  }
+}
+/**
+ * Create and display radio buttons for a specific method's use cases.
+ */
+function listMethodSpecificUseCases() {
+  var methodInfo = $('#code-snippet-method-restrict').html().split('|');
+  var selectedResource = methodInfo[0];
+  var selectedMethod = methodInfo[1];
+  resetCodeSample();
+  var optionList = '';
+  var firstGroupItem = '';
+  if (RESOURCES[selectedResource]) {
+    var methods = RESOURCES[selectedResource];
+
+    for (var i = 0; i < methods.length; i++) {
+      if (methods[i][0] == selectedMethod) {
+        var alwaysSelect = (optionList == '') ? ' checked' : '';
+        if (alwaysSelect == ' checked') {
+          defaultSamples[selectedResource + '.' + selectedMethod] = (
+              methods[i][2]);
+        }
+
+        var inputText = methods[i][0];
+        if (methods[i].length > 1 && methods[i][1]) {
+          inputText = methods[i][1];
+        }
+
+        var inputValue = methods[i][0];
+        if (methods[i].length > 2 && methods[i][2]) {
+          inputValue = methods[i][2];
+        }
+
+        var methodPath = '';
+        if (methods[i].length > 3 && methods[i][3]) {
+          methodPath = methods[i][3];
+        }
+        optionList += (
+            '<input id="' + selectedResource + '-' + i + '" ' +
+            'type="radio" name="method-name" ' +
+            'value="' + inputValue + '" ' +
+            'onchange="displayCodeSample(\'' + selectedResource + '\', ' +
+            '\'' + methods[i][0] + '\', ' +
+            '\'' + inputValue + '\', ' +
+            '\'' + methodPath + '\', ' +
+            'false, true);"' +
+            alwaysSelect + '>' + '<code>' + inputText + '</code><br>');
+      }
+    }
+  }
+  $('#method-specific-use-case-options').html(optionList);
+}
+
+/**
+ * Hide the current code sample, description, and API response when the user
+ * changes the selected resource.
+ */
+function resetCodeSample() {
+  $('#selected-code-sample-description').html('');
+  $('#selected-code-sample').html('');
+  $('#api-response').html('');
+  $('#api-response-status-bar').removeClass();
+  $('#api-response').removeClass();
+  $('#editable-params').html('');
+  $('#no-curl-boilerplate').css('display', 'none');
+  $('#update-example-params').css('display', 'none');
+}
+
+/**
+ * Return the default function name for a resource and method. The function
+ * name identifies the key in a key-value pair where that key maps to a
+ * function that is the snippet for a particular use case of calling a
+ * particular API method. The default function name can be used when there
+ * is only one snippet for a given method. For example, the default function
+ * name for the videos.list method is videosList.
+ * @param {string} resource The name of the resource. See the listMethods
+ *     function for more detail.
+ * @param {string} method The name of the method.
+ * @return {string} The function name.
+ */
+function getFunctionName(resource, method) {
+  return resource + method.substr(0, 1).toUpperCase() + method.substr(1);
+}
+
+/**
+ * Get correct set of boilerplate code for a function depending on whether
+ * the function supports media upload. This function prevents code for
+ * uploading videos from appearing in, say, list methods.
+ * @param {string} functionName A name that uniquely identifies the use case.
+ * @param {string} language The language for which code is being retrieved.
+ * @return {string} The boilerplate language to use.
+ */
+function getFunctionBoilerplate(functionName, language) {
+  if ($('#show-resumable-boilerplate').html() == 'true' &&
+      fileUploaders[functionName] &&
+      boilerplate['upload'][language]) {
+    return boilerplate['upload'][language];
+  } else {
+    return boilerplate[language];
+  }
+}
+
+/**
+ * Set the boilerplate code for a language by finding the contents of the
+ * boilerplate-auth element for that language, which is hidden no the page.
+ * Optionally include boilerplate code for resumable uploads based on the
+ * page content. For example, include that code for the videos.insert method
+ * but not for the channels.list method.
+ * For example, for Python, this function extracts the values of
+ * the <div id="boilerplate-auth-python"> element.
+ */
+function setBoilerplate() {
+  for (var language in LANGUAGES) {
+    boilerplate[language] = '';
+    if ($('#boilerplate-auth-' + language).length) {
+      boilerplate[language] += $('#boilerplate-auth-' + language).html();
+      boilerplate[language] = boilerplate[language].replace('ANGLELEFT', '<');
+      boilerplate[language] = boilerplate[language].replace('ANGLERIGHT', '>');
+    }
+    if (language == 'js') {
+      boilerplate[language] = boilerplate[language].replace('SCRIPT_HEADER',
+          '<html><head><title>Google APIs - Sample JS Page</title></head>\n' +
+          '<body>\n\n' +
+          '<script>\n');
+      boilerplate[language] = boilerplate[language].replace('SCRIPT_FOOTER',
+          '</body></html>');
+    } else if (language == 'php') {
+      boilerplate[language] = boilerplate[language].replace('PHP_START',
+            '<?php');
+      boilerplate[language] = boilerplate[language].replace('PHP_END', '?>');
+    }
+    // Look for RESUMABLE1 in boilerplate and replace with contents of
+    // boilerplate-resumable-python-1 element or empty string if method
+    // does not support media upload. Repeat until RESUMABLE# is not found.
+    var count = 1;
+    var replace_resumable = true;
+    boilerplate['upload'][language] = boilerplate[language];
+    while (replace_resumable) {
+      if (boilerplate[language].indexOf('RESUMABLE' + count.toString()) < 0) {
+        replace_resumable = false;
+        break;
+      }
+      var resumable_text = '';
+      if ($('#show-resumable-boilerplate').html() == 'true' &&
+          $('#boilerplate-resumable-' + language + '-' +
+          count.toString()).length) {
+        resumable_text = $('#boilerplate-resumable-' + language + '-' +
+                           count.toString()).html().trim() + '\n';
+      }
+      // Include boilerplate in upload version and remove RESUMABLE from
+      // non-upload version of boilerplate.
+      boilerplate['upload'][language] = boilerplate['upload'][language].replace(
+          'RESUMABLE' + count.toString() + '\n', resumable_text);
+      boilerplate[language] = boilerplate[language].replace(
+          'RESUMABLE' + count.toString() + '\n', '');
+      count++;
+    }
+    if (language == 'go') {
+      for (var bd in CONFIG['boilerplateDefaults']) {
+        boilerplate['upload'][language] = (
+            boilerplate['upload'][language].replace(bd,
+                CONFIG['boilerplateDefaults'][bd]));
+        boilerplate[language] = boilerplate[language].replace(
+            bd, CONFIG['boilerplateDefaults'][bd]);
+      }
+    } else if (language == 'js') {
+      boilerplate[language] = boilerplate[language].replace(/SCRIPT_START/g,
+          '<script');
+      boilerplate[language] = boilerplate[language].replace(/SCRIPT_END/g,
+          '</script>');
+      boilerplate[language] = boilerplate[language].replace(/ANGLELEFT/g, '<');
+      boilerplate[language] = boilerplate[language].replace(/ANGLERIGHT/g, '>');
+      boilerplate['upload'][language] = (
+          boilerplate['upload'][language].replace(/SCRIPT_START/g, '<script'));
+      boilerplate['upload'][language] = (
+          boilerplate['upload'][language].replace(/SCRIPT_END/g, '</script>'));
+      boilerplate['upload'][language] = (
+          boilerplate['upload'][language].replace(/ANGLELEFT/g, '<'));
+      boilerplate['upload'][language] = (
+          boilerplate['upload'][language].replace(/ANGLERIGHT/g, '>'));
+    }
+  }
+}
+
+/**
+ * Switch between code snippet and complete code sample with boilerplate.
+ * @param {string} element The element that was toggled.
+ */
+function toggleCodeSnippet(element) {
+  if (element.value == '2') {
+    SHOW_FULL_SAMPLE = true;
+/*
+    $('#selected-code-snippets-js').addClass('devsite-enable-open-in-jsfiddle');
+    $('#selected-code-snippets-js').attr('data-jsfiddle-title',
+        'API sample code (' + CONFIG['jsApi'] + ')');
+*/
+  } else {
+    SHOW_FULL_SAMPLE = false;
+/*
+    $('#selected-code-snippets-js').removeClass(
+        'devsite-enable-open-in-jsfiddle');
+    $('#selected-code-snippets-js').removeAttr('data-jsfiddle-title');
+*/
+  }
+  displayCodeSample(currentlyDisplayedSample['resource'],
+                    currentlyDisplayedSample['method'],
+                    currentlyDisplayedSample['functionName'],
+                    currentlyDisplayedSample['path'],
+                    currentlyDisplayedSample['isUserAuthorized'],
+                    false);
+}
+
+/**
+ * Make sure that when a user clicks on a tab, the appropriate content shows
+ * up in the tab.
+ */
+function makeTabsWork() {
+  var parent = 'code-snippets';
+  $('#code-snippets .selector .kd-tabbar-horz h3,' +
+      '.devsite-overflow-menu h3').click(function() {
+    $('#' + parent + ' section').addClass('ui-datasection-hide');
+    $('#' + parent + ' .selector .kd-tabbar-horz h3,' +
+        '.devsite-overflow-menu h3').removeClass('selected');
+    $(this).addClass('selected');
+    var selected = $(this).attr('value');
+    $('#' + parent + '-' + selected).removeClass('ui-datasection-hide');
+    var selectedLanguage = (
+        $('#code-snippets .kd-buttonbar .selected').attr('value'));
+    if (selectedLanguage == 'curl') {
+        $('#code-snippets-slider-wrapper').css('display', 'none');
+    } else {
+        $('#code-snippets-slider-wrapper').css('display', 'block');
+    }
+    displayClientLibraryDescription(selectedLanguage);
+  });
+}

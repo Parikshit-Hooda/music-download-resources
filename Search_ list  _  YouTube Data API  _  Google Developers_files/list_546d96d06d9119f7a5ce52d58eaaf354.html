@@ -1,0 +1,2589 @@
+<!DOCTYPE html>
+<!-- saved from url=(0110)https://google-developers.appspot.com/youtube/v3/docs/search/list_546d96d06d9119f7a5ce52d58eaaf354.frame?hl=en -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Google Developers</title>
+    
+  
+    <link href="./css(1)" rel="stylesheet">
+    <link rel="stylesheet" href="./devsite-cyan.css">
+    <script type="text/javascript" async="" src="./linkid.js.download"></script><script async="" src="./analytics.js.download"></script><script src="./cb=gapi(1).loaded_0" async=""></script><script src="./prettify-bundle.js.download"></script>
+  
+
+    <meta name="robots" content="noindex">
+    <script src="./jquery-bundle.js(1).download"></script>
+    <script src="./jquery_ui-bundle.js(1).download"></script>
+    <script src="./jsapi"></script>
+    
+      <script src="./framebox_widgets.js.download"></script>
+    
+    <script src="./framebox.js.download"></script>
+  </head>
+  <body class="devsite-layout-docs devsite-framebox no-touch">
+<meta name="enable_widgets" content="true"><meta name="auto_height" content="true"><p style="display: none; height: 0; width: 0">This is a snippet from developers.google.com</p>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <style>
+      .kd-tabbed-horz > article,
+      .kd-tabbed-vert > article,
+      .ui-datasection-hide {
+        display: none;
+      }
+      .kd-tabbutton {
+        padding: 0 36px;
+      }
+      #api-response-status-bar {
+        background: #7f7f7f;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 0;
+        padding: 8px;
+      }
+      #api-response-status-bar.fail-status {
+        background: rgba(244, 67, 54, 1);
+      }
+      #api-response.fail-status {
+        background: rgba(244, 67, 54, 0.05);
+      }
+      #api-response-status-bar.success-status {
+        background: rgba(76, 175, 80, 1);
+      }
+      #api-response.success-status {
+        background: rgba(76, 175, 80, 0.05);
+      }
+      .curl-style, #api-response {
+        font-size: 13px;
+      }
+      #execute-without-oauth {
+        color:blue;
+        cursor: pointer;
+        display: none;
+        padding-top: 8px;
+        text-decoration:underline;
+      }
+      #code-snippets {
+        margin: 0;
+      }
+      #code-snippets > section > pre {
+        margin-top: -8px;
+      }
+      #selected-code-sample-description {
+        padding-bottom: 16px;
+      }
+      .code-var-color {
+        color: #ec407a;
+        font-weight: bold;
+      }
+      .code-snippet-slider-wrapper {
+        text-align: right;
+      }
+      .code-snippet-slider {
+        margin: 0 1em;
+        width: 6em;
+      }
+      span.slider-label {
+        font-size: 12px;
+        vertical-align: top;
+      }
+    </style>
+
+    <script src="./jquery.min.js.download"></script>
+    <script src="./jsbeautify.min.js.download"></script>
+    <script src="./jszip.min.js.download"></script>
+    <script src="./FileSaver.min.js.download"></script>
+    <script type="text/javascript" src="./data_api_snippets.js.download"></script>
+    <script type="text/javascript" src="./google_apis_snippet_handler.js.download"></script>
+
+
+  <div style="display: none" id="code-snippet-method-restrict">search|list</div>
+
+<div style="display: none" id="show-resumable-boilerplate">false</div>
+
+
+
+<div id="client-library-description-wrapper" style="display:none">
+  <div id="client-library-description-curl">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+       The snippets currently show how to execute API requests using <code>curl</code>, but you can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p class="note"><b>Note:</b> Follow the instructions for <a href="https://google-developers.appspot.com/apps-script/guides/services/advanced" target="_parent">advanced Google services</a> to enable YouTube features in Apps Script.</p>
+  </div>
+  <div id="client-library-description-appsscript">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+       Samples are currently shown in <a href="https://google-developers.appspot.com/apps-script/advanced/youtube" target="_parent">Apps Script</a>, but you can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p class="note"><b>Note:</b> Follow the instructions for <a href="https://google-developers.appspot.com/apps-script/guides/services/advanced" target="_parent">advanced Google services</a> to enable YouTube features in Apps Script.</p>
+  </div>
+  <div id="client-library-description-go">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+    Samples are currently shown in Go and use the <a href="https://github.com/google/google-api-go-client" target="_parent">Google APIs Client Library for Go</a>. You can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p>This example assumes that you have a <a href="https://google-developers.appspot.com/api-client-library/python/guide/aaa_client_secrets" target="_parent">client secrets file</a> named <code>cs.json</code> that is located in the same directory as the one that contains the Go script.</p>
+  </div>
+  <div id="client-library-description-java">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+    Samples are currently shown in Java and use the <a href="https://google-developers.appspot.com/api-client-library/java/" target="_parent">Google APIs Client Library for Java</a>. You can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p>There are two places in the boilerplate code where you need to enter your own client ID for the code to work. Search for the text <code>REPLACE_ME</code> to identify the places where you need to specify the ID. See the <a href="https://google-developers.appspot.com/api-client-library/java/google-api-java-client/oauth2" target="_parent">client library documentation</a> for more information.</p>
+  </div>
+  <div id="client-library-description-js">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+    Samples are currently shown in JavaScript and use the <a href="https://google-developers.appspot.com/api-client-library/javascript/" target="_parent">Google APIs Client Library for JavaScript</a>. You can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p>There are two places in the boilerplate code where you need to enter your own client ID for the code to work. Search for the text <code>REPLACE_ME</code> to identify the places where you need to specify the ID. See the <a href="https://google-developers.appspot.com/api-client-library/javascript/features/authentication" target="_parent">client library documentation</a> for more information.</p>
+  </div>
+  <div id="client-library-description-php">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+    Samples are currently shown in PHP and use the <a href="https://google-developers.appspot.com/api-client-library/php/" target="_parent">Google APIs Client Library for PHP</a>. You can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p>This example assumes that you have a <a href="https://google-developers.appspot.com/api-client-library/python/guide/aaa_client_secrets" target="_parent">client secrets file</a> named <code>client_secrets.json</code> that is located in the same directory as the one that contains the PHP script.</p>
+  </div>
+  <div id="client-library-description-python">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+    Samples are currently shown in Python and use the <a href="https://google-developers.appspot.com/api-client-library/python/" target="_parent">Google APIs Client Library for Python</a>. You can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p>This example assumes that you have a <a href="https://google-developers.appspot.com/api-client-library/python/guide/aaa_client_secrets" target="_parent">client secrets file</a> named <code>client_secrets.json</code> that is located in the same directory as the one that contains the Python script.</p>
+  </div>
+  <div id="client-library-description-ruby">
+    <p>
+These code snippets show how to execute common YouTube Data API operations in Java, JavaScript, Python, PHP, Ruby, Go, Apps Script, and <code>curl</code>.
+
+    Samples are currently shown in Ruby and use the <a href="https://google-developers.appspot.com/api-client-library/ruby/" target="_parent">Google APIs Client Library for Ruby</a>. You can change the code sample language by selecting one of the other tabs above the sample.</p>
+    <p>This example assumes that you have a <a href="https://google-developers.appspot.com/api-client-library/python/guide/aaa_client_secrets">client secrets file</a> named <code>client_secrets.json</code> that is located in the same directory as the one that contains the Ruby script.</p>
+  </div>
+</div>
+
+<div id="client-library-description"></div>
+
+
+
+
+<div class="devsite-table-wrapper"><table style="margin-top: -8px">
+  <tbody><tr style="background: #fff; border-top: 0">
+    <td id="code-snippet-method-restrict-info" style="width: 65%; border-right: solid 1px black; padding-right: 1em;">
+      <div id="selected-code-sample-description">This example retrieves the first 25 search results associated with the keyword <b>surfing</b>. By default, the <code><a href="https://google-developers.appspot.com/youtube/v3/docs/search/list#type">type</a></code> parameter does not specify a value, which means the response could include videos, playlists, and channels.</div>
+    </td>
+    <td id="code-snippet-method-restrict-options" style="width:35%; padding-left: 1em"><u>Use cases</u><br><br><div id="method-specific-use-case-options"><input id="search-0" type="radio" name="method-name" value="searchListByKeyword" onchange="displayCodeSample(&#39;search&#39;, &#39;list&#39;, &#39;searchListByKeyword&#39;, &#39;&#39;, false, true);" checked=""><code>list (by keyword)</code><br><input id="search-1" type="radio" name="method-name" value="searchListByLocation" onchange="displayCodeSample(&#39;search&#39;, &#39;list&#39;, &#39;searchListByLocation&#39;, &#39;&#39;, false, true);"><code>list (by location)</code><br><input id="search-2" type="radio" name="method-name" value="searchListLiveEvents" onchange="displayCodeSample(&#39;search&#39;, &#39;list&#39;, &#39;searchListLiveEvents&#39;, &#39;&#39;, false, true);"><code>list (live events)</code><br><input id="search-3" type="radio" name="method-name" value="searchListMine" onchange="displayCodeSample(&#39;search&#39;, &#39;list&#39;, &#39;searchListMine&#39;, &#39;&#39;, false, true);"><code>list (my videos)</code><br><input id="search-4" type="radio" name="method-name" value="searchListRelatedVideos" onchange="displayCodeSample(&#39;search&#39;, &#39;list&#39;, &#39;searchListRelatedVideos&#39;, &#39;&#39;, false, true);"><code>list (related videos)</code><br></div></td>
+  </tr>
+</tbody></table></div>
+
+
+    <div id="code-snippets-slider-wrapper" class="code-snippet-slider-wrapper" style="display: block;">
+      <span class="slider-label slider-label-left">snippet</span><input id="code-snippets-slider" class="code-snippet-slider" type="range" value="1" min="1" max="2" onchange="toggleCodeSnippet(this);"><span class="slider-label slider-label-right">full sample</span>
+    </div>
+<div id="code-snippets" class="ds-selector-tabs ds-selector ui-datasection-main" data-ds-scope="code-snippets">
+  <div class="selector">
+    <div class="kd-buttonbar kd-tabbar-horz">
+      <h3 id="code-snippets-java-button" value="java" class="kd-tabbutton" kd-data-id="code-sample:java" data-ds-scope="code-snippets">Java</h3>
+      <h3 id="code-snippets-js-button" value="js" class="kd-tabbutton selected" kd-data-id="code-sample:js" data-ds-scope="code-snippets">JavaScript</h3>
+      <h3 id="code-snippets-python-button" value="python" class="kd-tabbutton" kd-data-id="code-sample:python" data-ds-scope="code-snippets">Python</h3>
+      <h3 id="code-snippets-php-button" value="php" class="kd-tabbutton" kd-data-id="code-sample:php" data-ds-scope="code-snippets">PHP</h3>
+      <h3 id="code-snippets-ruby-button" value="ruby" class="kd-tabbutton" kd-data-id="code-sample:ruby" data-ds-scope="code-snippets">Ruby</h3>
+      
+      
+      
+    <a class="devsite-overflow-menu-button kd-tabbutton" style="">More</a></div>
+  </div>
+
+  <section id="code-snippets-java" class="ui-datasection-hide">
+    <h3 style="display: none">Java</h3>
+    <pre id="selected-code-snippets-java" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com">// Sample java code for search.list</span><span class="pln"><br><br></span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> main</span><span class="pun">(</span><span class="typ">String</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">throws</span><span class="pln"> </span><span class="typ">IOException</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="typ">YouTube</span><span class="pln"> service </span><span class="pun">=</span><span class="pln"> getYouTubeService</span><span class="pun">();</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">try</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="typ">HashMap</span><span class="pun">&lt;</span><span class="typ">String</span><span class="pun">,</span><span class="pln"> </span><span class="typ">String</span><span class="pun">&gt;</span><span class="pln"> parameters </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">HashMap</span><span class="pun">&lt;&gt;();</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; parameters</span><span class="pun">.</span><span class="pln">put</span><span class="pun">(</span><span class="str">"part"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"snippet"</span><span class="pun">);</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; parameters</span><span class="pun">.</span><span class="pln">put</span><span class="pun">(</span><span class="str">"maxResults"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"25"</span><span class="pun">);</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; parameters</span><span class="pun">.</span><span class="pln">put</span><span class="pun">(</span><span class="str">"q"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"surfing"</span><span class="pun">);</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; parameters</span><span class="pun">.</span><span class="pln">put</span><span class="pun">(</span><span class="str">"type"</span><span class="pun">,</span><span class="pln"> </span><span class="str">""</span><span class="pun">);</span><span class="pln"><br><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="typ">YouTube</span><span class="pun">.</span><span class="typ">Search</span><span class="pun">.</span><span class="typ">List</span><span class="pln"> searchListByKeywordRequest </span><span class="pun">=</span><span class="pln"> youtube</span><span class="pun">.</span><span class="pln">search</span><span class="pun">().</span><span class="pln">list</span><span class="pun">(</span><span class="pln">parameters</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">"part"</span><span class="pun">).</span><span class="pln">toString</span><span class="pun">());</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">parameters</span><span class="pun">.</span><span class="pln">containsKey</span><span class="pun">(</span><span class="str">"maxResults"</span><span class="pun">))</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; searchListByKeywordRequest</span><span class="pun">.</span><span class="pln">setMaxResults</span><span class="pun">(</span><span class="typ">Long</span><span class="pun">.</span><span class="pln">parseLong</span><span class="pun">(</span><span class="pln">parameters</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">"maxResults"</span><span class="pun">).</span><span class="pln">toString</span><span class="pun">()));</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">parameters</span><span class="pun">.</span><span class="pln">containsKey</span><span class="pun">(</span><span class="str">"q"</span><span class="pun">)</span><span class="pln"> </span><span class="pun">&amp;&amp;</span><span class="pln"> parameters</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">"q"</span><span class="pun">)</span><span class="pln"> </span><span class="pun">!=</span><span class="pln"> </span><span class="str">""</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; searchListByKeywordRequest</span><span class="pun">.</span><span class="pln">setQ</span><span class="pun">(</span><span class="pln">parameters</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">"q"</span><span class="pun">).</span><span class="pln">toString</span><span class="pun">());</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">parameters</span><span class="pun">.</span><span class="pln">containsKey</span><span class="pun">(</span><span class="str">"type"</span><span class="pun">)</span><span class="pln"> </span><span class="pun">&amp;&amp;</span><span class="pln"> parameters</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">"type"</span><span class="pun">)</span><span class="pln"> </span><span class="pun">!=</span><span class="pln"> </span><span class="str">""</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; searchListByKeywordRequest</span><span class="pun">.</span><span class="pln">setType</span><span class="pun">(</span><span class="pln">parameters</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">"type"</span><span class="pun">).</span><span class="pln">toString</span><span class="pun">());</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="typ">SearchListResponse</span><span class="pln"> response </span><span class="pun">=</span><span class="pln"> searchListByKeywordRequest</span><span class="pun">.</span><span class="pln">execute</span><span class="pun">();</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="typ">System</span><span class="pun">.</span><span class="kwd">out</span><span class="pun">.</span><span class="pln">println</span><span class="pun">(</span><span class="pln">response</span><span class="pun">);</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br></span><span class="pun">}</span></pre>
+  </section>
+  <section id="code-snippets-js" class="">
+    <h3 style="display: none">JavaScript</h3>
+    <!--<pre id="selected-code-snippets-js" class="devsite-enable-open-in-jsfiddle prettyprint" data-scope="example" data-type="js" data-jsfiddle-title="JSFiddle Example"></pre>-->
+    <pre id="selected-code-snippets-js" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com">// Sample js code for search.list</span><span class="pln"><br><br></span><span class="com">// See full sample for buildApiRequest() code, which is not </span><span class="pln"><br></span><span class="com">// specific to a particular youtube or youtube method.</span><span class="pln"><br><br>buildApiRequest</span><span class="pun">(</span><span class="str">'GET'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="str">'/youtube/v3/search'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">{</span><span class="str">'maxResults'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'25'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="str">'part'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'snippet'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="str">'q'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'surfing'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="str">'type'</span><span class="pun">:</span><span class="pln"> </span><span class="str">''</span><span class="pun">});</span></pre>
+  </section>
+  <section id="code-snippets-python" class="ui-datasection-hide">
+    <h3 style="display: none">Python</h3>
+    <pre id="selected-code-snippets-python" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com"># Sample python code for search.list</span><span class="pln"><br><br></span><span class="kwd">def</span><span class="pln"> search_list_by_keyword</span><span class="pun">(</span><span class="pln">service</span><span class="pun">,</span><span class="pln"> </span><span class="pun">**</span><span class="pln">kwargs</span><span class="pun">):</span><span class="pln"><br>&nbsp; kwargs </span><span class="pun">=</span><span class="pln"> remove_empty_kwargs</span><span class="pun">(**</span><span class="pln">kwargs</span><span class="pun">)</span><span class="pln"> </span><span class="com"># See full sample for function</span><span class="pln"><br>&nbsp; results </span><span class="pun">=</span><span class="pln"> service</span><span class="pun">.</span><span class="pln">search</span><span class="pun">().</span><span class="pln">list</span><span class="pun">(</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="pun">**</span><span class="pln">kwargs<br>&nbsp; </span><span class="pun">).</span><span class="pln">execute</span><span class="pun">()</span><span class="pln"><br><br>&nbsp; print_results</span><span class="pun">(</span><span class="pln">results</span><span class="pun">)</span><span class="pln"><br><br>search_list_by_keyword</span><span class="pun">(</span><span class="pln">service</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; part</span><span class="pun">=</span><span class="str">'snippet'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; maxResults</span><span class="pun">=</span><span class="lit">25</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; q</span><span class="pun">=</span><span class="str">'surfing'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; type</span><span class="pun">=</span><span class="str">''</span><span class="pun">)</span></pre>
+  </section>
+  <section id="code-snippets-php" class="ui-datasection-hide">
+    <h3 style="display: none">PHP</h3>
+    <pre id="selected-code-snippets-php" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com">// Sample php code for search.list</span><span class="pln"><br><br></span><span class="kwd">function</span><span class="pln"> searchListByKeyword</span><span class="pun">(</span><span class="pln">$service</span><span class="pun">,</span><span class="pln"> $part</span><span class="pun">,</span><span class="pln"> $params</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; $params </span><span class="pun">=</span><span class="pln"> array_filter</span><span class="pun">(</span><span class="pln">$params</span><span class="pun">);</span><span class="pln"><br>&nbsp; &nbsp; $response </span><span class="pun">=</span><span class="pln"> $service</span><span class="pun">-&gt;</span><span class="pln">search</span><span class="pun">-&gt;</span><span class="pln">listSearch</span><span class="pun">(</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; $part</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; $params<br>&nbsp; &nbsp; </span><span class="pun">);</span><span class="pln"><br><br>&nbsp; &nbsp; print_r</span><span class="pun">(</span><span class="pln">$response</span><span class="pun">);</span><span class="pln"><br></span><span class="pun">}</span><span class="pln"><br><br>searchListByKeyword</span><span class="pun">(</span><span class="pln">$service</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="str">'snippet'</span><span class="pun">,</span><span class="pln"> <br>&nbsp; &nbsp; array</span><span class="pun">(</span><span class="str">'maxResults'</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="lit">25</span><span class="pun">,</span><span class="pln"> </span><span class="str">'q'</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="str">'surfing'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'type'</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="str">''</span><span class="pun">));</span></pre>
+  </section>
+  <section id="code-snippets-ruby" class="ui-datasection-hide">
+    <h3 style="display: none">Ruby</h3>
+    <pre id="selected-code-snippets-ruby" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com"># Sample ruby code for search.list</span><span class="pln"><br><br></span><span class="kwd">def</span><span class="pln"> search_list_by_keyword</span><span class="pun">(</span><span class="pln">service</span><span class="pun">,</span><span class="pln"> part</span><span class="pun">,</span><span class="pln"> </span><span class="pun">**</span><span class="kwd">params</span><span class="pun">)</span><span class="pln"><br>&nbsp; </span><span class="kwd">params</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">params</span><span class="pun">.</span><span class="pln">delete_if </span><span class="pun">{</span><span class="pln"> </span><span class="pun">|</span><span class="pln">p</span><span class="pun">,</span><span class="pln"> v</span><span class="pun">|</span><span class="pln"> v </span><span class="pun">==</span><span class="pln"> </span><span class="str">''</span><span class="pun">}</span><span class="pln"><br>&nbsp; response </span><span class="pun">=</span><span class="pln"> service</span><span class="pun">.</span><span class="pln">list_searches</span><span class="pun">(</span><span class="pln">part</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">params</span><span class="pun">)</span><span class="pln"><br>&nbsp; print_results</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"><br></span><span class="kwd">end</span><span class="pln"><br><br>search_list_by_keyword</span><span class="pun">(</span><span class="pln">service</span><span class="pun">,</span><span class="pln"> </span><span class="str">'snippet'</span><span class="pun">,</span><span class="pln"><br>&nbsp; max_results</span><span class="pun">:</span><span class="pln"> </span><span class="lit">25</span><span class="pun">,</span><span class="pln"><br>&nbsp; q</span><span class="pun">:</span><span class="pln"> </span><span class="str">'surfing'</span><span class="pun">,</span><span class="pln"><br>&nbsp; type</span><span class="pun">:</span><span class="pln"> </span><span class="str">''</span><span class="pun">)</span></pre>
+  </section>
+  <section id="code-snippets-go" class="ui-datasection-hide">
+    <h3 style="display: none">Go</h3>
+    <pre id="selected-code-snippets-go" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com">// Sample go code for search.list</span><span class="pln"><br><br>func printSearchListResults</span><span class="pun">(</span><span class="pln">response </span><span class="pun">*</span><span class="pln">youtube</span><span class="pun">.</span><span class="typ">SearchListResponse</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd">for</span><span class="pln"> _</span><span class="pun">,</span><span class="pln"> item </span><span class="pun">:=</span><span class="pln"> range response</span><span class="pun">.</span><span class="typ">Items</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fmt</span><span class="pun">.</span><span class="typ">Println</span><span class="pun">(</span><span class="pln">item</span><span class="pun">.</span><span class="typ">Id</span><span class="pun">.</span><span class="typ">VideoId</span><span class="pun">,</span><span class="pln"> </span><span class="str">": "</span><span class="pun">,</span><span class="pln"> item</span><span class="pun">.</span><span class="typ">Snippet</span><span class="pun">.</span><span class="typ">Title</span><span class="pun">)</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br></span><span class="pun">}</span><span class="pln"><br><br>func searchListByKeyword</span><span class="pun">(</span><span class="pln">service </span><span class="pun">*</span><span class="pln">youtube</span><span class="pun">.</span><span class="typ">Service</span><span class="pun">,</span><span class="pln"> part </span><span class="kwd">string</span><span class="pun">,</span><span class="pln"> maxResults int64</span><span class="pun">,</span><span class="pln"> q </span><span class="kwd">string</span><span class="pun">,</span><span class="pln"> typeArgument </span><span class="kwd">string</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; call </span><span class="pun">:=</span><span class="pln"> service</span><span class="pun">.</span><span class="typ">Search</span><span class="pun">.</span><span class="typ">List</span><span class="pun">(</span><span class="pln">part</span><span class="pun">)</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd">if</span><span class="pln"> maxResults </span><span class="pun">!=</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; call </span><span class="pun">=</span><span class="pln"> call</span><span class="pun">.</span><span class="typ">MaxResults</span><span class="pun">(</span><span class="pln">maxResults</span><span class="pun">)</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd">if</span><span class="pln"> q </span><span class="pun">!=</span><span class="pln"> </span><span class="str">""</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; call </span><span class="pun">=</span><span class="pln"> call</span><span class="pun">.</span><span class="pln">Q</span><span class="pun">(</span><span class="pln">q</span><span class="pun">)</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd">if</span><span class="pln"> typeArgument </span><span class="pun">!=</span><span class="pln"> </span><span class="str">""</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; call </span><span class="pun">=</span><span class="pln"> call</span><span class="pun">.</span><span class="typ">Type</span><span class="pun">(</span><span class="pln">typeArgument</span><span class="pun">)</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; response</span><span class="pun">,</span><span class="pln"> err </span><span class="pun">:=</span><span class="pln"> call</span><span class="pun">.</span><span class="typ">Do</span><span class="pun">()</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; handleError</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> </span><span class="str">""</span><span class="pun">)</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; printSearchListResults</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"><br></span><span class="pun">}</span><span class="pln"><br><br>searchListByKeyword</span><span class="pun">(</span><span class="pln">service</span><span class="pun">,</span><span class="pln"> </span><span class="str">"snippet"</span><span class="pun">,</span><span class="pln"> </span><span class="lit">25</span><span class="pun">,</span><span class="pln"> </span><span class="str">"surfing"</span><span class="pun">,</span><span class="pln"> </span><span class="str">""</span><span class="pun">)</span></pre>
+  </section>
+  <section id="code-snippets-appsscript" class="ui-datasection-hide">
+    <h3 style="display: none">Apps Script</h3>
+    <pre id="selected-code-snippets-appsscript" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com">// Sample appsscript code for search.list</span><span class="pln"><br><br></span><span class="kwd">function</span><span class="pln"> searchListByKeyword</span><span class="pun">(</span><span class="pln">part</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">params</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; </span><span class="kwd">params</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> removeEmptyParams</span><span class="pun">(</span><span class="kwd">params</span><span class="pun">);</span><span class="pln"> </span><span class="com">// See full sample for function</span><span class="pln"><br><br>&nbsp; </span><span class="kwd">var</span><span class="pln"> response </span><span class="pun">=</span><span class="pln"> </span><span class="typ">YouTube</span><span class="pun">.</span><span class="typ">Search</span><span class="pun">.</span><span class="pln">list</span><span class="pun">(</span><span class="pln">part</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; </span><span class="kwd">params</span><span class="pun">);</span><span class="pln"><br>&nbsp; printResults</span><span class="pun">(</span><span class="pln">response</span><span class="pun">);</span><span class="pln"><br></span><span class="pun">}</span><span class="pln"><br><br></span><span class="kwd">function</span><span class="pln"> </span><span class="typ">Main</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; searchListByKeyword</span><span class="pun">(</span><span class="str">'snippet'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="str">'maxResults'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'25'</span><span class="pun">,</span><span class="pln"><br></span><span class="str">'q'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'surfing'</span><span class="pun">,</span><span class="pln"><br></span><span class="str">'type'</span><span class="pun">:</span><span class="pln"> </span><span class="str">''</span><span class="pun">});</span><span class="pln"><br></span><span class="pun">}</span></pre>
+  </section>
+  <section id="code-snippets-curl" class="ui-datasection-hide">
+    <h3 style="display: none">CURL</h3>
+    <p id="no-curl-boilerplate" style="display:none">See the language-specific tabs for boilerplate code for authorizing API requests and handling API responses.</p>
+    <pre id="selected-code-snippets-curl" class="prettyprint"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-click-to-copy-button" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" data-tooltip-align="b,c" data-tooltip="Click to copy" aria-label="Click to copy" data-title="Click to copy"></div></div><span class="com"># curl URL:</span><span class="pln"><br>curl </span><span class="pun">-</span><span class="pln">i </span><span class="pun">-</span><span class="pln">G </span><span class="pun">-</span><span class="pln">d </span><span class="str">"q=surfing&amp;maxResults=25&amp;part=snippet&amp;key={YOUR_API_KEY}"</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; https</span><span class="pun">:</span><span class="com">//www.googleapis.com/youtube/v3/search</span><span class="pln"><br><br></span><span class="com"># HTTP URL:</span><span class="pln"><br>GET https</span><span class="pun">:</span><span class="com">//www.googleapis.com/youtube/v3/search?q=surfing</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">&amp;</span><span class="pln">maxResults</span><span class="pun">=</span><span class="lit">25</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">&amp;</span><span class="pln">part</span><span class="pun">=</span><span class="pln">snippet<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">&amp;</span><span class="pln">key</span><span class="pun">={</span><span class="pln">YOUR_API_KEY</span><span class="pun">}</span></pre>
+  </section>
+</div>
+
+<div class="devsite-table-wrapper"><table style="margin-top: -8px">
+  <tbody><tr style="background: #fff; border-top: 0">
+    <td id="code-snippet-method-restrict-intro" style="width: 65%;">
+    <div id="code-snippet-method-restrict-media-file" style="display: none;">
+      <p style="margin-bottom: 0.4em;">Specify the name (and path to) the file being uploaded:</p>
+      <div id="editable-param-media_filename" style="margin-left: 25px"><input id="editable-param-input-media_filename" type="text" size="37" oninput="updateMediaFilename();" value=""></div>
+      <p style="margin-bottom: 0.4em;">Specify the file's MIME type:</p>
+      <div id="editable-param-mime_type" style="margin-left: 25px"><input id="editable-param-input-mime_type" type="text" size="37" oninput="updateMediaFilename();" value=""></div>
+    </div>
+    <p style="margin-bottom: 0.4em;">Modify parameters passed to this example to update the code snippets or execute the request to see the API response:</p>
+    </td>
+    <td style="width: 35%">&nbsp;</td>
+  </tr>
+  <tr style="background: #fff; border-top: 0">
+    <td id="code-snippet-method-restrict-editable" style="width: 65%;">
+      <div id="editable-params"><input id="editable-param-inputs" value="search,list,searchListByKeyword,undefined" type="hidden"><div id="editable-params-wrapper" style="margin-left: 25px;"><div id="editable-param-type"><label for="editable-param-input-type">type</label><input id="editable-param-input-type" type="text" size="37" oninput="updateExampleParameterValues();" value=""></div><div id="editable-param-q"><label for="editable-param-input-q">q</label><input id="editable-param-input-q" type="text" size="37" oninput="updateExampleParameterValues();" value="surfing"></div><div id="editable-param-maxResults"><label for="editable-param-input-maxResults">maxResults</label><input id="editable-param-input-maxResults" type="text" size="37" oninput="updateExampleParameterValues();" value="25"></div><div id="editable-param-part"><label for="editable-param-input-part">part</label><input id="editable-param-input-part" type="text" size="37" oninput="updateExampleParameterValues();" value="snippet"></div></div></div>
+      <p id="bad-parameter-values" style="color: red; display: none;"><b>Oops. Some of these parameter values contain quotes ("), angle brackets (&lt;&gt;), or other unsavory characters. Please try again.</b></p>
+    </td>
+    <td id="code-snippet-method-restrict-buttons" style="width:35%; padding-left: 32px; padding-top: 27px;"><button id="execute-request-button" class="button-blue" style="display: block;">Authorize and execute</button><br><div id="execute-without-oauth" style="display: inline-block;">Execute without OAuth</div><div id="load-in-explorer" style="display: inline-block;"><a href="https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.search.list?q=surfing&amp;maxResults=25&amp;part=snippet" target="_blank">Load in APIs Explorer</a></div>
+      
+    </td>
+  </tr>
+</tbody></table></div>
+
+<script async="" defer="" src="./api.js(1).download" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === &#39;complete&#39;) this.onload()" gapi_processed="true"></script>
+
+<p id="unauthorized-message" style="color: red; display: none;"><b>Note: To see API responses via this tool, you first need to authorize the tool to make API requests on your behalf. To do so, click the "Authorize Requests" button above.</b></p>
+
+<div id="api-response-wrapper" style="display: none;">
+<div id="api-response-status-bar" class="success-status">200 (OK)</div>
+<pre id="api-response" class="success-status" style="height: 400px; margin-top: 0; overflow:auto"><div class="devsite-code-button-wrapper"><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div><div class="devsite-code-button gc-analytics-event material-icons devsite-dark-code-button" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" data-tooltip-align="b,c" data-tooltip="Dark code theme" aria-label="Dark code theme" data-title="Dark code theme"></div></div>/**
+&nbsp;* API response
+&nbsp;*/
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/0pv3B5W6nfYy2h1kE8MuEMwsqgE\"",
+  "nextPageToken": "CBkQAA",
+  "regionCode": "IN",
+  "pageInfo": {
+    "totalResults": 1000000,
+    "resultsPerPage": 25
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/S9cuXZkIvXoU_nwLKL9D3qGjIj4\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "26KzUnEbTUs"
+      },
+      "snippet": {
+        "publishedAt": "2013-05-17T22:23:40.000Z",
+        "channelId": "UCblfuW_4rakIf2h6aqANefA",
+        "title": "Surfing the Heaviest Wave in the World - Teahupoo",
+        "description": "Get barreled http://win.gs/1alYVe2 May 13th, 2013 will go down as a memorable day in the Tahitian history books. Watch as Tahitian demi-god Raimana Van ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/26KzUnEbTUs/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/26KzUnEbTUs/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/26KzUnEbTUs/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Red Bull",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/Amykv1hEk5vzuqlcAS8z2BEptrU\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "CWYDxh7QD34"
+      },
+      "snippet": {
+        "publishedAt": "2014-09-02T16:52:33.000Z",
+        "channelId": "UCblfuW_4rakIf2h6aqANefA",
+        "title": "Best surfing action from Red Bull Cape Fear 2014",
+        "description": "Click for the FULL EVENT: http://www.redbullcapefear.com/ The southern tip of Sydney Australia is home to one of the most treacherous waves on the planet: ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/CWYDxh7QD34/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/CWYDxh7QD34/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/CWYDxh7QD34/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Red Bull",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/C3yeqEJFt-_bLhuqWrYBNO7HaC0\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "fNr8kqSLpxQ"
+      },
+      "snippet": {
+        "publishedAt": "2014-11-12T18:00:17.000Z",
+        "channelId": "UC3Yc0vyFkYXB1_njh3uj7yw",
+        "title": "World's best surfing 2014/2015 (HD)",
+        "description": "Subscribe: http://bit.ly/SUBICTV Submit a Video : http://bit.ly/T1RsJh Facebook: https://www.facebook.com/Icompilationtv Follow us on Twitter ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/fNr8kqSLpxQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/fNr8kqSLpxQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/fNr8kqSLpxQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "IcompilationTV",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/03m9MCq7f9dnLOX3G9cXRcfR31Q\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "TB-SQhg1z9A"
+      },
+      "snippet": {
+        "publishedAt": "2015-01-04T16:19:48.000Z",
+        "channelId": "UCfBqD12IIXjPORycn87MPAg",
+        "title": "Big Wave Surfing famous surfer Laird Hamilton 80-100 Feet",
+        "description": "Big Wave Surfing famous surfer Laird Hamilton 80-100 Feet http://snowbrains.com/laird-hamilton-tells-cnn-100-foot-wave-doesnt-count/ January 2015 Big Wave ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/TB-SQhg1z9A/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/TB-SQhg1z9A/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/TB-SQhg1z9A/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Utoo B Heavenbound",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/kTSkgU0wvyF4eAtJqB97kxOqMt4\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "t_OZB7gZe9Q"
+      },
+      "snippet": {
+        "publishedAt": "2017-08-30T16:00:07.000Z",
+        "channelId": "UCblfuW_4rakIf2h6aqANefA",
+        "title": "Surfing the monstrous Waves of Ireland",
+        "description": "Get the full story here: http://win.gs/2vDLjHp Want to be one of the best big wave surfers in the world? Then we hope you've been taking some notes from Natxo ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/t_OZB7gZe9Q/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/t_OZB7gZe9Q/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/t_OZB7gZe9Q/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Red Bull",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/h7LqypPLmSoGcvHsXnvZmFcglkE\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "0pdCW9-eiVU"
+      },
+      "snippet": {
+        "publishedAt": "2017-02-11T00:47:40.000Z",
+        "channelId": "UCiiFGfvlKvX3uzMovO3unaw",
+        "title": "BIG WAVE SURFING COMPILATION 2017",
+        "description": "EVER HAD ONE OF THOSE DAYS PART-2 BIG WAVE SURFING, **AMAZING FOOTAGE ** WITH 60-100FT- HUGE SURF Please Subscribe if You Would like ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/0pdCW9-eiVU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/0pdCW9-eiVU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/0pdCW9-eiVU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Absolutely Flawless",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/aFLvMIiSGn0894mONBhgYIdX3cg\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "nkhpGC10OVw"
+      },
+      "snippet": {
+        "publishedAt": "2017-04-09T17:18:44.000Z",
+        "channelId": "UCHeaHzQFLElUw__yG3SSzMg",
+        "title": "World's best surfing 2017",
+        "description": "World's best surfing 2017 — Enjoy the video. Rate, Comment, Share... Thanx Subscribe for new compilations: http://goo.gl/X017T If your Video is in this ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/nkhpGC10OVw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/nkhpGC10OVw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/nkhpGC10OVw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Monthly Winners",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/XJY_xQQcW2V3Aw4Un587uWxtRNQ\"",
+      "id": {
+        "kind": "youtube#channel",
+        "channelId": "UCKo-NbWOxnxBnU41b-AoKeA"
+      },
+      "snippet": {
+        "publishedAt": "2005-11-02T06:29:47.000Z",
+        "channelId": "UCKo-NbWOxnxBnU41b-AoKeA",
+        "title": "SURFER",
+        "description": "We founded SURFER Magazine with a mission: to bring our readers a slice of the entire surfing world with each issue. And for over four decades, we've made ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://yt3.ggpht.com/-JxjgIQiM0mQ/AAAAAAAAAAI/AAAAAAAAAAA/L8WaJRKSSoo/s88-c-k-no-mo-rj-c0xffffff/photo.jpg"
+          },
+          "medium": {
+            "url": "https://yt3.ggpht.com/-JxjgIQiM0mQ/AAAAAAAAAAI/AAAAAAAAAAA/L8WaJRKSSoo/s240-c-k-no-mo-rj-c0xffffff/photo.jpg"
+          },
+          "high": {
+            "url": "https://yt3.ggpht.com/-JxjgIQiM0mQ/AAAAAAAAAAI/AAAAAAAAAAA/L8WaJRKSSoo/s240-c-k-no-mo-rj-c0xffffff/photo.jpg"
+          }
+        },
+        "channelTitle": "SURFER",
+        "liveBroadcastContent": "upcoming"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/sJca2mdF_gUyx6c5jnti3ONj4wg\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Lm3P8rb428M"
+      },
+      "snippet": {
+        "publishedAt": "2017-10-21T05:57:41.000Z",
+        "channelId": "UCYLqIgYnlbmZHH9_oacn5Ng",
+        "title": "SURFING WITH kid surfer SABRE NORRIS &amp; The Norris nuts! || Georgia Productions",
+        "description": "FIRST OF ALL THANK YOU SO MUCH FOR 100K! So sabre and her siblings Sockie, Biggy and Naz tried to teach me how to surf. I't didn't go well. WATCH THE ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Lm3P8rb428M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Lm3P8rb428M/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Lm3P8rb428M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Georgia Productions",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/dQofAtTCxP_XvTsIuH4PMCCOvEA\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "tDOM-U7uStM"
+      },
+      "snippet": {
+        "publishedAt": "2015-05-07T17:29:13.000Z",
+        "channelId": "UC9fD1YzP97mOg-KjXSuCQ2g",
+        "title": "Surfing Dogs",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/tDOM-U7uStM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/tDOM-U7uStM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/tDOM-U7uStM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Tower Life",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/U34_XAoTV_iG0y2JbxJOYOpVON8\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "b6hoBp7Hk-A"
+      },
+      "snippet": {
+        "publishedAt": "2015-02-03T20:00:01.000Z",
+        "channelId": "UCblfuW_4rakIf2h6aqANefA",
+        "title": "The Beautiful Chaos of Surfing Pipeline",
+        "description": "Pipeline is the Yankee Stadium, center court at Wimbledon, and the Melbourne Cricket Ground of surfing. Surfers grow up on the myths of the hallowed reef ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/b6hoBp7Hk-A/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/b6hoBp7Hk-A/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/b6hoBp7Hk-A/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Red Bull",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/dNwYM_CRPhW0nFjpEGUcAXSYfPw\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "X9tU8ybzcFs"
+      },
+      "snippet": {
+        "publishedAt": "2017-07-15T07:03:37.000Z",
+        "channelId": "UCsG5dkqFUHZO6eY9uOzQqow",
+        "title": "The Dock",
+        "description": "At four am we were up, towing out what's now known as \"The Dock” in Bali for this concept shoot. We asked ourselves, what does the future look like? A cashless ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/X9tU8ybzcFs/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/X9tU8ybzcFs/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/X9tU8ybzcFs/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Stab Magazine",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/BZmBQgdqj7esaKHn6kUqpVHHwAo\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "l14Y9siG0LU"
+      },
+      "snippet": {
+        "publishedAt": "2010-05-15T01:05:55.000Z",
+        "channelId": "UC4MtFj941XltopkIf4cIooQ",
+        "title": "How to Surf:  Surfing Basics in Huntington Beach",
+        "description": "http://www.theoceanfrontca.com shows how to surf for beginners. This \"surfing 101\" video walks you through surfing basics, such as how to swim out, stand up, ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/l14Y9siG0LU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/l14Y9siG0LU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/l14Y9siG0LU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "TheOCeanfront",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/EvVv8mqr0gtQTBlEdQsDuW3OrDU\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "pn7SFWpXURk"
+      },
+      "snippet": {
+        "publishedAt": "2017-03-07T17:00:57.000Z",
+        "channelId": "UCqhnX4jA0A5paNd1v-zEysw",
+        "title": "GoPro Surf: Inside the Legendary Barrels of Namibia",
+        "description": "The term \"we scored waves\" in the surfing world gets thrown around quite a bit. Judging from this content of Koa and Alex Smith, Koa Rothman, Benji Brand and ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/pn7SFWpXURk/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/pn7SFWpXURk/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/pn7SFWpXURk/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "GoPro",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/wTrwHzyOOdhChMNAMPPBqeheolM\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "vk0F8dHo3wU"
+      },
+      "snippet": {
+        "publishedAt": "2015-10-14T13:45:47.000Z",
+        "channelId": "UC-Zt7GPzlrPPQexkG9-shPg",
+        "title": "\"Pacific Dreams\" A California Surfing Film",
+        "description": "\"Pacific Dreams\" is a surfing movie featuring my 2015 footage shot around the beautiful state of California. Filmed &amp; Edited by Jeff Chavolla ( http://www.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/vk0F8dHo3wU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/vk0F8dHo3wU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/vk0F8dHo3wU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Jeff Chavolla",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/JGNkuLjOn76060Z1Ql5TGMADTaU\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "_t4EANKHjoI"
+      },
+      "snippet": {
+        "publishedAt": "2017-10-21T20:00:02.000Z",
+        "channelId": "UC0gElXJLp_puscXA7vW11sg",
+        "title": "SURFING WITH THE ALIEN TAG TEAM ~ 100% TAPPING FC!!",
+        "description": "Acai is a sexual beast ukogmonkey can't tap this ;) Broadcasted live on Twitch -- Watch live at https://www.twitch.tv/ukogmonkey.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/_t4EANKHjoI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/_t4EANKHjoI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/_t4EANKHjoI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "UKOGmonkey",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/E9c_lB0GRVEOAwziF0ni4Vcq22M\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "Fzg_dKowXuQ"
+      },
+      "snippet": {
+        "publishedAt": "2017-09-18T17:30:00.000Z",
+        "channelId": "UCytZlLB3uBn2XFfXlN25zPg",
+        "title": "SURFING HURRICANE IRMA!! **Deadly Waves**",
+        "description": "Surfing some huge waves in Hurricane Irma! Thanks to Ben Gravy : https://www.youtube.com/user/BenRobNUB SUPPORT THE RELIEF &amp; RESCUE!!",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Fzg_dKowXuQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Fzg_dKowXuQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Fzg_dKowXuQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "JOOGSQUAD PPJT",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/HBOvtrxtk9RAVNjBmQXqNKhuQc4\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "SnfY8Qxu7MQ"
+      },
+      "snippet": {
+        "publishedAt": "2016-03-01T17:29:29.000Z",
+        "channelId": "UC6DrfxtC6U_n8RSrZU2CBYw",
+        "title": "Greatest Surfing Wipeouts",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/SnfY8Qxu7MQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/SnfY8Qxu7MQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/SnfY8Qxu7MQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "ExtremeSportsTV",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/mnaunq0o6-u42lOxOQk7QAMz7WE\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "anhRxIQutZ8"
+      },
+      "snippet": {
+        "publishedAt": "2015-07-19T20:09:47.000Z",
+        "channelId": "UCpwvZwUam-URkxB7g4USKpg",
+        "title": "Jaw-dropping: Surfer fights off shark attack live on TV in S. African competition",
+        "description": "Courtesy of World Surf League (WSL): www.worldsurfleague.com Professional Australian surfer Mick Fanning had a huge scare as his board was attacked by a ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/anhRxIQutZ8/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/anhRxIQutZ8/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/anhRxIQutZ8/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "RT",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/IxvTFG359-fxZtQaPUFJLUvNS40\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "wkViaFQCfgU"
+      },
+      "snippet": {
+        "publishedAt": "2016-12-30T23:20:42.000Z",
+        "channelId": "UCVk7uRN7g-q_uHMaAjHxk8A",
+        "title": "THE GIRLS OF SURFING  XVII",
+        "description": "A little something to say goodbye to 2016 and welcome 2017 ! Join the page here : https://www.facebook.com/thegirlsofsurfing/ Instagram @jolieoligny Twitter ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/wkViaFQCfgU/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/wkViaFQCfgU/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/wkViaFQCfgU/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "julianna0263",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/ups7GOnVfOs9oB0tf0F9BIX_Bo8\"",
+      "id": {
+        "kind": "youtube#playlist",
+        "playlistId": "PLD790D878D999E573"
+      },
+      "snippet": {
+        "publishedAt": "2012-08-17T17:51:08.000Z",
+        "channelId": "UCYdsLi9QSPo5osSGAAy6YAw",
+        "title": "Chill Beach - Surf Music",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/oRdbvGgPPiw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/oRdbvGgPPiw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/oRdbvGgPPiw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Violeta Bocage",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/ygg7VwhHjBJHqVEMJX8GtK5c9RY\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "aizVVLXK0Ms"
+      },
+      "snippet": {
+        "publishedAt": "2016-10-01T20:06:48.000Z",
+        "channelId": "UCBi2mrWuNuyYy4gbM6fU18Q",
+        "title": "7-Year-Old Phenom 'Flying Squirrel' Takes Surfing World by Storm",
+        "description": "Meet quite possibly the best child surfer in the world, Quincy Symonds. SUBSCRIBE to ABC NEWS: https://www.youtube.com/ABCNews/ Watch More on ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/aizVVLXK0Ms/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/aizVVLXK0Ms/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/aizVVLXK0Ms/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "ABC News",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/B_RXa20vwx80B5aJm5MEz6kTUfU\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "gS6LJgfR1AM"
+      },
+      "snippet": {
+        "publishedAt": "2017-02-16T17:30:00.000Z",
+        "channelId": "UCccOBk6ck17-l_x2THCshdw",
+        "title": "This Might Be the Prettiest Footage of Surfing Giant Maverick's We've Ever Seen - The Inertia",
+        "description": "Maverick's, in Half Moon Bay, California, is one of the surfing's most menacing and dangerous big waves. This edit shows exactly why. Shot and Edited by Adam ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/gS6LJgfR1AM/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/gS6LJgfR1AM/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/gS6LJgfR1AM/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "The Inertia",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/7iZ4ConQKz900FaUwBNBXeQKN3U\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "UxQqTo2U-7k"
+      },
+      "snippet": {
+        "publishedAt": "2015-10-02T17:50:36.000Z",
+        "channelId": "UCblfuW_4rakIf2h6aqANefA",
+        "title": "Pro Surf Contest in a Wave Pool - Red Bull Unleashed",
+        "description": "More Surfing? No problem: http://win.gs/RedBullWater At north Wales's Surf Snowdonia, the world's first Wavegarden, Red Bull delivered a whole new format for ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/UxQqTo2U-7k/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/UxQqTo2U-7k/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/UxQqTo2U-7k/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Red Bull",
+        "liveBroadcastContent": "none"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/kOn7rY6PxxEKWTp2R3_AoJvaRic\"",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "AtSZUyLcLYw"
+      },
+      "snippet": {
+        "publishedAt": "2017-05-17T16:00:02.000Z",
+        "channelId": "UCblfuW_4rakIf2h6aqANefA",
+        "title": "Indonesia's Surfing Treasure: Desert Point | Sessions",
+        "description": "Watch more XXL surf here: http://win.gs/Sessions Scoring at Desert Point is a surf travelling rite of a passage. In our latest Sessions edit we follow Tai Graham ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/AtSZUyLcLYw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/AtSZUyLcLYw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/AtSZUyLcLYw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Red Bull",
+        "liveBroadcastContent": "none"
+      }
+    }
+  ]
+}</pre>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+<div id="boilerplate-code-wrapper" style="display:none">
+  <div id="boilerplate-description-appsscript">
+    <h3>Apps Script boilerplate code</h3>
+    <p>Apps Script requests authorization based on the API functionality that your code uses. You do not need special code to authorize requests. However, you do need to make sure that the YouTube Data API is enabled for your Apps Script application. Follow the Apps Script instructions for <a href="https://google-developers.appspot.com/apps-script/guides/services/advanced#enabling_advanced_services">enabling advanced services</a> to use the YouTube API in your application.</p>
+    <p>Each Apps Script function calls the <code>printResults</code> function shown below to print data from the API response. Typically, the function prints the <code>id</code> for each item in the result set as well as another property value from the item's <code>snippet</code>. Values are logged to the debugging logs.</p>
+  </div>
+
+  <div id="boilerplate-auth-appsscript">
+/****** START BOILERPLATE CODE ******/
+
+// <b>Note:</b> Apps Script automatically requests authorization
+// based on the API's used in the code.
+
+// Build an object from an object containing properties as key-value pairs
+function createResource(properties) {
+  var res = {};
+  var normalizedProps = {};
+  for (var p in properties) {
+    var value = properties[p];
+    if (p.substr(-2, 2) == '[]' &amp;&amp; value) {
+      var adjustedName = p.replace('[]', '');
+      normalizedProps[adjustedName] = value.split(',');
+    } else {
+      normalizedProps[p] = value;
+    }
+  }
+  for (var p in normalizedProps) {
+    if (normalizedProps.hasOwnProperty(p) &amp;&amp; normalizedProps[p]) {
+      var propArray = p.split('.');
+      var ref = res;
+      for (var pa = 0; pa ANGLELEFT propArray.length; pa++) {
+        var key = propArray[pa];
+        if (pa == propArray.length - 1) {
+          ref[key] = normalizedProps[p];
+        } else {
+          ref = ref[key] = ref[key] || {};
+        }
+      }
+    };
+  }
+  return res;
+}
+
+// Remove parameters that don't have values before sending API request
+function removeEmptyParams(params) {
+  for (var p in params) {
+    if (!params[p] || params[p] == 'undefined') {
+      delete params[p];
+    }
+  }
+  return params;
+}
+
+// Sample Apps Script code for printing API response data
+
+function printResults(response) {
+  Logger.log(response);
+}
+/***** END BOILERPLATE CODE *****/
+
+NONBOILERPLATE
+  </div>
+
+  <div id="boilerplate-description-go">
+    <h3>Go boilerplate code</h3>
+    <h4>Printing data from the API response</h4>
+    <p>In the method-specific samples, each Go function that calls the API is accompanied by a custom print function that takes the corresponding API response as an argument. Typically, the print function prints the <code>id</code> for each item in the result set as well as another property value from the item's <code>snippet</code>.</p>
+    <p>The example below shows a function that calls the <code>channels.list</code> method and its corresponding print function.</p>
+  </div>
+  <div id="boilerplate-auth-go">// Sample Go code for user authorization
+
+package main
+
+import (
+        "bufio"
+        "encoding/json"
+        "errors"
+        "flag"
+        "fmt"
+        "log"
+        "io/ioutil"
+        "net"
+        "net/http"
+        "os"
+        "os/exec"
+        "path/filepath"
+        "runtime"
+        "strconv"
+        "strings"
+
+        "golang.org/x/net/context"
+        "golang.org/x/oauth2"
+        "google.golang.org/api/youtube/v3"
+)
+
+const missingClientSecretsMessage = `
+Please configure OAuth 2.0
+`
+
+var (
+        clientSecretsFile = flag.String("secrets", "cs.json", "Client Secrets configuration")
+        cacheFile         = flag.String("cache", "request.token", "Token cache file")
+)
+        
+// ClientConfig is a data structure definition for the client_secrets.json file.
+// The code unmarshals the JSON configuration file into this structure.
+type ClientConfig struct {
+        ClientID     string   `json:"client_id"`
+        ClientSecret string   `json:"client_secret"`
+        RedirectURIs []string `json:"redirect_uris"`
+        AuthURI      string   `json:"auth_uri"`
+        TokenURI     string   `json:"token_uri"`
+}
+
+// Config is a root-level configuration object.
+type Config struct {
+        Installed ClientConfig `json:"installed"`
+        Web       ClientConfig `json:"web"`
+}
+
+// openURL opens a browser window to the specified location.
+// This code originally appeared at:
+//   http://stackoverflow.com/questions/10377243/how-can-i-launch-a-process-that-is-not-a-file-in-go
+func openURL(url string) error {
+        var err error
+        switch runtime.GOOS {
+        case "linux":
+                err = exec.Command("xdg-open", url).Start()
+        case "windows":
+                err = exec.Command("rundll32", "url.dll,FileProtocolHandler", "http://localhost:4001/").Start()
+        case "darwin":
+                err = exec.Command("open", url).Start()
+        default:
+                err = fmt.Errorf("Cannot open URL %s on this platform", url)
+        }
+        return err
+}
+
+// readConfig reads the configuration from clientSecretsFile.
+// It returns an oauth configuration object for use with the Google API client.
+func readConfig(scope string) (*oauth2.Config, error) {
+        // Read the secrets file
+        data, err := ioutil.ReadFile(*clientSecretsFile)
+        if err != nil {
+                pwd, _ := os.Getwd()
+                fullPath := filepath.Join(pwd, *clientSecretsFile)
+                return nil, fmt.Errorf(missingClientSecretsMessage, fullPath)
+        }
+
+        cfg := new(Config)
+        err = json.Unmarshal(data, &amp;cfg)
+        if err != nil {
+                return nil, err
+        }
+
+        var redirectUri string
+        if len(cfg.Web.RedirectURIs) &gt; 0 {
+                redirectUri = cfg.Web.RedirectURIs[0]
+        } else if len(cfg.Installed.RedirectURIs) &gt; 0 {
+                redirectUri = cfg.Installed.RedirectURIs[0]
+        } else {
+                return nil, errors.New("Must specify a redirect URI in config file or when creating OAuth client")
+        }
+
+        return &amp;oauth2.Config{
+                ClientID:     cfg.Installed.ClientID,
+                ClientSecret: cfg.Installed.ClientSecret,
+                Scopes:       []string{scope},
+                Endpoint:     oauth2.Endpoint{cfg.Installed.AuthURI, cfg.Installed.TokenURI},
+                RedirectURL:  redirectUri,
+        }, nil
+}
+
+// startWebServer starts a web server that listens on http://localhost:8080.
+// The webserver waits for an oauth code in the three-legged auth flow.
+func startWebServer() (codeCh chan string, err error) {
+        listener, err := net.Listen("tcp", "localhost:8081")
+        if err != nil {
+                return nil, err
+        }
+        codeCh = make(chan string)
+        go http.Serve(listener, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+                code := r.FormValue("code")
+                codeCh &lt;- code // send code to OAuth flow
+                listener.Close()
+                w.Header().Set("Content-Type", "text/plain")
+                fmt.Fprintf(w, "Received code: %v\r\nYou can now safely close this browser window.", code)
+        }))
+
+        return codeCh, nil
+}
+
+// buildOAuthHTTPClient takes the user through the three-legged OAuth flow.
+// It opens a browser in the native OS or outputs a URL, then blocks until
+// the redirect completes to the /oauth2callback URI.
+// It returns an instance of an HTTP client that can be passed to the
+// constructor of the API client.
+func buildOAuthHTTPClient(scope string) (*http.Client, error) {
+        config, err := readConfig(scope)
+        if err != nil {
+                msg := fmt.Sprintf("Cannot read configuration file: %v", err)
+                return nil, errors.New(msg)
+        }
+
+        var ctx context.Context
+
+        // Try to read the token from the cache file.
+        // If an error occurs, do the three-legged OAuth flow because
+        // the token is invalid or doesn't exist.
+        var token *oauth2.Token
+
+        data, err := ioutil.ReadFile(*cacheFile)
+        if err == nil {
+                err = json.Unmarshal(data, &amp;token)
+        }
+        if (err != nil) || !token.Valid() {
+                // Start web server.
+                // This is how this program receives the authorization code
+                // when the browser redirects.
+                codeCh, err := startWebServer()
+                if err != nil {
+                        return nil, err
+                }
+                fmt.Println(codeCh)
+
+                // Open url in browser
+                url := config.AuthCodeURL("")
+                err = openURL(url)
+                if err != nil {
+                        fmt.Println("Visit the URL below to get a code.",
+                                " This program will pause until the site is visted.")
+                } else {
+                        fmt.Println("Your browser has been opened to an authorization URL.",
+                                " This program will resume once authorization has been provided.\n")
+
+                }
+                // Accept code on command line.
+                fmt.Println(url)
+                fmt.Print("Enter code: ")
+                scanner := bufio.NewScanner(os.Stdin)
+                code := ""
+                for scanner.Scan() {
+                        line := scanner.Text()
+                        fmt.Println(line)
+                        code = line
+                        break
+                }
+
+                // This code caches the authorization code on the local
+                // filesystem, if necessary, as long as the TokenCache
+                // attribute in the config is set.
+                token, err = config.Exchange(ctx, code)
+                if err != nil {
+                        return nil, err
+                }
+                data, err := json.Marshal(token)
+                ioutil.WriteFile(*cacheFile, data, 0644)
+        }
+
+        return oauth2.NewClient(ctx, oauth2.StaticTokenSource(token)), nil
+}
+
+func handleError(err error, message string) {
+        if message == "" {
+                message = "Error making API call"
+        }
+        if err != nil {
+                log.Fatalf(message + ": %v", err.Error())
+        }
+}
+
+func addPropertyToResource(ref map[string]interface{}, keys []string, value string, count int) map[string]interface{} {
+        for k := count; k &lt; (len(keys) - 1); k++ {
+                switch val := ref[keys[k]].(type) {
+                case map[string]interface{}:
+                        ref[keys[k]] = addPropertyToResource(val, keys, value, (k + 1))
+                case nil:
+                        next := make(map[string]interface{})
+                        ref[keys[k]] = addPropertyToResource(next, keys, value, (k + 1))
+                }
+        }
+        // Only include properties that have values.
+        if (count == len(keys) - 1 &amp;&amp; value != "") {
+                valueKey := keys[len(keys)-1]
+                if valueKey[len(valueKey)-2:] == "[]" {
+                        ref[valueKey[0:len(valueKey)-2]] = strings.Split(value, ",")
+                } else if len(valueKey) &gt; 4 &amp;&amp; valueKey[len(valueKey)-4:] == "|int" {
+                        ref[valueKey[0:len(valueKey)-4]], _ = strconv.Atoi(value)
+                } else if value == "true" {
+                        ref[valueKey] = true
+                } else if value == "false" {
+                        ref[valueKey] = false
+                } else {
+                        ref[valueKey] = value
+                }
+        }
+        return ref
+}
+
+func createResource(properties map[string]string) string {
+        resource := make(map[string]interface{})
+        for key, value := range properties {
+                keys := strings.Split(key, ".")
+                ref := addPropertyToResource(resource, keys, value, 0)
+                resource = ref
+        }
+        propJson, err := json.Marshal(resource)
+        if err != nil {
+               log.Fatal("cannot encode to JSON ", err)
+        }
+        return string(propJson)
+}
+NONBP1
+func main() {
+        flag.Parse()
+
+        client, err := buildOAuthHTTPClient(GOSCOPE)
+        handleError(err, "Error building OAuth client")
+
+        service, err := youtube.New(client)
+        handleError(err, "Error creating YouTube client")
+
+        NONBP2
+}</div>
+  <div id="boilerplate-description-java">
+    <h3>Java boilerplate code</h3>
+    <h4>Printing data from the API response</h4>
+    <p>Each Python function calls the <code>print_results</code> function to print data from the API response. Typically, the function prints the <code>id</code> for each item in the result set as well as another property value from the item's <code>snippet</code>.</p>
+  </div>
+  <div id="boilerplate-resumable-java-1">
+import com.google.api.client.googleapis.media.MediaHttpUploader;
+import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
+  </div>
+  <div id="boilerplate-resumable-java-2">
+import com.google.api.client.http.InputStreamContent;
+  </div>
+  <div id="boilerplate-resumable-java-3">
+            uploader.setDirectUploadEnabled(false);
+
+            MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
+                public void progressChanged(MediaHttpUploader uploader) throws IOException {
+                    switch (uploader.getUploadState()) {
+                        case INITIATION_STARTED:
+                            System.out.println("Initiation Started");
+                            break;
+                        case INITIATION_COMPLETE:
+                            System.out.println("Initiation Completed");
+                            break;
+                        case MEDIA_IN_PROGRESS:
+                            System.out.println("Upload in progress");
+                            System.out.println("Upload percentage: " + uploader.getProgress());
+                            break;
+                        case MEDIA_COMPLETE:
+                            System.out.println("Upload Completed!");
+                            break;
+                        case NOT_STARTED:
+                            System.out.println("Upload Not Started!");
+                            break;
+                    }
+                }
+            };
+            uploader.setProgressListener(progressListener);
+  </div>
+  <div id="boilerplate-auth-java">// Sample Java code for user authorization
+
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+RESUMABLE1
+import com.google.api.client.http.HttpTransport;
+RESUMABLE2
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
+
+import com.google.api.services.youtube.YouTubeScopes;
+import com.google.api.services.youtube.model.*;
+import com.google.api.services.youtube.YouTube;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+
+
+public class ApiExample {
+
+    /** Application name. */
+    private static final String APPLICATION_NAME = "API Sample";
+
+    /** Directory to store user credentials for this application. */
+    private static final java.io.File DATA_STORE_DIR = new java.io.File(
+        System.getProperty("user.home"), ".credentials/java-youtube-api-tests");
+
+    /** Global instance of the {@link FileDataStoreFactory}. */
+    private static FileDataStoreFactory DATA_STORE_FACTORY;
+
+    /** Global instance of the JSON factory. */
+    private static final JsonFactory JSON_FACTORY =
+        JacksonFactory.getDefaultInstance();
+
+    /** Global instance of the HTTP transport. */
+    private static HttpTransport HTTP_TRANSPORT;
+
+    /** Global instance of the scopes required by this quickstart.
+     *
+     * If modifying these scopes, delete your previously saved credentials
+     * at ~/.credentials/drive-java-quickstart
+     */
+    private static final CollectionANGLELEFTStringANGLERIGHT SCOPES =
+        Arrays.asList("YouTubeScopes.https://www.googleapis.com/auth/youtube.force-ssl YouTubeScopes.https://www.googleapis.com/auth/youtubepartner");
+
+    static {
+        try {
+            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Creates an authorized Credential object.
+     * @return an authorized Credential object.
+     * @throws IOException
+     */
+    public static Credential authorize() throws IOException {
+        // Load client secrets.
+        InputStream in =
+            ApiExample.class.getResourceAsStream("/client_secret.json");
+        GoogleClientSecrets clientSecrets =
+            GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+
+        // Build flow and trigger user authorization request.
+        GoogleAuthorizationCodeFlow flow =
+                new GoogleAuthorizationCodeFlow.Builder(
+                        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+                .setDataStoreFactory(DATA_STORE_FACTORY)
+                .setAccessType("offline")
+                .build();
+        Credential credential = new AuthorizationCodeInstalledApp(
+            flow, new LocalServerReceiver()).authorize("user");
+        System.out.println(
+                "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+        return credential;
+    }
+
+    /**
+     * Build and return an authorized API client service, such as a YouTube
+     * Data API client service.
+     * @return an authorized API client service
+     * @throws IOException
+     */
+    public static YouTube getYouTubeService() throws IOException {
+        Credential credential = authorize();
+        return new YouTube.Builder(
+                HTTP_TRANSPORT, JSON_FACTORY, credential)
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        YouTube youtube = getYouTubeService();
+
+        try {
+        NONBP2
+        RESUMABLE3
+        NONBP3
+        } catch (GoogleJsonResponseException e) {
+            e.printStackTrace();
+            System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
+                    + e.getDetails().getMessage());
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+}</div>
+  <div id="boilerplate-description-js">
+    <h3>JavaScript boilerplate code</h3>
+    <h4>Printing data from the API response</h4>
+    <p>Each JavaScript function calls the <code>executeRequest</code> function, which, in turn, calls the <code>printResults</code> function to print data from the API response. More specifically, <code>executeRequest</code> defines a callback function that is executed when the API response comes back.</p>
+    <p>Typically, the <code>printResults</code> function prints the <code>id</code> for each item in the result set as well as another property value from the item's <code>snippet</code>. In this function, values are logged to the Chrome debugging console.</p>
+  </div>
+  <div id="boilerplate-resumable-js-1">
+  var selectedFile;
+  </div>
+  <div id="boilerplate-resumable-js-2">
+	$("#select-file-button").click(function () {
+          $("#select-file").click();
+        });
+	$("#upload-file-button").click(function () {
+          defineRequest();
+        });
+        $("#select-file").bind("change", function () {
+          selectedFile = $("#select-file").prop("files")[0];
+        });
+  </div>
+  <div id="boilerplate-resumable-js-3">
+  /**
+   * Retrieve the access token for the currently authorized user.
+   */
+  function getAccessToken(event) {
+    return GoogleAuth.currentUser.get().getAuthResponse(true).access_token;
+  }
+
+  /**
+   * Helper for implementing retries with backoff. Initial retry
+   * delay is 1 second, increasing by 2x (+jitter) for subsequent retries
+   *
+   * @constructor
+   */
+  var RetryHandler = function() {
+    this.interval = 1000; // Start at one second
+    this.maxInterval = 60 * 1000; // Don't wait longer than a minute 
+  };
+
+  /**
+   * Invoke the function after waiting
+   *
+   * @param {function} fn Function to invoke
+   */
+  RetryHandler.prototype.retry = function(fn) {
+    setTimeout(fn, this.interval);
+    this.interval = this.nextInterval_();
+  };
+
+  /**
+   * Reset the counter (e.g. after successful request.)
+   */
+  RetryHandler.prototype.reset = function() {
+    this.interval = 1000;
+  };
+
+  /**
+   * Calculate the next wait time.
+   * @return {number} Next wait interval, in milliseconds
+   *
+   * @private
+   */
+  RetryHandler.prototype.nextInterval_ = function() {
+    var interval = this.interval * 2 + this.getRandomInt_(0, 1000);
+    return Math.min(interval, this.maxInterval);
+  };
+
+  /**
+   * Get a random int in the range of min to max. Used to add jitter to wait times.
+   *
+   * @param {number} min Lower bounds
+   * @param {number} max Upper bounds
+   * @private
+   */
+  RetryHandler.prototype.getRandomInt_ = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
+
+  /**
+   * Helper class for resumable uploads using XHR/CORS. Can upload any
+   * Blob-like item, whether files or in-memory constructs.
+   *
+   * @example
+   * var content = new Blob(["Hello world"], {"type": "text/plain"});
+   * var uploader = new MediaUploader({
+   *   file: content,
+   *   token: accessToken,
+   *   onComplete: function(data) { ... }
+   *   onError: function(data) { ... }
+   * });
+   * uploader.upload();
+   *
+   * @constructor
+   * @param {object} options Hash of options
+   * @param {string} options.token Access token
+   * @param {blob} options.file Blob-like item to upload
+   * @param {string} [options.fileId] ID of file if replacing
+   * @param {object} [options.params] Additional query parameters
+   * @param {string} [options.contentType] Content-type, if overriding the
+   *    type of the blob.
+   * @param {object} [options.metadata] File metadata
+   * @param {function} [options.onComplete] Callback for when upload is complete
+   * @param {function} [options.onProgress] Callback for status of in-progress
+   *    upload
+   * @param {function} [options.onError] Callback if upload fails
+   */
+  var MediaUploader = function(options) {
+    var noop = function() {};
+    this.file = options.file;
+    this.contentType = options.contentType || this.file.type || 'application/octet-stream';
+    this.metadata = options.metadata || {
+      'title': this.file.name,
+      'mimeType': this.contentType
+    };
+    this.token = options.token;
+    this.onComplete = options.onComplete || noop;
+    this.onProgress = options.onProgress || noop;
+    this.onError = options.onError || noop;
+    this.offset = options.offset || 0;
+    this.chunkSize = options.chunkSize || 0;
+    this.retryHandler = new RetryHandler();
+
+    this.url = options.url;
+    if (!this.url) {
+      var params = options.params || {};
+      params.uploadType = 'resumable';
+      this.url = this.buildUrl_(options.fileId, params, options.baseUrl);
+    }
+    this.httpMethod = options.fileId ? 'PUT' : 'POST';
+  };
+
+  /**
+   * Initiate the upload.
+   */
+  MediaUploader.prototype.upload = function() {
+    var self = this;
+    var xhr = new XMLHttpRequest();
+
+    xhr.open(this.httpMethod, this.url, true);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + this.token);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-Upload-Content-Length', this.file.size);
+    xhr.setRequestHeader('X-Upload-Content-Type', this.contentType);
+
+    xhr.onload = function(e) {
+      if (e.target.status ANGLELEFT 400) {
+        var location = e.target.getResponseHeader('Location');
+        this.url = location;
+        this.sendFile_();
+      } else {
+        this.onUploadError_(e);
+      }
+    }.bind(this);
+    xhr.onerror = this.onUploadError_.bind(this);
+    xhr.send(JSON.stringify(this.metadata));
+  };
+
+  /**
+   * Send the actual file content.
+   *
+   * @private
+   */
+  MediaUploader.prototype.sendFile_ = function() {
+    var content = this.file;
+    var end = this.file.size;
+
+    if (this.offset || this.chunkSize) {
+      // Only slice the file if we're either resuming or uploading in chunks
+      if (this.chunkSize) {
+        end = Math.min(this.offset + this.chunkSize, this.file.size);
+      }
+      content = content.slice(this.offset, end);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', this.url, true);
+    xhr.setRequestHeader('Content-Type', this.contentType);
+    xhr.setRequestHeader('Content-Range', 'bytes ' + this.offset + '-' + (end - 1) + '/' + this.file.size);
+    xhr.setRequestHeader('X-Upload-Content-Type', this.file.type);
+    if (xhr.upload) {
+      xhr.upload.addEventListener('progress', this.onProgress);
+    }
+    xhr.onload = this.onContentUploadSuccess_.bind(this);
+    xhr.onerror = this.onContentUploadError_.bind(this);
+    xhr.send(content);
+  };
+
+  /**
+   * Query for the state of the file for resumption.
+   *
+   * @private
+   */
+  MediaUploader.prototype.resume_ = function() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', this.url, true);
+    xhr.setRequestHeader('Content-Range', 'bytes */' + this.file.size);
+    xhr.setRequestHeader('X-Upload-Content-Type', this.file.type);
+    if (xhr.upload) {
+      xhr.upload.addEventListener('progress', this.onProgress);
+    }
+    xhr.onload = this.onContentUploadSuccess_.bind(this);
+    xhr.onerror = this.onContentUploadError_.bind(this);
+    xhr.send();
+  };
+
+  /**
+   * Extract the last saved range if available in the request.
+   *
+   * @param {XMLHttpRequest} xhr Request object
+   */
+  MediaUploader.prototype.extractRange_ = function(xhr) {
+    var range = xhr.getResponseHeader('Range');
+    if (range) {
+      this.offset = parseInt(range.match(/\d+/g).pop(), 10) + 1;
+    }
+  };
+
+  /**
+   * Handle successful responses for uploads. Depending on the context,
+   * may continue with uploading the next chunk of the file or, if complete,
+   * invokes the caller's callback.
+   *
+   * @private
+   * @param {object} e XHR event
+   */
+  MediaUploader.prototype.onContentUploadSuccess_ = function(e) {
+    if (e.target.status == 200 || e.target.status == 201) {
+      this.onComplete(e.target.response);
+    } else if (e.target.status == 308) {
+      this.extractRange_(e.target);
+      this.retryHandler.reset();
+      this.sendFile_();
+    }
+  };
+
+  /**
+   * Handles errors for uploads. Either retries or aborts depending
+   * on the error.
+   *
+   * @private
+   * @param {object} e XHR event
+   */
+  MediaUploader.prototype.onContentUploadError_ = function(e) {
+    if (e.target.status &amp;&amp; e.target.status ANGLELEFT 500) {
+      this.onError(e.target.response);
+    } else {
+      this.retryHandler.retry(this.resume_.bind(this));
+    }
+  };
+
+  /**
+   * Handles errors for the initial request.
+   *
+   * @private
+   * @param {object} e XHR event
+   */
+  MediaUploader.prototype.onUploadError_ = function(e) {
+    this.onError(e.target.response); // TODO - Retries for initial upload
+  };
+
+  /**
+   * Construct a query string from a hash/object
+   *
+   * @private
+   * @param {object} [params] Key/value pairs for query string
+   * @return {string} query string
+   */
+  MediaUploader.prototype.buildQuery_ = function(params) {
+    params = params || {};
+    return Object.keys(params).map(function(key) {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+    }).join('&amp;');
+  };
+
+  /**
+   * Build the upload URL
+   *
+   * @private
+   * @param {string} [id] File ID if replacing
+   * @param {object} [params] Query parameters
+   * @return {string} URL
+   */
+  MediaUploader.prototype.buildUrl_ = function(id, params, baseUrl) {
+    var url = baseUrl;
+    if (id) {
+      url += id;
+    }
+    var query = this.buildQuery_(params);
+    if (query) {
+      url += '?' + query;
+    }
+    return url;
+  };
+</div>
+  <div id="boilerplate-resumable-js-4">
+  <button id="select-file-button">Select file</button>
+  <input id="select-file" type="file" style="display:none"><br><br>
+  <button id="upload-file-button">Upload file</button>
+</div>
+  <div id="boilerplate-auth-js">
+SCRIPT_HEADER
+  /***** START BOILERPLATE CODE: Load client library, authorize user. *****/
+
+  // Global variables for GoogleAuth object, auth status.
+  var GoogleAuth;
+RESUMABLE1
+
+  /**
+   * Load the API's client and auth2 modules.
+   * Call the initClient function after the modules load.
+   */
+  function handleClientLoad() {
+    gapi.load('client:auth2', initClient);
+  }
+
+  function initClient() {
+    // Initialize the gapi.client object, which app uses to make API requests.
+    // Get API key and client ID from API Console.
+    // 'scope' field specifies space-delimited list of access scopes
+
+    gapi.client.init({
+        'clientId': 'REPLACE_ME',
+        'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'],
+        'scope': 'https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtubepartner'
+    }).then(function () {
+      GoogleAuth = gapi.auth2.getAuthInstance();
+
+      // Listen for sign-in state changes.
+      GoogleAuth.isSignedIn.listen(updateSigninStatus);
+
+      // Handle initial sign-in state. (Determine if user is already signed in.)
+      setSigninStatus();
+
+      // Call handleAuthClick function when user clicks on "Authorize" button.
+      $('#execute-request-button').click(function() {
+        handleAuthClick(event);
+      }); 
+RESUMABLE2
+    });
+  }
+
+  function handleAuthClick(event) {
+    // Sign user in after click on auth button.
+    GoogleAuth.signIn();
+  }
+
+  function setSigninStatus() {
+    var user = GoogleAuth.currentUser.get();
+    isAuthorized = user.hasGrantedScopes('https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtubepartner');
+    // Toggle button text and displayed statement based on current auth status.
+    if (isAuthorized) {
+      defineRequest();
+    }
+  }
+
+  function updateSigninStatus(isSignedIn) {
+    setSigninStatus();
+  }
+
+  function createResource(properties) {
+    var resource = {};
+    var normalizedProps = properties;
+    for (var p in properties) {
+      var value = properties[p];
+      if (p &amp;&amp; p.substr(-2, 2) == '[]') {
+        var adjustedName = p.replace('[]', '');
+        if (value) {
+          normalizedProps[adjustedName] = value.split(',');
+        }
+        delete normalizedProps[p];
+      }
+    }
+    for (var p in normalizedProps) {
+      // Leave properties that don't have values out of inserted resource.
+      if (normalizedProps.hasOwnProperty(p) &amp;&amp; normalizedProps[p]) {
+        var propArray = p.split('.');
+        var ref = resource;
+        for (var pa = 0; pa &lt; propArray.length; pa++) {
+          var key = propArray[pa];
+          if (pa == propArray.length - 1) {
+            ref[key] = normalizedProps[p];
+          } else {
+            ref = ref[key] = ref[key] || {};
+          }
+        }
+      };
+    }
+    return resource;
+  }
+
+  function removeEmptyParams(params) {
+    for (var p in params) {
+      if (!params[p] || params[p] == 'undefined') {
+        delete params[p];
+      }
+    }
+    return params;
+  }
+
+  function executeRequest(request) {
+    request.execute(function(response) {
+      console.log(response);
+    });
+  }
+
+  function buildApiRequest(requestMethod, path, params, properties) {
+    params = removeEmptyParams(params);
+    var request;
+    if (properties) {
+      var resource = createResource(properties);
+      request = gapi.client.request({
+          'body': resource,
+          'method': requestMethod,
+          'path': path,
+          'params': params
+      });
+    } else {
+      request = gapi.client.request({
+          'method': requestMethod,
+          'path': path,
+          'params': params
+      });
+    }
+    executeRequest(request);
+  }
+
+RESUMABLE3
+  /***** END BOILERPLATE CODE *****/
+
+  NONBP1
+  function defineRequest() {
+    NONBP2
+  }
+SCRIPT_END
+
+<button id="execute-request-button">Authorize</button>
+RESUMABLE4
+
+SCRIPT_START src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"ANGLERIGHTSCRIPT_END
+SCRIPT_START async defer src="https://apis.google.com/js/api.js" 
+        onload="this.onload=function(){};handleClientLoad()" 
+        onreadystatechange="if (this.readyState === 'complete') this.onload()"ANGLERIGHT
+SCRIPT_END
+SCRIPT_FOOTER</div>
+  <div id="boilerplate-description-php">
+    <h3>PHP boilerplate code</h3>
+    <h4>Printing data from the API response</h4>
+    <p>Each PHP function calls the <code>printResults</code> function to print data from the API response. Typically, the function prints the <code>id</code> for each item in the result set as well as another property value from the item's <code>snippet</code>.</p>
+  </div>
+  <div id="boilerplate-auth-php">
+PHP_START
+
+/**
+ * Library Requirements
+ *
+ * 1. Install composer (https://getcomposer.org)
+ * 2. On the command line, change to this directory (api-samples/php)
+ * 3. Require the google/apiclient library
+ *    $ composer require google/apiclient:~2.0
+ */
+if (!file_exists($file = __DIR__ . '/vendor/autoload.php')) {
+  throw new \Exception('please run "composer require google/apiclient:~2.0" in "' . __DIR__ .'"');
+}
+require_once __DIR__ . '/vendor/autoload.php';
+session_start();
+
+/*
+ * Set $DEVELOPER_KEY to the "API key" value from the "Access" tab of the
+ * Google Developers Console: https://console.developers.google.com/
+ * Please ensure that you have enabled the YouTube Data API for your project.
+ */
+define('CREDENTIALS_PATH', '~/php-yt-oauth2.json');
+
+function getClient() {
+  $client = new Google_Client();
+  $client-&gt;setApplicationName('API Samples');
+  $client-&gt;setScopes('https://www.googleapis.com/auth/youtube.force-ssl');
+  // Set to name/location of your client_secrets.json file.
+  $client-&gt;setAuthConfig('client_secrets.json');
+  $client-&gt;setAccessType('offline');
+
+  // Load previously authorized credentials from a file.
+  $credentialsPath = expandHomeDirectory(CREDENTIALS_PATH);
+  if (file_exists($credentialsPath)) {
+    $accessToken = json_decode(file_get_contents($credentialsPath), true);
+  } else {
+    // Request authorization from the user.
+    $authUrl = $client-&gt;createAuthUrl();
+    printf("Open the following link in your browser:\n%s\n", $authUrl);
+    print 'Enter verification code: ';
+    $authCode = trim(fgets(STDIN));
+
+    // Exchange authorization code for an access token.
+    $accessToken = $client-&gt;fetchAccessTokenWithAuthCode($authCode);
+
+    // Store the credentials to disk.
+    if(!file_exists(dirname($credentialsPath))) {
+      mkdir(dirname($credentialsPath), 0700, true);
+    }
+    file_put_contents($credentialsPath, json_encode($accessToken));
+    printf("Credentials saved to %s\n", $credentialsPath);
+  }
+  $client-&gt;setAccessToken($accessToken);
+
+  // Refresh the token if it's expired.
+  if ($client-&gt;isAccessTokenExpired()) {
+    $client-&gt;fetchAccessTokenWithRefreshToken($client-&gt;getRefreshToken());
+    file_put_contents($credentialsPath, json_encode($client-&gt;getAccessToken()));
+  }
+  return $client;
+}
+
+/**
+ * Expands the home directory alias '~' to the full path.
+ * @param string $path the path to expand.
+ * @return string the expanded path.
+ */
+function expandHomeDirectory($path) {
+  $homeDirectory = getenv('HOME');
+  if (empty($homeDirectory)) {
+    $homeDirectory = getenv("HOMEDRIVE") . getenv("HOMEPATH");
+  }
+  return str_replace('~', realpath($homeDirectory), $path);
+}
+
+// Define an object that will be used to make all API requests.
+$client = getClient();
+$service = new Google_Service_YouTube($client);
+
+if (isset($_GET['code'])) {
+  if (strval($_SESSION['state']) !== strval($_GET['state'])) {
+    die('The session state did not match.');
+  }
+
+  $client-&gt;authenticate($_GET['code']);
+  $_SESSION['token'] = $client-&gt;getAccessToken();
+  header('Location: ' . $redirect);
+}
+
+if (isset($_SESSION['token'])) {
+  $client-&gt;setAccessToken($_SESSION['token']);
+}
+
+if (!$client-&gt;getAccessToken()) {
+  print("no access token, whaawhaaa");
+  exit;
+}
+
+// Add a property to the resource.
+function addPropertyToResource(&amp;$ref, $property, $value) {
+    $keys = explode(".", $property);
+    $is_array = false;
+    foreach ($keys as $key) {
+        // Convert a name like "snippet.tags[]" to "snippet.tags" and
+        // set a boolean variable to handle the value like an array.
+        if (substr($key, -2) == "[]") {
+            $key = substr($key, 0, -2);
+            $is_array = true;
+        }
+        $ref = &amp;$ref[$key];
+    }
+
+    // Set the property value. Make sure array values are handled properly.
+    if ($is_array &amp;&amp; $value) {
+        $ref = $value;
+        $ref = explode(",", $value);
+    } elseif ($is_array) {
+        $ref = array();
+    } else {
+        $ref = $value;
+    }
+}
+
+// Build a resource based on a list of properties given as key-value pairs.
+function createResource($properties) {
+    $resource = array();
+    foreach ($properties as $prop =&gt; $value) {
+        if ($value) {
+            addPropertyToResource($resource, $prop, $value);
+        }
+    }
+    return $resource;
+}
+
+function uploadMedia($client, $request, $filePath, $mimeType) {
+    // Specify the size of each chunk of data, in bytes. Set a higher value for
+    // reliable connection as fewer chunks lead to faster uploads. Set a lower
+    // value for better recovery on less reliable connections.
+    $chunkSizeBytes = 1 * 1024 * 1024;
+
+    // Create a MediaFileUpload object for resumable uploads.
+    // Parameters to MediaFileUpload are:
+    // client, request, mimeType, data, resumable, chunksize.
+    $media = new Google_Http_MediaFileUpload(
+        $client,
+        $request,
+        $mimeType,
+        null,
+        true,
+        $chunkSizeBytes
+    );
+    $media-&gt;setFileSize(filesize($filePath));
+
+
+    // Read the media file and upload it chunk by chunk.
+    $status = false;
+    $handle = fopen($filePath, "rb");
+    while (!$status &amp;&amp; !feof($handle)) {
+      $chunk = fread($handle, $chunkSizeBytes);
+      $status = $media-&gt;nextChunk($chunk);
+    }
+
+    fclose($handle);
+    return $status;
+}
+
+/***** END BOILERPLATE CODE *****/
+
+NONBOILERPLATE
+PHP_END
+  </div>
+  <div id="boilerplate-description-python">
+    <h3>Python boilerplate code</h3>
+    <h4>Printing data from the API response</h4>
+    <p>Each Python function calls the <code>print_results</code> function to print data from the API response. Typically, the function prints the <code>id</code> for each item in the result set as well as another property value from the item's <code>snippet</code>.</p>
+  </div>
+  <div id="boilerplate-resumable-python-1">
+import httplib
+import random
+import time
+</div>
+<div id="boilerplate-resumable-python-2">
+from apiclient.http import MediaFileUpload
+</div>
+<div id="boilerplate-resumable-python-3">
+# Explicitly tell the underlying HTTP transport library not to retry, since
+# we are handling retry logic ourselves.
+httplib2.RETRIES = 1
+
+# Maximum number of times to retry before giving up.
+MAX_RETRIES = 10
+
+# Always retry when these exceptions are raised.
+RETRIABLE_EXCEPTIONS = (httplib2.HttpLib2Error, IOError, httplib.NotConnected,
+  httplib.IncompleteRead, httplib.ImproperConnectionState,
+  httplib.CannotSendRequest, httplib.CannotSendHeader,
+  httplib.ResponseNotReady, httplib.BadStatusLine)
+
+# Always retry when an apiclient.errors.HttpError with one of these status
+# codes is raised.
+RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
+
+# This method implements an exponential backoff strategy to resume a
+# failed upload.
+def resumable_upload(request, resource, method):
+  response = None
+  error = None
+  retry = 0
+  while response is None:
+    try:
+      print "Uploading file..."
+      status, response = request.next_chunk()
+      if response is not None:
+        if method == 'insert' and 'id' in response:
+          print "Video id '%s' was successfully uploaded." % response['id']
+        elif method != 'insert' or 'id' not in response:
+          print response
+        else:
+          exit("The upload failed with an unexpected response: %s" % response)
+    except HttpError, e:
+      if e.resp.status in RETRIABLE_STATUS_CODES:
+        error = "A retriable HTTP error %d occurred:\n%s" % (e.resp.status,
+                                                             e.content)
+      else:
+        raise
+    except RETRIABLE_EXCEPTIONS, e:
+      error = "A retriable error occurred: %s" % e
+
+    if error is not None:
+      print error
+      retry += 1
+      if retry &gt; MAX_RETRIES:
+        exit("No longer attempting to retry.")
+
+      max_sleep = 2 ** retry
+      sleep_seconds = random.random() * max_sleep
+      print "Sleeping %f seconds and then retrying..." % sleep_seconds
+      time.sleep(sleep_seconds)
+  </div>
+  <div id="boilerplate-auth-python">
+### START BOILERPLATE CODE
+
+# Sample Python code for user authorization
+
+import httplib2
+import os
+import sys
+RESUMABLE1
+
+from apiclient.discovery import build
+from apiclient.errors import HttpError
+RESUMABLE2
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.file import Storage
+from oauth2client.tools import argparser, run_flow
+
+# The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
+# the OAuth 2.0 information for this application, including its client_id and
+# client_secret.
+CLIENT_SECRETS_FILE = "client_secrets.json"
+
+# This OAuth 2.0 access scope allows for full read/write access to the
+# authenticated user's account and requires requests to use an SSL connection.
+YOUTUBE_READ_WRITE_SSL_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl"
+API_SERVICE_NAME = "youtube"
+API_VERSION = "v3"
+
+# This variable defines a message to display if the CLIENT_SECRETS_FILE is
+# missing.
+MISSING_CLIENT_SECRETS_MESSAGE = "WARNING: Please configure OAuth 2.0" 
+
+# Authorize the request and store authorization credentials.
+def get_authenticated_service(args):
+  flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE, scope=YOUTUBE_READ_WRITE_SSL_SCOPE,
+    message=MISSING_CLIENT_SECRETS_MESSAGE)
+
+  storage = Storage("youtube-api-snippets-oauth2.json")
+  credentials = storage.get()
+
+  if credentials is None or credentials.invalid:
+    credentials = run_flow(flow, storage, args)
+
+  # Trusted testers can download this discovery document from the developers page
+  # and it should be in the same directory with the code.
+  return build(API_SERVICE_NAME, API_VERSION,
+      http=credentials.authorize(httplib2.Http()))
+
+RESUMABLE3
+
+args = argparser.parse_args()
+service = get_authenticated_service(args)
+
+def print_results(results):
+  print(results)
+
+# Build a resource based on a list of properties given as key-value pairs.
+# Leave properties with empty values out of the inserted resource.
+def build_resource(properties):
+  resource = {}
+  for p in properties:
+    # Given a key like "snippet.title", split into "snippet" and "title", where
+    # "snippet" will be an object and "title" will be a property in that object.
+    prop_array = p.split('.')
+    ref = resource
+    for pa in range(0, len(prop_array)):
+      is_array = False
+      key = prop_array[pa]
+      # Convert a name like "snippet.tags[]" to snippet.tags, but handle
+      # the value as an array.
+      if key[-2:] == '[]':
+        key = key[0:len(key)-2:]
+        is_array = True
+      if pa == (len(prop_array) - 1):
+        # Leave properties without values out of inserted resource.
+        if properties[p]:
+          if is_array:
+            ref[key] = properties[p].split(',')
+          else:
+            ref[key] = properties[p]
+      elif key not in ref:
+        # For example, the property is "snippet.title", but the resource does
+        # not yet have a "snippet" object. Create the snippet object here.
+        # Setting "ref = ref[key]" means that in the next time through the
+        # "for pa in range ..." loop, we will be setting a property in the
+        # resource's "snippet" object.
+        ref[key] = {}
+        ref = ref[key]
+      else:
+        # For example, the property is "snippet.description", and the resource
+        # already has a "snippet" object.
+        ref = ref[key]
+  return resource
+
+# Remove keyword arguments that are not set
+def remove_empty_kwargs(**kwargs):
+  good_kwargs = {}
+  if kwargs is not None:
+    for key, value in kwargs.iteritems():
+      if value:
+        good_kwargs[key] = value
+  return good_kwargs
+
+### END BOILERPLATE CODE
+
+NONBOILERPLATE
+  </div>
+  <div id="boilerplate-description-ruby">
+    <h3>Ruby boilerplate code</h3>
+    <h4>Printing data from the API response</h4>
+    <p>Each Ruby function calls the <code>print_results</code> function to print data from the API response. Typically, the function prints the <code>id</code> for each item in the result set as well as another property value from the item's <code>snippet</code>.</p>
+  </div>
+  <div id="boilerplate-auth-ruby">
+### START BOILERPLATE CODE
+
+# Sample Ruby code for user authorization
+
+require 'rubygems'
+gem 'google-api-client', '&gt;0.7'
+require 'google/apis'
+require 'google/apis/youtube_v3'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+
+require 'fileutils'
+
+# REPLACE WITH VALID REDIRECT_URI FOR YOUR CLIENT
+REDIRECT_URI = 'http://localhost:8090'
+APPLICATION_NAME = 'YouTube Data API Ruby Tests'
+
+# REPLACE WITH NAME/LOCATION OF YOUR client_secrets.json FILE
+CLIENT_SECRETS_PATH = 'client_secrets.json'
+
+# REPLACE FINAL ARGUMENT WITH FILE WHERE CREDENTIALS WILL BE STORED
+CREDENTIALS_PATH = File.join(Dir.home, '.credentials',
+                             "youtube-ruby-snippet-tests.yaml")
+
+# SCOPE FOR WHICH THIS SCRIPT REQUESTS AUTHORIZATION
+SCOPE = Google::Apis::YoutubeV3::AUTH_YOUTUBE_FORCE_SSL
+
+def authorize
+  FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
+
+  client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
+  token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+  authorizer = Google::Auth::UserAuthorizer.new(
+    client_id, SCOPE, token_store)
+  user_id = 'default'
+  credentials = authorizer.get_credentials(user_id)
+  if credentials.nil?
+    url = authorizer.get_authorization_url(base_url: REDIRECT_URI)
+    puts "Open the following URL in the browser and enter the " +
+         "resulting code after authorization"
+    puts url
+    code = gets
+    credentials = authorizer.get_and_store_credentials_from_code(
+      user_id: user_id, code: code, base_url: REDIRECT_URI)
+  end
+  credentials
+end
+
+# Initialize the API
+service = Google::Apis::YoutubeV3::YouTubeService.new
+service.client_options.application_name = APPLICATION_NAME
+service.authorization = authorize
+
+# Print response object as JSON
+def print_results(response)
+  puts response.to_json
+end
+
+# Build a resource based on a list of properties given as key-value pairs.
+def create_resource(properties)
+  resource = {}
+  properties.each do |prop, value|
+    ref = resource
+    prop_array = prop.to_s.split(".")
+    for p in 0..(prop_array.size - 1)
+      is_array = false
+      key = prop_array[p]
+      if key[-2,2] == "[]"
+        key = key[0...-2]
+        is_array = true
+      end
+      if p == (prop_array.size - 1)
+        if is_array
+          if value == ""
+            ref[key.to_sym] = []
+          else
+            ref[key.to_sym] = value.split(",")
+          end
+        elsif value != ""
+          ref[key.to_sym] = value
+        end
+      elsif ref.include?(key.to_sym)
+        ref = ref[key.to_sym]
+      else
+        ref[key.to_sym] = {}
+        ref = ref[key.to_sym]
+      end
+    end
+  end
+  return resource
+end
+
+### END BOILERPLATE CODE
+
+NONBOILERPLATE
+  </div>
+</div>
+
+
+
+    
+
+
+  
+    <input class="google-analytics-id-json" type="hidden" value="{&quot;dimensions&quot;: {&quot;dimension6&quot;: null, &quot;dimension5&quot;: &quot;en&quot;, &quot;dimension3&quot;: false, &quot;dimension8&quot;: &quot;scriptsafe&quot;, &quot;dimension1&quot;: &quot;Signed out&quot;}, &quot;gaid&quot;: &quot;UA-24532603-1&quot;}">
+  
+
+
+
+  
+  
+    <script>
+      var dataLayer = [{"freeTrialEligibleUser": "False", "userCountry": "IN", "language": {"requested": "en", "served": null}, "projectName": null, "scriptsafe": "scriptsafe", "signedIn": "False", "internalUser": "False"}];
+    </script>
+  
+
+
+
+    <script>
+      
+      window.onload = function() {
+          // Initialize the settings variables we get from the server side
+        devsite.settings.initSettings({'FULL_SITE_SEARCH_ENABLED': 1, 'ENABLE_BLOCKED_VIDEO_PLACEHOLDER': 0, 'VERSION_HASH': '558bc0d91d', 'SITE_NAME': 'devsite', 'HISTORY_ENABLED': 1, 'SUBPATH': '', 'ENABLE_BLOCKED_LINK_TOOLTIP': 0, 'ALLOWED_HOSTS': ['.android.com', '.api.ai', '.apigee.com', '.appspot.com', '.dialogflow.com', '.gonglchuangl.net', '.google.cn', '.google.com', '.googleplex.com', '.nest.com', '.openthread.io', '.orbitera.com', '.tensorflow.org'], 'BLOCK_RSS_FEEDS': 0, 'SCRIPTSAFE_DOMAIN': 'google-developers.appspot.com'} || {});
+        // DevsiteUtilParams rely on devsite.settings.
+        devsite.utils.initDevsiteUtilParams('https://google-developers.appspot.com/',
+            devsite.settings['ALLOWED_HOSTS'].concat('youtube.com'));
+        devsite.permissions.init({"f62218c009ec029abef196bba5aa34cf": true, "039e5d84b87fd75807ffb37b7f1bbf2c": true, "098dafe57affddc137df300142652cfd": false, "cb025a64a50094835616312f4774a53d": true, "c95bf81627eb648c2345aec06a66200a": true, "51470233c56fc1fde50f00b73c52b216": false, "d169d485cf24243a263783dbe42029b1": false, "752953480de00a336d911a46966cc16d": false, "700def1a83e356c06c0925afb05de4b0": false, "6749dcb526ce9bde6993550c7d928d24": true});
+        devsite.base.init(null, null, top, false);
+        
+        devsite.analytics.InitAnalytics(true);
+
+        
+          devsite.kennedy.InitializeTabbars();
+          devsite.kennedy.InitializeSelects();
+          $('.expandable').each(function(index, container){$(container).expandable();});
+        
+      }
+
+      
+        devsite.framebox.AutoSizeClient.initAutoSize(
+            true,
+            false
+        );
+      
+    </script>
+  
+
+
+<iframe name="oauth2relay1629553233" id="oauth2relay1629553233" src="./postmessageRelay.html" tabindex="-1" aria-hidden="true" style="width: 1px; height: 1px; position: absolute; top: -100px;"></iframe><iframe id="apiproxy20162647148318d3b3f000d441794f989561011f0.2269598751" name="apiproxy20162647148318d3b3f000d441794f989561011f0.2269598751" src="./proxy.html" tabindex="-1" aria-hidden="true" style="width: 1px; height: 1px; position: absolute; top: -100px; display: none;"></iframe><iframe aria-hidden="true" id="ssIFrame_google" sandbox="allow-scripts allow-same-origin" src="./iframe.html" style="position: absolute; width: 1px; height: 1px; left: -9999px; display: none;"></iframe><div class="devsite-overflow-menu" style="visibility: hidden; top: -1000px;"><h3 id="code-snippets-go-button" value="go" class="kd-tabbutton" kd-data-id="code-sample:go" data-ds-scope="code-snippets">Go</h3><h3 id="code-snippets-appsscript-button" value="appsscript" class="kd-tabbutton" kd-data-id="code-sample:appsscript" data-ds-scope="code-snippets">Apps Script</h3><h3 id="code-snippets-curl-button" value="curl" class="kd-tabbutton" kd-data-id="code-sample:curl" data-ds-scope="code-snippets">CURL</h3></div></body></html>
